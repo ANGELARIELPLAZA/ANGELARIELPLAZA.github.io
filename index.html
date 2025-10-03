@@ -1,239 +1,492 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Invitación de Boda | SINAI & ANGEL </title>
-  <meta name="description" content="Estás invitado a nuestra boda. Acompáñanos en este día especial." />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invitación Boda</title>
   <style>
-    :root{
-      --bg:#faf7f3;            /* Fondo marfil suave */
-      --fg:#2d2a26;            /* Texto principal */
-      --muted:#6d645d;         /* Texto secundario */
-      --brand:#b89c6b;         /* Dorado suave */
-      --brand-2:#d8c9a9;       /* Dorado claro */
-      --card:#ffffff;
-      --ring: rgba(184,156,107,.25);
-      --radius: 20px;
-      --shadow: 0 10px 30px rgba(0,0,0,.06);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; background:radial-gradient(1200px 800px at 20% -10%, #fff, var(--bg));
-      color:var(--fg); font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      line-height:1.55; letter-spacing:.2px;
-    }
-    header.hero{
-      position:relative; display:grid; place-items:center; text-align:center; padding:100px 20px 60px;
-      overflow:hidden;
-    }
-    .halo{
-      position:absolute; inset:-30% -10% auto; height:140%; background:radial-gradient(600px 300px at 50% 10%, var(--brand-2), transparent 60%);
-      opacity:.35; filter: blur(40px); pointer-events:none; z-index:0;
-    }
-    .hero h1{
-      font-family:"Playfair Display", serif; font-weight:700; letter-spacing:1px; margin:0; font-size:clamp(32px, 6vw, 64px);
-    }
-    .amp{color:var(--brand)}
-    .date{margin-top:10px; color:var(--muted); font-weight:500}
-    .lead{max-width:720px; margin:16px auto 0; color:var(--muted)}
-
-    .card{
-      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
-      padding:26px; border:1px solid #eee
+    * {
+      box-sizing: border-box;
     }
 
-    .section{padding:26px 20px}
-    .container{max-width:980px; margin:0 auto}
-    .grid{display:grid; gap:22px}
-    @media (min-width: 900px){
-      .grid-2{grid-template-columns:1.2fr .8fr}
+    :root {
+      --bg: #ffffff;
+      --text: #2d2d2d;
+      --muted: #6b7280;
+      --accent: #2c3e50;
+      --brand: #8b5e3c;
+      --card: #ffffff;
+      --shadow: 0 10px 25px rgba(0, 0, 0, .08);
+      --radius: 12px;
     }
 
-    /* Countdown */
-    .countdown{display:flex; gap:12px; justify-content:center; margin-top:18px}
-    .unit{min-width:86px; padding:14px 10px; border-radius:16px; border:1px solid #eee; box-shadow:var(--shadow); background:#fff}
-    .unit b{display:block; font-size:26px; font-variant-numeric:tabular-nums}
-    .unit span{font-size:12px; color:var(--muted); letter-spacing:.8px; text-transform:uppercase}
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
 
-    /* Buttons */
-    .btn{display:inline-block; padding:12px 18px; border-radius:999px; border:1px solid var(--brand-2); text-decoration:none; color:var(--fg); font-weight:600; background:linear-gradient(#fff, #f9f4ee)}
-    .btn:hover{box-shadow:0 8px 24px var(--ring)}
-    .btn.primary{background:linear-gradient(180deg, #fff, #f3ece2); border-color:var(--brand); color:#2b241a}
+    /* ===== Sección 1 (Hero) ===== */
+    .hero {
+      position: relative;
+      background: url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1600&auto=format&fit=crop') no-repeat center center/cover;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+    }
 
-    .details-list{display:grid; gap:10px; margin:0; padding:0; list-style:none}
-    .details-list li{display:flex; gap:10px; align-items:flex-start}
-    .icon{width:22px; height:22px; margin-top:2px}
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, .4);
+    }
 
-    .quote{font-family:"Playfair Display", serif; font-size:22px; color:#4d463f; text-align:center}
+    .content {
+      position: relative;
+      z-index: 2;
+      max-width: 90%;
+      padding: 20px;
+    }
 
-    footer{padding:40px 20px 80px; text-align:center; color:var(--muted)}
-    .divider{height:1px; background:linear-gradient(90deg, transparent, #e7e0d6, transparent); margin:32px 0}
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin: 0 0 10px;
+      letter-spacing: .03em;
+    }
 
-    /* Simple fade */
-    [data-reveal]{opacity:0; transform:translateY(8px); transition:.7s ease}
-    [data-reveal].visible{opacity:1; transform:none}
+    p {
+      font-size: clamp(.9rem, 2.5vw, 1.1rem);
+      margin: 0 0 20px;
+      color: #f5f5f5;
+    }
+
+    .countdown {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .box {
+      flex: 1;
+      min-width: 70px;
+      background: rgba(255, 255, 255, .2);
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .number {
+      font-size: clamp(1.2rem, 4vw, 2rem);
+      font-weight: 700;
+    }
+
+    .label {
+      font-size: clamp(.6rem, 2vw, .8rem);
+      letter-spacing: 1px;
+    }
+
+    .fade-transition {
+      height: 110px;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, .42), #fff);
+    }
+
+    /* ===== Sección 2 (Dónde & Cuándo) ===== */
+    .section2 {
+      background: #fff;
+      color: var(--text);
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .section2 h2 {
+      color: var(--brand);
+      letter-spacing: .1em;
+      font-weight: 600;
+      font-size: 1.6rem;
+      margin: 24px 0 8px;
+    }
+
+    .section2 p {
+      color: var(--muted);
+      margin: 0 0 22px;
+    }
+
+    .section2 img {
+      width: 100%;
+      max-width: 720px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    /* ===== Sección 3 (RSVP) ===== */
+    .section3 {
+      padding: 40px 16px 80px;
+      background: #f8f8f8;
+    }
+
+    .card {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card img.banner {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-body {
+      padding: 22px;
+    }
+
+    .card-title {
+      text-align: center;
+      color: var(--brand);
+      font-size: 1.6rem;
+      letter-spacing: .12em;
+      margin: 8px 0 4px;
+    }
+
+    .card-sub {
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
+      margin-bottom: 18px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .label {
+      display: block;
+      font-size: .95rem;
+      margin: 0 0 6px;
+      color: var(--text);
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      border: 1px solid #dcdcdc;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      outline: none;
+      transition: box-shadow .2s, border-color .2s;
+      background: #fff;
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+      border-color: #c7b7a2;
+      box-shadow: 0 0 0 4px rgba(139, 94, 60, .12);
+    }
+
+    .textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .options {
+      display: grid;
+      gap: 8px;
+      margin-top: 6px;
+      color: var(--text);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 18px;
+    }
+
+    .btn {
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 22px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(139, 94, 60, .25);
+    }
+
+    .btn:hover {
+      filter: brightness(.95);
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: .85rem;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* ===== Sección 4 (Itinerario en línea de tiempo) ===== */
+    .section4 {
+      background: #fff;
+      padding: 50px 20px;
+    }
+
+    .section4 h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--brand);
+      margin-bottom: 40px;
+      letter-spacing: .08em;
+    }
+
+    .timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .timeline::after {
+      content: '';
+      position: absolute;
+      width: 3px;
+      background: var(--brand);
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      margin-left: -1.5px;
+    }
+
+    .timeline-item {
+      padding: 20px 30px;
+      position: relative;
+      width: 50%;
+    }
+
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      right: -10px;
+      background: var(--brand);
+      border: 3px solid #fff;
+      top: 30px;
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .timeline-item.left {
+      left: 0;
+    }
+
+    .timeline-item.right {
+      left: 50%;
+    }
+
+    .timeline-item.right::after {
+      left: -10px;
+    }
+
+    .timeline-content {
+      padding: 20px;
+      background: #f8f8f8;
+      position: relative;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .timeline-content h3 {
+      margin-top: 0;
+      color: var(--brand);
+      font-size: 1.2rem;
+    }
+
+    .timeline-content p {
+      margin: 6px 0 0;
+      color: var(--text);
+    }
+
+    @media screen and (max-width:768px) {
+      .timeline::after {
+        left: 20px;
+      }
+
+      .timeline-item {
+        width: 100%;
+        padding-left: 50px;
+        padding-right: 25px;
+      }
+
+      .timeline-item.right {
+        left: 0;
+      }
+
+      .timeline-item::after {
+        left: 0;
+      }
+    }
   </style>
-</head>
-<body>
-  <!-- Config rápida: edita los valores de abajo -->
+  <audio id="bg-music" autoplay loop muted>
+    <source src="musica.mp3" type="audio/mpeg">
+  </audio>
+
   <script>
-    const INVITE = {
-      couple: "Ana & Juan",
-      dateISO: "2025-07-20T17:00:00-06:00",  // Fecha/hora local del evento (zona: CDT/CST según corresponda)
-      venueName: "Jardín Santa Lucía",
-      address: "Camino de las Rosas 123, CDMX",
-      googleMapsUrl: "https://maps.google.com/?q=Camino+de+las+Rosas+123+CDMX",
-      rsvpUrl: "https://forms.gle/tu-formulario", // Reemplaza por tu Google Form o similar
-      dressCode: "Formal de día",
-      hashtag: "#AnaYJuan2025"
-    }
+    // Cuando el usuario haga el primer clic, quitamos mute
+    document.addEventListener("click", () => {
+      const music = document.getElementById("bg-music");
+      music.muted = false;
+      music.play();
+    }, { once: true });
   </script>
 
-  <header class="hero">
-    <div class="halo" aria-hidden="true"></div>
-    <div class="container" data-reveal>
-      <h1 id="couple">SINAI <span class="amp">&</span> ANGEL</h1>
-      <div class="date" id="date-human">Domingo, 20 de julio de 2025 · 5:00 p.m.</div>
-      <p class="lead">Con gran alegría te invitamos a celebrar nuestra unión. Tu presencia hará inolvidable este día.</p>
-      <div class="countdown" aria-live="polite" id="countdown" style="margin-top:22px"></div>
-      <p style="margin-top:18px"><a class="btn primary" id="rsvp" target="_blank" rel="noopener">Confirmar asistencia</a></p>
-    </div>
-  </header>
+</head>
 
-  <main class="container">
-    <section class="section grid grid-2">
-      <div class="card" data-reveal>
-        <h2 style="margin-top:0">Detalles del evento</h2>
-        <ul class="details-list">
-          <li>
-            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 11h5m-5 4h10M7 7h10m3 3v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9l5 5z" stroke="#b89c6b" stroke-width="1.5" stroke-linecap="round"/></svg>
-            <div>
-              <b id="venue">Jardín Santa Lucía</b><br>
-              <span id="address">Camino de las Rosas 123, CDMX</span>
-            </div>
-          </li>
-          <li>
-            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#b89c6b" stroke-width="1.5" stroke-linecap="round"/></svg>
-            <div>
-              <b>Itinerario</b><br>
-              17:00 — Ceremonia · 18:30 — Recepción · 20:30 — Baile
-            </div>
-          </li>
-          <li>
-            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 20l5-5 5 5V6a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v14z" stroke="#b89c6b" stroke-width="1.5" stroke-linecap="round"/></svg>
-            <div>
-              <b>Código de vestimenta</b><br>
-              <span id="dress">Formal de día</span>
-            </div>
-          </li>
-          <li>
-            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10v9a1 1 0 001 1h14a1 1 0 001-1v-9M16 7a4 4 0 11-8 0 4 4 0 018 0z" stroke="#b89c6b" stroke-width="1.5" stroke-linecap="round"/></svg>
-            <div>
-              <b>Hashtag</b><br>
-              <span id="hash">#AnaYJuan2025</span>
-            </div>
-          </li>
-        </ul>
-        <div class="divider"></div>
-        <a class="btn" id="maps" target="_blank" rel="noopener">Ver ubicación en Maps</a>
-      </div>
-
-      <div class="card" data-reveal>
-        <h2 style="margin-top:0">Ubicación</h2>
-        <div style="aspect-ratio: 4 / 3; width:100%; overflow:hidden; border-radius:14px; border:1px solid #eee">
-          <!-- Reemplaza el src con tu iframe de Google Maps Embed si lo deseas -->
-          <iframe id="map-iframe" title="Mapa del lugar" width="100%" height="100%" style="border:0" loading="lazy" allowfullscreen
-            referrerpolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps?q=Camino+de+las+Rosas+123+CDMX&output=embed"></iframe>
+<body>
+  <!-- Sección 1 -->
+  <section class="hero">
+    <div class="overlay"></div>
+    <div class="content">
+      <h1>Carlos & Andrea</h1>
+      <p>31.12.22 • Nuestra Boda</p>
+      <div class="countdown" id="countdown">
+        <div class="box">
+          <div class="number" id="days">00</div>
+          <div class="label">DÍAS</div>
+        </div>
+        <div class="box">
+          <div class="number" id="hours">00</div>
+          <div class="label">HORAS</div>
+        </div>
+        <div class="box">
+          <div class="number" id="minutes">00</div>
+          <div class="label">MINUTOS</div>
+        </div>
+        <div class="box">
+          <div class="number" id="seconds">00</div>
+          <div class="label">SEGUNDOS</div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section">
-      <div class="card" data-reveal>
-        <figure class="quote" style="margin:0">
-          <blockquote>“El amor no mira con los ojos, sino con el alma.”</blockquote>
-          <figcaption style="margin-top:8px; color:var(--muted)">— William Shakespeare</figcaption>
-        </figure>
+  <div class="fade-transition"></div>
+
+  <!-- Sección 2 -->
+  <section class="section2">
+    <h2>¡NOS CASAMOS!</h2>
+    <p>Y queremos que vivas este momento tan especial junto a nosotros.</p>
+    <h2>¿DÓNDE & CUÁNDO?</h2>
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Catedral_de_Guadalajara%2C_Jalisco%2C_M%C3%A9xico%2C_2015-10-11%2C_DD_37-39_HDR.JPG"
+      alt="Catedral de Guadalajara" />
+    <p><strong>CEREMONIA</strong><br>31 DICIEMBRE 2024 | 18:30 H<br><strong>CATEDRAL DE GUADALAJARA</strong></p>
+  </section>
+  <!-- Sección 3 (Itinerario en línea de tiempo) -->
+  <section class="section4">
+    <h2>ITINERARIO</h2>
+    <div class="timeline">
+      <div class="timeline-item left">
+        <div class="timeline-content">
+          <h3>17:30 - Recepción</h3>
+          <p>Llegada de invitados y acomodo en la catedral.</p>
+        </div>
       </div>
-    </section>
-
-    <section class="section">
-      <div class="card" data-reveal>
-        <h2 style="margin-top:0">Confirmación (RSVP)</h2>
-        <p>Ayúdanos a planear mejor confirmando tu asistencia antes del <b>1 de junio</b>.</p>
-        <a class="btn primary" id="rsvp2" target="_blank" rel="noopener">Responder formulario</a>
-        <p style="margin:.6rem 0 0; color:var(--muted); font-size:14px">Si no te funciona el botón, copia y pega este enlace:<br><span id="rsvp-url-text" style="word-break:break-all"></span></p>
+      <div class="timeline-item right">
+        <div class="timeline-content">
+          <h3>18:30 - Ceremonia Religiosa</h3>
+          <p>Ceremonia en la Catedral de Guadalajara.</p>
+        </div>
       </div>
-    </section>
-  </main>
+      <div class="timeline-item left">
+        <div class="timeline-content">
+          <h3>20:00 - Coctel de Bienvenida</h3>
+          <p>Recepción con aperitivos y bebidas.</p>
+        </div>
+      </div>
+      <div class="timeline-item right">
+        <div class="timeline-content">
+          <h3>21:00 - Cena</h3>
+          <p>Banquete en el salón principal.</p>
+        </div>
+      </div>
+      <div class="timeline-item left">
+        <div class="timeline-content">
+          <h3>23:00 - Baile y Fiesta</h3>
+          <p>Música, baile y celebración hasta la madrugada.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Sección 4 (RSVP) -->
+  <section class="section3" id="rsvp">
+    <div class="card">
+      <img class="banner"
+        src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1600&auto=format&fit=crop"
+        alt="Pareja" />
+      <div class="card-body">
+        <div class="card-title">CONFIRMA TU ASISTENCIA</div>
+        <div class="card-sub">DRESSCODE: RIGUROSO FORMAL • NO NIÑOS</div>
 
-  <footer>
-    <div class="divider"></div>
-    <small>Con cariño, <span id="couple-foot">Ana & Juan</span> · ¡Nos vemos pronto!</small>
-  </footer>
+        <div class="actions">
+          <a href="https://wa.me/5219211024671?text=¡Hola!%20Quiero%20confirmar%20mi%20asistencia%20a%20la%20boda%20,%20mi%20nombre%20es%20[Tu%20Nombre]."
+            target="_blank" class="btn">
+            Confirmar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <script>
-    // Utilidades
-    const $ = (sel) => document.querySelector(sel);
-    const fmtLongDate = (iso) => new Date(iso).toLocaleString('es-MX', { dateStyle: 'full', timeStyle: 'short' });
-
-    // Configurar textos a partir de INVITE
-    function applyConfig(){
-      $('#couple').innerHTML = INVITE.couple.replace('&', '<span class="amp">&</span>');
-      $('#couple-foot').textContent = INVITE.couple;
-      $('#date-human').textContent = fmtLongDate(INVITE.dateISO);
-      $('#venue').textContent = INVITE.venueName;
-      $('#address').textContent = INVITE.address;
-      $('#dress').textContent = INVITE.dressCode;
-      $('#hash').textContent = INVITE.hashtag;
-      $('#maps').href = INVITE.googleMapsUrl;
-      $('#rsvp').href = INVITE.rsvpUrl; $('#rsvp2').href = INVITE.rsvpUrl;
-      $('#rsvp-url-text').textContent = INVITE.rsvpUrl;
-      const q = encodeURIComponent(INVITE.address || INVITE.venueName);
-      $('#map-iframe').src = `https://www.google.com/maps?q=${q}&output=embed`;
+    // Cuenta regresiva
+    const targetDate = new Date("2025-12-31T00:00:00").getTime();
+    function updateCountdown() {
+      const now = Date.now();
+      const distance = Math.max(0, targetDate - now);
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((distance / (1000 * 60)) % 60);
+      const seconds = Math.floor((distance / 1000) % 60);
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
     }
+    setInterval(updateCountdown, 1000); updateCountdown();
 
-    // Countdown
-    function startCountdown(iso){
-      const target = new Date(iso).getTime();
-      const root = $('#countdown');
-      const tpl = (v,l)=>`<div class="unit"><b>${String(v).padStart(2,'0')}</b><span>${l}</span></div>`;
-      function tick(){
-        const now = Date.now();
-        let diff = Math.max(0, target - now);
-        const d = Math.floor(diff / 86400000); diff %= 86400000;
-        const h = Math.floor(diff / 3600000);  diff %= 3600000;
-        const m = Math.floor(diff / 60000);    diff %= 60000;
-        const s = Math.floor(diff / 1000);
-        root.innerHTML = tpl(d,'días') + tpl(h,'horas') + tpl(m,'min') + tpl(s,'seg');
-      }
-      tick();
-      setInterval(tick, 1000);
-    }
-
-    // Revelado simple on-scroll
-    function revealOnScroll(){
-      const els = document.querySelectorAll('[data-reveal]');
-      const onScroll = () => {
-        const vh = window.innerHeight;
-        els.forEach(el => {
-          const rect = el.getBoundingClientRect();
-          if(rect.top < vh - 60) el.classList.add('visible');
-        })
-      };
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive:true });
-    }
-
-    // Init
-    applyConfig();
-    startCountdown(INVITE.dateISO);
-    revealOnScroll();
+    // Formulario RSVP demo
+    const form = document.getElementById('rsvpForm');
+    const msg = document.getElementById('rsvpMsg');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const nombre = data.get('nombre');
+      const asistencia = data.get('asistencia');
+      const pases = data.get('pases');
+      msg.textContent = `¡Gracias, ${nombre}! Hemos registrado tu respuesta (${asistencia === 'si' ? 'asistirás' : 'no asistirás'}) con ${pases} pase(s).`;
+      form.reset();
+    });
   </script>
 </body>
+
 </html>
