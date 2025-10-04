@@ -5,347 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Invitación Boda</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="gallery.css">
 
-    :root {
-      --bg: #ffffff;
-      --text: #2d2d2d;
-      --muted: #6b7280;
-      --accent: #2c3e50;
-      --brand: #8b5e3c;
-      --card: #ffffff;
-      --shadow: 0 10px 25px rgba(0, 0, 0, .08);
-      --radius: 12px;
-    }
-
-    body,
-    html {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-    }
-
-    /* ===== Sección 1 (Hero) ===== */
-    .hero {
-      position: relative;
-      background: url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1600&auto=format&fit=crop') no-repeat center center/cover;
-      width: 100%;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      text-align: center;
-    }
-
-    .overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, .4);
-    }
-
-    .content {
-      position: relative;
-      z-index: 2;
-      max-width: 90%;
-      padding: 20px;
-    }
-
-    h1 {
-      font-size: clamp(2rem, 5vw, 3rem);
-      margin: 0 0 10px;
-      letter-spacing: .03em;
-    }
-
-    p {
-      font-size: clamp(.9rem, 2.5vw, 1.1rem);
-      margin: 0 0 20px;
-      color: #f5f5f5;
-    }
-
-    .countdown {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .box {
-      flex: 1;
-      min-width: 70px;
-      background: rgba(255, 255, 255, .2);
-      padding: 10px;
-      border-radius: 8px;
-    }
-
-    .number {
-      font-size: clamp(1.2rem, 4vw, 2rem);
-      font-weight: 700;
-    }
-
-    .label {
-      font-size: clamp(.6rem, 2vw, .8rem);
-      letter-spacing: 1px;
-    }
-
-    .fade-transition {
-      height: 110px;
-      background: linear-gradient(to bottom, rgba(0, 0, 0, .42), #fff);
-    }
-
-    /* ===== Sección 2 (Dónde & Cuándo) ===== */
-    .section2 {
-      background: #fff;
-      color: var(--text);
-      text-align: center;
-      padding: 40px 20px;
-    }
-
-    .section2 h2 {
-      color: var(--brand);
-      letter-spacing: .1em;
-      font-weight: 600;
-      font-size: 1.6rem;
-      margin: 24px 0 8px;
-    }
-
-    .section2 p {
-      color: var(--muted);
-      margin: 0 0 22px;
-    }
-
-    .section2 img {
-      width: 100%;
-      max-width: 720px;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-    }
-
-    /* ===== Sección 3 (RSVP) ===== */
-    .section3 {
-      padding: 40px 16px 80px;
-      background: #f8f8f8;
-    }
-
-    .card {
-      max-width: 720px;
-      margin: 0 auto;
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .card img.banner {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .card-body {
-      padding: 22px;
-    }
-
-    .card-title {
-      text-align: center;
-      color: var(--brand);
-      font-size: 1.6rem;
-      letter-spacing: .12em;
-      margin: 8px 0 4px;
-    }
-
-    .card-sub {
-      text-align: center;
-      color: var(--muted);
-      font-size: .9rem;
-      margin-bottom: 18px;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .label {
-      display: block;
-      font-size: .95rem;
-      margin: 0 0 6px;
-      color: var(--text);
-    }
-
-    .input,
-    .select,
-    .textarea {
-      width: 100%;
-      border: 1px solid #dcdcdc;
-      border-radius: 8px;
-      padding: 12px 14px;
-      font-size: 1rem;
-      outline: none;
-      transition: box-shadow .2s, border-color .2s;
-      background: #fff;
-    }
-
-    .input:focus,
-    .select:focus,
-    .textarea:focus {
-      border-color: #c7b7a2;
-      box-shadow: 0 0 0 4px rgba(139, 94, 60, .12);
-    }
-
-    .textarea {
-      min-height: 110px;
-      resize: vertical;
-    }
-
-    .options {
-      display: grid;
-      gap: 8px;
-      margin-top: 6px;
-      color: var(--text);
-    }
-
-    .row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .actions {
-      display: flex;
-      justify-content: center;
-      margin-top: 18px;
-    }
-
-    .btn {
-      background: var(--brand);
-      color: #fff;
-      border: none;
-      border-radius: 999px;
-      padding: 12px 22px;
-      font-size: 1rem;
-      cursor: pointer;
-      box-shadow: 0 6px 14px rgba(139, 94, 60, .25);
-    }
-
-    .btn:hover {
-      filter: brightness(.95);
-    }
-
-    .muted {
-      color: var(--muted);
-      font-size: .85rem;
-      text-align: center;
-      margin-top: 8px;
-    }
-
-    /* ===== Sección 4 (Itinerario en línea de tiempo) ===== */
-    .section4 {
-      background: #fff;
-      padding: 50px 20px;
-    }
-
-    .section4 h2 {
-      text-align: center;
-      font-size: 1.8rem;
-      color: var(--brand);
-      margin-bottom: 40px;
-      letter-spacing: .08em;
-    }
-
-    .timeline {
-      position: relative;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .timeline::after {
-      content: '';
-      position: absolute;
-      width: 3px;
-      background: var(--brand);
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      margin-left: -1.5px;
-    }
-
-    .timeline-item {
-      padding: 20px 30px;
-      position: relative;
-      width: 50%;
-    }
-
-    .timeline-item::after {
-      content: '';
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      right: -10px;
-      background: var(--brand);
-      border: 3px solid #fff;
-      top: 30px;
-      border-radius: 50%;
-      z-index: 1;
-    }
-
-    .timeline-item.left {
-      left: 0;
-    }
-
-    .timeline-item.right {
-      left: 50%;
-    }
-
-    .timeline-item.right::after {
-      left: -10px;
-    }
-
-    .timeline-content {
-      padding: 20px;
-      background: #f8f8f8;
-      position: relative;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-
-    .timeline-content h3 {
-      margin-top: 0;
-      color: var(--brand);
-      font-size: 1.2rem;
-    }
-
-    .timeline-content p {
-      margin: 6px 0 0;
-      color: var(--text);
-    }
-
-    @media screen and (max-width:768px) {
-      .timeline::after {
-        left: 20px;
-      }
-
-      .timeline-item {
-        width: 100%;
-        padding-left: 50px;
-        padding-right: 25px;
-      }
-
-      .timeline-item.right {
-        left: 0;
-      }
-
-      .timeline-item::after {
-        left: 0;
-      }
-    }
-  </style>
   <audio id="bg-music" autoplay loop muted>
     <source src="musica.mp3" type="audio/mpeg">
   </audio>
@@ -366,8 +28,8 @@
   <section class="hero">
     <div class="overlay"></div>
     <div class="content">
-      <h1>Carlos & Andrea</h1>
-      <p>31.12.22 • Nuestra Boda</p>
+      <h1>SINAI & ANGEL</h1>
+      <p>28.12.25 • Nuestra Boda</p>
       <div class="countdown" id="countdown">
         <div class="box">
           <div class="number" id="days">00</div>
@@ -379,11 +41,11 @@
         </div>
         <div class="box">
           <div class="number" id="minutes">00</div>
-          <div class="label">MINUTOS</div>
+          <div class="label">MIN</div>
         </div>
         <div class="box">
           <div class="number" id="seconds">00</div>
-          <div class="label">SEGUNDOS</div>
+          <div class="label">SEG</div>
         </div>
       </div>
     </div>
@@ -437,7 +99,34 @@
       </div>
     </div>
   </section>
-  <!-- Sección 4 (RSVP) -->
+  <!-- Sección 4 (Galería de fotos) -->
+  <section class="section-gallery" id="galeria">
+    <h2>MOMENTOS</h2>
+    <div class="g-stack-wrap">
+      <div class="g-stack" id="gStack">
+        <!-- La PRIMERA en el DOM es la que queda arriba -->
+        <div class="g-card"><img
+            src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1200&auto=format&fit=crop"
+            alt="Foto 1"></div>
+        <div class="g-card"><img
+            src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1200&auto=format&fit=crop"
+            alt="Foto 2"></div>
+        <div class="g-card"><img
+            src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop"
+            alt="Foto 3"></div>
+        <div class="g-card"><img
+            src="https://images.unsplash.com/photo-1521334884684-d80222895322?q=80&w=1200&auto=format&fit=crop"
+            alt="Foto 4"></div>
+      </div>
+      <div class="g-hint">Desliza a la izquierda o derecha para ver las fotos</div>
+      <div class="g-actions">
+        <button class="g-btn" id="gReset">⟲ Reiniciar</button>
+      </div>
+      <div class="g-empty" id="gEmpty">¡Sin más fotos! Presiona “Reiniciar”.</div>
+    </div>
+  </section>
+
+  <!-- Sección 5 (RSVP) -->
   <section class="section3" id="rsvp">
     <div class="card">
       <img class="banner"
@@ -459,7 +148,7 @@
 
   <script>
     // Cuenta regresiva
-    const targetDate = new Date("2025-12-31T00:00:00").getTime();
+    const targetDate = new Date("2025-12-28T00:00:00").getTime();
     function updateCountdown() {
       const now = Date.now();
       const distance = Math.max(0, targetDate - now);
@@ -487,6 +176,91 @@
       form.reset();
     });
   </script>
+  <script>
+(function () {
+  const stack = document.getElementById('gStack');
+  const resetBtn = document.getElementById('gReset');
+  const emptyMsg = document.getElementById('gEmpty');
+  const original = stack.innerHTML;
+
+  let currentCard = null;
+  let startX = 0, startY = 0;
+  let dx = 0, dy = 0;
+  let dragging = false;
+
+  const THRESHOLD = 90;    // distancia horizontal para descartar
+  const ROTATION  = 18;    // grados máximos de giro
+
+  function topCard() {
+    const cards = stack.querySelectorAll('.g-card');
+    return cards.length ? cards[0] : null;   // primera = arriba
+  }
+
+  function applyTransform(el, x, y) {
+    const rot = (x / window.innerWidth) * ROTATION;
+    el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
+  }
+
+  function start(e) {
+    currentCard = topCard();
+    if (!currentCard) return;
+    dragging = true;
+    const p = (e.touches && e.touches[0]) || e;
+    startX = p.clientX; startY = p.clientY;
+    dx = 0; dy = 0;
+    currentCard.style.transition = 'none';
+  }
+
+  function move(e) {
+    if (!dragging || !currentCard) return;
+    const p = (e.touches && e.touches[0]) || e;
+    dx = p.clientX - startX;
+    dy = p.clientY - startY;
+    if (Math.abs(dx) > Math.abs(dy)) e.preventDefault(); // evita scroll vertical durante el drag
+    applyTransform(currentCard, dx, dy);
+  }
+
+  function end() {
+    if (!dragging || !currentCard) return;
+    dragging = false;
+
+    if (Math.abs(dx) > THRESHOLD) {
+      const dirClass = dx > 0 ? 'g-right' : 'g-left';
+      currentCard.classList.add(dirClass);
+      currentCard.style.transition = ''; // usa la transición del CSS de estado
+      currentCard.addEventListener('transitionend', removeOnce);
+    } else {
+      currentCard.style.transition = 'transform .25s ease';
+      currentCard.style.transform = '';
+    }
+  }
+
+  function removeOnce(ev) {
+    const el = ev.currentTarget;
+    el.removeEventListener('transitionend', removeOnce);
+    if (el.parentElement === stack) stack.removeChild(el);
+    if (!topCard()) emptyMsg.style.display = 'block';
+  }
+
+  function reset() {
+    stack.innerHTML = original;
+    emptyMsg.style.display = 'none';
+  }
+
+  // listeners
+  stack.addEventListener('mousedown', start);
+  stack.addEventListener('mousemove', move);
+  document.addEventListener('mouseup', end);
+
+  stack.addEventListener('touchstart', start, { passive: false });
+  stack.addEventListener('touchmove',  move,  { passive: false });
+  stack.addEventListener('touchend',   end);
+  stack.addEventListener('touchcancel',end);
+
+  resetBtn.addEventListener('click', reset);
+})();
+</script>
+
 </body>
 
 </html>
