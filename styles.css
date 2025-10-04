@@ -1,11 +1,12 @@
-
 * {
   box-sizing: border-box;
 }
 
 :root {
   --bg: #ffffff;
-  --text: #2d2d2d;
+    --black: #000000;
+
+  --text: #f5f4f4;
   --muted: #6b7280;
   --accent: #2c3e50;
   --brand: #8b5e3c;
@@ -26,7 +27,9 @@ html {
 /* ===== Sección 1 (Hero) ===== */
 .hero {
   position: relative;
-  background: url('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1600&auto=format&fit=crop') no-repeat center center/cover;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
+    url('IMAGEN1.jpeg') no-repeat center center/cover;
   width: 100%;
   height: 100vh;
   display: flex;
@@ -36,10 +39,55 @@ html {
   text-align: center;
 }
 
+
+.hero h1 {
+  font-size: clamp(12rem, 5vw, 3rem);
+
+  font-family: 'ui-sans-serif';
+  font-weight: 700;
+  /* puedes usar 400 si prefieres más delgado */
+  letter-spacing: .05em;
+}
+
 .overlay {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, .4);
+}
+
+.section-quote {
+  display: flex;
+  justify-content: center;
+}
+
+.quote-card {
+  max-width: 600px;
+  padding: 15px;
+  border-radius: 12px;
+  font-family: 'Playfair Display', serif;
+  /* tipografía elegante */
+}
+
+.quote-card blockquote {
+  margin: 0;
+  text-align: left;
+}
+
+.quote-text {
+  font-size: 2rem;
+  font-style: italic;
+  color: #ffffff;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  text-align: center;
+
+}
+
+.quote-ref {
+  font-size: 1rem;
+  color: #ffffff;
+  text-align: right;
+  display: block;
 }
 
 .content {
@@ -62,12 +110,19 @@ p {
 }
 
 .countdown {
+  padding-top: 30%;
   display: flex;
   justify-content: space-between;
   gap: 10px;
   flex-wrap: wrap;
 }
-
+.textnoscasamos{
+  font-size: clamp(2.2rem, 4vw, 2rem);
+  margin-bottom: 20px;
+  padding-top: 20%;
+  color: #f5f5f5;
+  font-family: 'ui-sans-serif';
+}
 .box {
   flex: 1;
   min-width: 70px;
@@ -96,7 +151,6 @@ p {
   background: #fff;
   color: var(--text);
   text-align: center;
-  padding: 40px 20px;
 }
 
 .section2 h2 {
@@ -241,7 +295,6 @@ p {
 /* ===== Sección 4 (Itinerario en línea de tiempo) ===== */
 .section4 {
   background: #fff;
-  padding: 50px 20px;
 }
 
 .section4 h2 {
@@ -316,7 +369,7 @@ p {
 
 .timeline-content p {
   margin: 6px 0 0;
-  color: var(--text);
+  color: var(--brand);
 }
 
 @media screen and (max-width:768px) {
@@ -338,3 +391,48 @@ p {
     left: 0;
   }
 }
+.textnoscasamos2{font-family:"Playfair Display", ui-serif, serif; font-size:clamp(1.05rem,2.4vw,1.35rem); font-weight:600; color:var(--black); letter-spacing:.02em; margin:8px auto 22px;}
+
+
+/* Grid de padres */
+.parents-block{max-width:1000px; margin:0 auto 22px; display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+.parents-col{background:#f9f7f4; border-radius:var(--radius); box-shadow:var(--shadow); padding:18px 16px;}
+.parents-col--full{grid-column:1 / -1;}
+.parents-title{font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto; font-size:.95rem; font-weight:700; color:var(--brand); text-transform:uppercase; letter-spacing:.08em; margin:0 0 8px;}
+.parents-list{list-style:none; padding:0; margin:0; font-family:"Playfair Display", ui-serif, serif; color:var(--black); line-height:1.6; font-size:1.05rem;}
+.parents-list .amp{font-weight:700; color:var(--brand); font-size:1.15rem; margin:2px 0;}
+.invite-line{margin:14px auto 10px; color:var(--muted); font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto; font-size:.98rem;}
+
+
+/* Dónde y Cuándo */
+.where-when{color:var(--brand); letter-spacing:.06em; font-weight:700; font-size:clamp(1.2rem, 2.6vw, 1.5rem); margin:18px 0 16px;}
+
+
+/* Event + Map grid */
+.event-grid{max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr 1.15fr; gap:22px; align-items:stretch;}
+.event-card{background:var(--card); border:1px solid #eadfd3; border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; display:grid; grid-template-columns:auto 1fr; gap:14px; text-align:left;}
+.event-date{background:#f5efe9; color:var(--brand); border-radius:12px; width:96px; min-width:96px; padding:10px 8px; display:grid; place-items:center; line-height:1;}
+.event-date .day{font-family:"Playfair Display", ui-serif, serif; font-size:2rem; font-weight:700;}
+.event-date .month{font-family:ui-sans-serif, system-ui; font-size:.9rem; letter-spacing:.14em;}
+.event-date .year{font-family:ui-sans-serif, system-ui; font-size:.85rem; letter-spacing:.12em; color:#8f806f;}
+.event-info .event-title{font-family:ui-sans-serif, system-ui; font-weight:800; font-size:1rem; color:var(--brand); letter-spacing:.06em; margin:2px 0 6px;}
+.event-info .event-time{font-family:ui-sans-serif, system-ui; font-size:.95rem; color:#5f5a54; margin:0 0 6px; letter-spacing:.04em;}
+.event-info .event-place{font-family:"Playfair Display", ui-serif, serif; font-size:1.05rem; color:var(--black); line-height:1.5; margin:0;}
+
+
+/* Mapa responsive */
+.map-wrap{border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); background:#eee; aspect-ratio:4 / 3;}
+.map-wrap iframe{width:100%; height:100%; border:0;}
+
+
+/* Hover sutil */
+.event-card:hover{transform:translateY(-1px); transition:transform .2s ease;}
+
+
+/* Responsive */
+@media (max-width: 920px){
+.parents-block{grid-template-columns:1fr;}
+.event-grid{grid-template-columns:1fr;}
+}
+
+

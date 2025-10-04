@@ -5,6 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Invitación Boda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Allrounder+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="gallery.css">
 
@@ -28,8 +31,18 @@
   <section class="hero">
     <div class="overlay"></div>
     <div class="content">
-      <h1>SINAI & ANGEL</h1>
-      <p>28.12.25 • Nuestra Boda</p>
+      <section class="section-quote">
+        <div class="quote-card">
+          <blockquote>
+            <p class="quote-text">“Mi amado es mío, y yo soy suya.”</p>
+            <footer class="quote-ref">— Cantares 2:16</footer>
+          </blockquote>
+        </div>
+      </section>
+
+      <h1>S|A</h1>
+      <h2 class="textnoscasamos">¡NOS CASAMOS!</h2>
+
       <div class="countdown" id="countdown">
         <div class="box">
           <div class="number" id="days">00</div>
@@ -48,57 +61,125 @@
           <div class="label">SEG</div>
         </div>
       </div>
+
     </div>
   </section>
 
   <div class="fade-transition"></div>
 
   <!-- Sección 2 -->
-  <section class="section2">
-    <h2>¡NOS CASAMOS!</h2>
-    <p>Y queremos que vivas este momento tan especial junto a nosotros.</p>
-    <h2>¿DÓNDE & CUÁNDO?</h2>
-    <img
-      src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Catedral_de_Guadalajara%2C_Jalisco%2C_M%C3%A9xico%2C_2015-10-11%2C_DD_37-39_HDR.JPG"
-      alt="Catedral de Guadalajara" />
-    <p><strong>CEREMONIA</strong><br>31 DICIEMBRE 2024 | 18:30 H<br><strong>CATEDRAL DE GUADALAJARA</strong></p>
+  <!-- Sección 2 – Versión mejorada, semántica y accesible -->
+  <section class="section2" id="donde-cuando" aria-labelledby="where-when">
+    <p class="textnoscasamos2">Con la bendición de nuestros queridos padres:</p>
+
+    <!-- Bloque de padres (responsive) -->
+    <div class="parents-block" role="list" aria-label="Padres de los novios">
+      <div class="parents-col" role="listitem">
+        <h3 class="parents-title">Padres de la novia</h3>
+        <ul class="parents-list">
+          <li>Lic. Sergio Antonio Aguilar Martínez</li>
+          <li class="amp" aria-hidden="true">&amp;</li>
+          <li>Sra. María del Carmen Hernández López</li>
+        </ul>
+      </div>
+
+      <div class="parents-col" role="listitem">
+        <h3 class="parents-title">Padres del novio</h3>
+        <ul class="parents-list">
+          <li>C.P. José Luis Sánchez Rodríguez</li>
+          <li class="amp" aria-hidden="true">&amp;</li>
+          <li>Sra. María del Carmen Ocampo Hernández</li>
+        </ul>
+      </div>
+
+      <!-- Nosotros -->
+      <div class="parents-col parents-col--full" role="listitem">
+        <p class="invite-line">Nosotros:</p>
+        <ul class="parents-list">
+          <li>Sinai </li>
+          <li class="amp" aria-hidden="true">&amp;</li>
+          <li>Angel Ariel</li>
+
+        </ul>
+        <p class="invite-line">Nos complace invitarles a compartir la alegría de nuestra boda.</p>
+      </div>
+    </div>
+
+
+    <!-- Evento + mapa (grid responsive) -->
+    <div class="event-grid" itemscope itemtype="https://schema.org/Event">
+      <article class="event-card">
+        <div class="event-date" aria-label="28 de diciembre de 2025">
+          <span class="day" aria-hidden="true">28</span>
+          <span class="month" aria-hidden="true">DIC</span>
+          <span class="year" aria-hidden="true">2025</span>
+        </div>
+        <div class="event-info">
+          <h3 class="event-title" itemprop="name">Ceremonia Civil y Recepción</h3>
+          <time class="event-time" datetime="2025-12-28T16:00-06:00" itemprop="startDate">16:00 h</time>
+          <p class="event-place" itemprop="location" itemscope itemtype="https://schema.org/Place">
+            <span itemprop="name">Salón California</span> · <span itemprop="address">Hueyapan de Ocampo</span>
+          </p>
+        </div>
+      </article>
+
+      <div class="map-wrap" aria-label="Mapa del Salón California en Hueyapan de Ocampo">
+        <iframe title="Ubicación de la ceremonia"
+          src="https://www.google.com/maps/embed?pb=!4v1759555004032!6m8!1m7!1s525mLgdGIuE7X5dVw3oq2w!2m2!1d18.14929584050972!2d-95.14387388140617!3f57.28776490063591!4f2.232769910594513!5f2.232759305552277"
+          allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
   </section>
+
   <!-- Sección 3 (Itinerario en línea de tiempo) -->
   <section class="section4">
-    <h2>ITINERARIO</h2>
+    <h2>Itinerario</h2>
+
     <div class="timeline">
       <div class="timeline-item left">
         <div class="timeline-content">
-          <h3>17:30 - Recepción</h3>
-          <p>Llegada de invitados y acomodo en la catedral.</p>
+          <h3>04:00 pm hrs.</h3>
+          <p>Ceremonia civil</p>
         </div>
       </div>
+
       <div class="timeline-item right">
         <div class="timeline-content">
-          <h3>18:30 - Ceremonia Religiosa</h3>
-          <p>Ceremonia en la Catedral de Guadalajara.</p>
+          <h3>05:00 pm hrs.</h3>
+          <p>Recepción</p>
         </div>
       </div>
+
       <div class="timeline-item left">
         <div class="timeline-content">
-          <h3>20:00 - Coctel de Bienvenida</h3>
-          <p>Recepción con aperitivos y bebidas.</p>
+          <h3>06:00 pm hrs.</h3>
+          <p>Brindis</p>
         </div>
       </div>
+
       <div class="timeline-item right">
         <div class="timeline-content">
-          <h3>21:00 - Cena</h3>
-          <p>Banquete en el salón principal.</p>
+          <h3>07:00 pm hrs.</h3>
+          <p>Cena</p>
         </div>
       </div>
+
       <div class="timeline-item left">
         <div class="timeline-content">
-          <h3>23:00 - Baile y Fiesta</h3>
-          <p>Música, baile y celebración hasta la madrugada.</p>
+          <h3>08:00 pm hrs.</h3>
+          <p>Bailes</p>
+        </div>
+      </div>
+
+      <div class="timeline-item right">
+        <div class="timeline-content">
+          <h3>01:00 am hrs.</h3>
+          <p>Fin de fiesta</p>
         </div>
       </div>
     </div>
   </section>
+
   <!-- Sección 4 (Galería de fotos) -->
   <section class="section-gallery" id="galeria">
     <h2>MOMENTOS</h2>
@@ -106,16 +187,16 @@
       <div class="g-stack" id="gStack">
         <!-- La PRIMERA en el DOM es la que queda arriba -->
         <div class="g-card"><img
-            src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1200&auto=format&fit=crop"
+            src="IMAGEN2.jpeg?q=80&w=1200&auto=format&fit=crop"
             alt="Foto 1"></div>
         <div class="g-card"><img
-            src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1200&auto=format&fit=crop"
+            src="IMAGEN3.jpeg?q=80&w=1200&auto=format&fit=crop"
             alt="Foto 2"></div>
         <div class="g-card"><img
-            src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop"
+            src="IMAGEN4.jpeg?q=80&w=1200&auto=format&fit=crop"
             alt="Foto 3"></div>
         <div class="g-card"><img
-            src="https://images.unsplash.com/photo-1521334884684-d80222895322?q=80&w=1200&auto=format&fit=crop"
+            src="IMAGEN5.jpeg?q=80&w=1200&auto=format&fit=crop"
             alt="Foto 4"></div>
       </div>
       <div class="g-hint">Desliza a la izquierda o derecha para ver las fotos</div>
@@ -129,12 +210,12 @@
   <!-- Sección 5 (RSVP) -->
   <section class="section3" id="rsvp">
     <div class="card">
-      <img class="banner"
+      <!--   <img class="banner"
         src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1600&auto=format&fit=crop"
-        alt="Pareja" />
+        alt="Pareja" /> -->
       <div class="card-body">
         <div class="card-title">CONFIRMA TU ASISTENCIA</div>
-        <div class="card-sub">DRESSCODE: RIGUROSO FORMAL • NO NIÑOS</div>
+        <div class="card-sub">DRESSCODE: FORMAL/ELEGANTE</div>
 
         <div class="actions">
           <a href="https://wa.me/5219211024671?text=¡Hola!%20Quiero%20confirmar%20mi%20asistencia%20a%20la%20boda%20,%20mi%20nombre%20es%20[Tu%20Nombre]."
@@ -177,89 +258,89 @@
     });
   </script>
   <script>
-(function () {
-  const stack = document.getElementById('gStack');
-  const resetBtn = document.getElementById('gReset');
-  const emptyMsg = document.getElementById('gEmpty');
-  const original = stack.innerHTML;
+    (function () {
+      const stack = document.getElementById('gStack');
+      const resetBtn = document.getElementById('gReset');
+      const emptyMsg = document.getElementById('gEmpty');
+      const original = stack.innerHTML;
 
-  let currentCard = null;
-  let startX = 0, startY = 0;
-  let dx = 0, dy = 0;
-  let dragging = false;
+      let currentCard = null;
+      let startX = 0, startY = 0;
+      let dx = 0, dy = 0;
+      let dragging = false;
 
-  const THRESHOLD = 90;    // distancia horizontal para descartar
-  const ROTATION  = 18;    // grados máximos de giro
+      const THRESHOLD = 90;    // distancia horizontal para descartar
+      const ROTATION = 18;    // grados máximos de giro
 
-  function topCard() {
-    const cards = stack.querySelectorAll('.g-card');
-    return cards.length ? cards[0] : null;   // primera = arriba
-  }
+      function topCard() {
+        const cards = stack.querySelectorAll('.g-card');
+        return cards.length ? cards[0] : null;   // primera = arriba
+      }
 
-  function applyTransform(el, x, y) {
-    const rot = (x / window.innerWidth) * ROTATION;
-    el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
-  }
+      function applyTransform(el, x, y) {
+        const rot = (x / window.innerWidth) * ROTATION;
+        el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
+      }
 
-  function start(e) {
-    currentCard = topCard();
-    if (!currentCard) return;
-    dragging = true;
-    const p = (e.touches && e.touches[0]) || e;
-    startX = p.clientX; startY = p.clientY;
-    dx = 0; dy = 0;
-    currentCard.style.transition = 'none';
-  }
+      function start(e) {
+        currentCard = topCard();
+        if (!currentCard) return;
+        dragging = true;
+        const p = (e.touches && e.touches[0]) || e;
+        startX = p.clientX; startY = p.clientY;
+        dx = 0; dy = 0;
+        currentCard.style.transition = 'none';
+      }
 
-  function move(e) {
-    if (!dragging || !currentCard) return;
-    const p = (e.touches && e.touches[0]) || e;
-    dx = p.clientX - startX;
-    dy = p.clientY - startY;
-    if (Math.abs(dx) > Math.abs(dy)) e.preventDefault(); // evita scroll vertical durante el drag
-    applyTransform(currentCard, dx, dy);
-  }
+      function move(e) {
+        if (!dragging || !currentCard) return;
+        const p = (e.touches && e.touches[0]) || e;
+        dx = p.clientX - startX;
+        dy = p.clientY - startY;
+        if (Math.abs(dx) > Math.abs(dy)) e.preventDefault(); // evita scroll vertical durante el drag
+        applyTransform(currentCard, dx, dy);
+      }
 
-  function end() {
-    if (!dragging || !currentCard) return;
-    dragging = false;
+      function end() {
+        if (!dragging || !currentCard) return;
+        dragging = false;
 
-    if (Math.abs(dx) > THRESHOLD) {
-      const dirClass = dx > 0 ? 'g-right' : 'g-left';
-      currentCard.classList.add(dirClass);
-      currentCard.style.transition = ''; // usa la transición del CSS de estado
-      currentCard.addEventListener('transitionend', removeOnce);
-    } else {
-      currentCard.style.transition = 'transform .25s ease';
-      currentCard.style.transform = '';
-    }
-  }
+        if (Math.abs(dx) > THRESHOLD) {
+          const dirClass = dx > 0 ? 'g-right' : 'g-left';
+          currentCard.classList.add(dirClass);
+          currentCard.style.transition = ''; // usa la transición del CSS de estado
+          currentCard.addEventListener('transitionend', removeOnce);
+        } else {
+          currentCard.style.transition = 'transform .25s ease';
+          currentCard.style.transform = '';
+        }
+      }
 
-  function removeOnce(ev) {
-    const el = ev.currentTarget;
-    el.removeEventListener('transitionend', removeOnce);
-    if (el.parentElement === stack) stack.removeChild(el);
-    if (!topCard()) emptyMsg.style.display = 'block';
-  }
+      function removeOnce(ev) {
+        const el = ev.currentTarget;
+        el.removeEventListener('transitionend', removeOnce);
+        if (el.parentElement === stack) stack.removeChild(el);
+        if (!topCard()) emptyMsg.style.display = 'block';
+      }
 
-  function reset() {
-    stack.innerHTML = original;
-    emptyMsg.style.display = 'none';
-  }
+      function reset() {
+        stack.innerHTML = original;
+        emptyMsg.style.display = 'none';
+      }
 
-  // listeners
-  stack.addEventListener('mousedown', start);
-  stack.addEventListener('mousemove', move);
-  document.addEventListener('mouseup', end);
+      // listeners
+      stack.addEventListener('mousedown', start);
+      stack.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', end);
 
-  stack.addEventListener('touchstart', start, { passive: false });
-  stack.addEventListener('touchmove',  move,  { passive: false });
-  stack.addEventListener('touchend',   end);
-  stack.addEventListener('touchcancel',end);
+      stack.addEventListener('touchstart', start, { passive: false });
+      stack.addEventListener('touchmove', move, { passive: false });
+      stack.addEventListener('touchend', end);
+      stack.addEventListener('touchcancel', end);
 
-  resetBtn.addEventListener('click', reset);
-})();
-</script>
+      resetBtn.addEventListener('click', reset);
+    })();
+  </script>
 
 </body>
 
