@@ -195,4 +195,42 @@ p {
   .flower {
     filter: brightness(.95) saturate(1.05);
   }
+}/* --- Solo móvil: bloquear vista en pantallas >= 768px --- */
+
+/* Por defecto, el bloqueador NO se ve (móviles) */
+.desktop-blocker {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #faf7f3;            /* un tono suave */
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.desktop-blocker__in {
+  max-width: 36rem;
+  margin: 0 auto;
+  line-height: 1.45;
+}
+
+/* A partir de 768px: ocultar todo el sitio y mostrar el bloqueador */
+@media (min-width: 768px) {
+  /* Oculta TODAS las secciones principales de tu página */
+  .container,
+  .section2,
+  .section4,
+  .section-gallery,
+  .section-dresscode,
+  .section3 {
+    display: none !important;
+  }
+
+  /* Muestra el aviso */
+  .desktop-blocker {
+    display: flex !important;
+  }
 }
