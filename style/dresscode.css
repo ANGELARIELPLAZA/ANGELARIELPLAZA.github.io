@@ -1,0 +1,150 @@
+/* ===========================
+   Sección: Código de vestimenta
+   =========================== */
+.section-dresscode {
+    --dc-bg: #f7f4ef;
+    --dc-text: #3a3a3a;
+    --dc-accent: #8b5e3c;
+    --dc-muted: #6b7280;
+    --dc-chip-size: 72px;
+    --dc-x: #b54646;
+    background: var(--dc-bg);
+    color: var(--dc-text);
+    padding: 56px 20px;
+}
+
+.section-dresscode .dc-in {
+    max-width: 980px;
+    margin: 0 auto;
+    text-align: center;
+}
+.mirror-x {
+  transform: scaleX(-1);
+}@media (max-width: 640px) {
+  .flower3{
+             position: absolute;
+        width: 24rem;
+        height: auto;
+        z-index: 2;
+        pointer-events: none;
+        user-select: none;
+        opacity: 0.5;
+  }
+}
+
+
+.dc-eyebrow {
+    font-family: 'Tangerine', cursive;
+    font-size: 3.8rem;
+    letter-spacing: .1em;
+    color: var(--dc-accent);
+    margin: 0 0 8px;
+}
+
+.dc-style {
+  font-family: 'Italianno', cursive;
+    font-size: clamp(3rem, 5vw, 3rem);
+    font-weight: 700;
+    color: #2e4d86;
+    margin: 0 0 14px;
+    
+}
+
+.dc-note {
+    font-family: 'Tangerine', cursive;
+    color: var(--dc-accent);
+    font-size: 2rem;
+    letter-spacing: .04em;
+    margin: 0 0 22px;
+}
+
+.dc-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    justify-items: center;
+    align-items: start;
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 680px;
+}
+
+@media (max-width: 640px) {
+    .dc-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.dc-chip {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+}
+
+.dc-swatch {
+    width: var(--dc-chip-size);
+    height: var(--dc-chip-size);
+    border-radius: 999px;
+    border: 2px solid rgba(0, 0, 0, .12);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .08) inset;
+    position: relative;
+}
+
+.dc-x {
+    position: relative;
+    width: var(--dc-chip-size);
+    height: 0;
+}
+
+
+
+.dc-chip-label {
+    font-size: 2rem;
+    color: var(--dc-muted);
+    font-family: 'Tangerine', cursive;}
+
+.dc-white {
+    background: #f5f5f5;
+}
+
+.dc-olive {
+    background: #b8b89b;
+}
+
+.dc-beige {
+    background: #d6c7b9;
+}
+
+.dc-navy {
+    background: #1e2f53;
+}
+
+.dc-chip {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    position: relative;
+}
+
+.dc-swatch {
+    width: var(--dc-chip-size);
+    height: var(--dc-chip-size);
+    border-radius: 999px;
+    border: 2px solid rgba(0, 0, 0, .12);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .08) inset;
+    position: relative;
+}
+
+.dc-x {
+    position: absolute;
+    top: 13%;
+    left: 49%;
+    transform: translate(-50%, -50%);
+    font-size: 2.4rem;
+    /* Ajusta según el tamaño del círculo */
+    font-weight: 700;
+    color: var(--dc-x);
+    pointer-events: none;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .4);
+}

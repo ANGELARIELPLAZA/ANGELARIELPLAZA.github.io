@@ -5,14 +5,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Invitación Boda</title>
-  <link href="https://fonts.googleapis.com/css2?family=Allrounder+Grotesk:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Great+Vibes&family=Italianno&family=Tangerine:wght@400;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="gallery.css">
+  <link rel="stylesheet" href="./style/base.css">
+  <link rel="stylesheet" href="./style/hero.css">
+  <link rel="stylesheet" href="./style/donde-cuando.css">
+  <link rel="stylesheet" href="./style/timeline.css">
+  <link rel="stylesheet" href="./style/gallery.css">
+  <link rel="stylesheet" href="./style/dresscode.css">
+  <link rel="stylesheet" href="./style/rsvp.css">
+
 
   <audio id="bg-music" autoplay loop muted>
-    <source src="musica.mp3" type="audio/mpeg">
+    <source src="./mp3/musica.mp3" type="audio/mpeg">
   </audio>
 
   <script>
@@ -28,153 +34,154 @@
 
 <body>
   <!-- Sección 1 -->
-  <section class="hero">
-    <div class="overlay"></div>
-    <div class="content">
-      <section class="section-quote">
-        <div class="quote-card">
-          <blockquote>
-            <p class="quote-text">“Mi amado es mío, y yo soy suya.”</p>
-            <footer class="quote-ref">— Cantares 2:16</footer>
-          </blockquote>
-        </div>
-      </section>
+  <div class="container">
 
-      <h1>S|A</h1>
-      <h2 class="textnoscasamos">¡NOS CASAMOS!</h2>
+    <section class="hero decor-wrap">
+      <div class="overlay"></div>
+      <img src="./img/Fondo_portada_arriba.png" alt="" class="flower flower--tl" aria-hidden="true" role="presentation">
 
-      <div class="countdown" id="countdown">
-        <div class="box">
-          <div class="number" id="days">00</div>
-          <div class="label">DÍAS</div>
+
+      <div class="content">
+        <section class="section-quote">
+          <div class="quote-card">
+            <blockquote>
+              <p class="quote-text">“Mi amado es mío, y yo soy suya.”</p>
+              <footer class="quote-ref">— Cantares 2:16</footer>
+            </blockquote>
+          </div>
+        </section>
+
+        <h1>S|A</h1>
+        <h2 class="textnoscasamos font-tangerine animate-typing">¡Nos casamos!</h2>
+
+        <div class="countdown" id="countdown">
+          <div class="box">
+            <div class="number" id="days">00</div>
+            <div class="label">Dias</div>
+          </div>
+          <div class="box">
+            <div class="number" id="hours">00</div>
+            <div class="label">Horas</div>
+          </div>
+          <div class="box">
+            <div class="number" id="minutes">00</div>
+            <div class="label">Min</div>
+          </div>
+          <div class="box">
+            <div class="number" id="seconds">00</div>
+            <div class="label">Seg</div>
+          </div>
         </div>
-        <div class="box">
-          <div class="number" id="hours">00</div>
-          <div class="label">HORAS</div>
+
+      </div>
+    </section>
+
+
+    <!-- Sección 2 -->
+    <section class="section2" id="donde-cuando" aria-labelledby="where-when">
+      <img src="./img/Fondo_Sec2_arriba.png" alt="" class="flower-bg" aria-hidden="true">
+      <p class="textnoscasamos2 font-tangerine">Con la bendición de nuestros queridos padres:</p>
+
+
+      <!-- Bloque de padres (responsive) -->
+      <div class="parents-block" role="list" aria-label="Padres de los novios">
+        <div class="parents-col" role="listitem">
+          <h3 class="parents-title font-tangerine">Padres de la novia</h3>
+          <ul class="parents-list">
+            <li class="font-great">Crisoforo Molina H.</li>
+            <li class="amp  font-italianno" italianno="true">&amp;</li>
+            <li class="font-great">Enriqueta Cazarin L.</li>
+          </ul>
         </div>
-        <div class="box">
-          <div class="number" id="minutes">00</div>
-          <div class="label">MIN</div>
+
+        <div class="parents-col" role="listitem">
+          <h3 class="parents-title font-tangerine">Padres del novio</h3>
+          <ul class="parents-list">
+            <li class="font-great">Angel Alberto Plaza R.</li>
+            <li class="amp  font-italianno" italianno="true">&amp;</li>
+            <li class="font-great">Angela Janely Acuña G.</li>
+          </ul>
         </div>
-        <div class="box">
-          <div class="number" id="seconds">00</div>
-          <div class="label">SEG</div>
+
+        <!-- Nosotros -->
+        <div class="parents-col parents-col--full" role="listitem">
+          <p class="parents-title">Nosotros:</p>
+          <ul class="novios-list font-italianno">
+            <li class="amp" italianno="true">Sinai &amp; Ariel</li>
+          </ul>
         </div>
+        <p class="textnoscasamos3 invite-line-2">Nos complace invitarles a compartir la alegría de nuestra boda.</p>
+
+        <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">
+
       </div>
 
-    </div>
-  </section>
+      <!-- Evento + mapa (grid responsive) -->
+      <div class="event-grid" itemscope itemtype="https://schema.org/Event">
+        <article class="event-card">
 
-  <div class="fade-transition"></div>
+          <div class="event-date" aria-label="28 de diciembre de 2025">
+            <img src="./img/flor_1.png" alt="" class="flower flower--tr" aria-hidden="true" role="presentation">
+            <span class="day" aria-hidden="true">28</span>
+            <span class="month" aria-hidden="true">Dic</span>
+            <span class="year" aria-hidden="true">2025</span>
+          </div>
+          <div class="event-info font-beau">
+            <h3 class="event-title" itemprop="name">Ceremonia Civil y Recepción</h3>
+            <time class="event-time" datetime="2025-12-28T4:00-06:00" itemprop="startDate">4:00 h pm</time>
+            <p class="event-place" itemprop="location" itemscope itemtype="https://schema.org/Place">
+              <span itemprop="name">Salón de eventos California</span> ·
+              <span itemprop="address">Hueyapan de Ocampo</span>
+            </p>
+          </div>
+        </article>
 
-  <!-- Sección 2 -->
-  <!-- Sección 2 – Versión mejorada, semántica y accesible -->
-  <section class="section2" id="donde-cuando" aria-labelledby="where-when">
-    <p class="textnoscasamos2">Con la bendición de nuestros queridos padres:</p>
-
-    <!-- Bloque de padres (responsive) -->
-    <div class="parents-block" role="list" aria-label="Padres de los novios">
-      <div class="parents-col" role="listitem">
-        <h3 class="parents-title">Padres de la novia</h3>
-        <ul class="parents-list">
-          <li>Lic. Sergio Antonio Aguilar Martínez</li>
-          <li class="amp" aria-hidden="true">&amp;</li>
-          <li>Sra. María del Carmen Hernández López</li>
-        </ul>
-      </div>
-
-      <div class="parents-col" role="listitem">
-        <h3 class="parents-title">Padres del novio</h3>
-        <ul class="parents-list">
-          <li>C.P. José Luis Sánchez Rodríguez</li>
-          <li class="amp" aria-hidden="true">&amp;</li>
-          <li>Sra. María del Carmen Ocampo Hernández</li>
-        </ul>
-      </div>
-
-      <!-- Nosotros -->
-      <div class="parents-col parents-col--full" role="listitem">
-        <p class="invite-line">Nosotros:</p>
-        <ul class="parents-list">
-          <li>Sinai </li>
-          <li class="amp" aria-hidden="true">&amp;</li>
-          <li>Angel Ariel</li>
-
-        </ul>
-        <p class="invite-line">Nos complace invitarles a compartir la alegría de nuestra boda.</p>
-      </div>
-    </div>
-
-
-    <!-- Evento + mapa (grid responsive) -->
-    <div class="event-grid" itemscope itemtype="https://schema.org/Event">
-      <article class="event-card">
-        <div class="event-date" aria-label="28 de diciembre de 2025">
-          <span class="day" aria-hidden="true">28</span>
-          <span class="month" aria-hidden="true">DIC</span>
-          <span class="year" aria-hidden="true">2025</span>
+        <div class="map-wrap" aria-label="Mapa del Salón California en Hueyapan de Ocampo">
+          <iframe title="Ubicación de la ceremonia"
+            src="https://www.google.com/maps/embed?pb=!4v1759555004032!6m8!1m7!1s525mLgdGIuE7X5dVw3oq2w!2m2!1d18.14929584050972!2d-95.14387388140617!3f57.28776490063591!4f2.232769910594513!5f2.232759305552277"
+            allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
         </div>
-        <div class="event-info">
-          <h3 class="event-title" itemprop="name">Ceremonia Civil y Recepción</h3>
-          <time class="event-time" datetime="2025-12-28T16:00-06:00" itemprop="startDate">16:00 h</time>
-          <p class="event-place" itemprop="location" itemscope itemtype="https://schema.org/Place">
-            <span itemprop="name">Salón California</span> · <span itemprop="address">Hueyapan de Ocampo</span>
-          </p>
-        </div>
-      </article>
-
-      <div class="map-wrap" aria-label="Mapa del Salón California en Hueyapan de Ocampo">
-        <iframe title="Ubicación de la ceremonia"
-          src="https://www.google.com/maps/embed?pb=!4v1759555004032!6m8!1m7!1s525mLgdGIuE7X5dVw3oq2w!2m2!1d18.14929584050972!2d-95.14387388140617!3f57.28776490063591!4f2.232769910594513!5f2.232759305552277"
-          allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
+
 
   <!-- Sección 3 (Itinerario en línea de tiempo) -->
   <section class="section4">
-    <h2>Itinerario</h2>
+    <h2 class="font-tangerine">Itinerario</h2>
+    <img src="./img/flor_2.png" alt="" class="flower2 flower--bl" aria-hidden="true" role="presentation">
 
     <div class="timeline">
       <div class="timeline-item left">
         <div class="timeline-content">
-          <h3>04:00 pm hrs.</h3>
+          <h3>04:00 pm </h3>
+          <img src="./icons/wedding-arch.png" alt="Icono ceremonia civil" class="timeline-icon">
           <p>Ceremonia civil</p>
         </div>
       </div>
 
       <div class="timeline-item right">
         <div class="timeline-content">
-          <h3>05:00 pm hrs.</h3>
+          <h3>05:00 pm </h3>
+          <img src="./icons/wine.png" alt="Icono ceremonia civil" class="timeline-icon">
           <p>Recepción</p>
         </div>
       </div>
 
       <div class="timeline-item left">
         <div class="timeline-content">
-          <h3>06:00 pm hrs.</h3>
-          <p>Brindis</p>
-        </div>
-      </div>
-
-      <div class="timeline-item right">
-        <div class="timeline-content">
-          <h3>07:00 pm hrs.</h3>
+          <h3>07:00 pm </h3>
+          <img src="./icons/restaurant.png" alt="Icono ceremonia civil" class="timeline-icon">
           <p>Cena</p>
         </div>
       </div>
 
-      <div class="timeline-item left">
-        <div class="timeline-content">
-          <h3>08:00 pm hrs.</h3>
-          <p>Bailes</p>
-        </div>
-      </div>
-
       <div class="timeline-item right">
         <div class="timeline-content">
-          <h3>01:00 am hrs.</h3>
-          <p>Fin de fiesta</p>
+          <h3>09:00 pm </h3>
+          <img src="./icons/dance.png" alt="Icono ceremonia civil" class="timeline-icon">
+          <p>Bailes</p>
         </div>
       </div>
     </div>
@@ -182,22 +189,14 @@
 
   <!-- Sección 4 (Galería de fotos) -->
   <section class="section-gallery" id="galeria">
-    <h2>MOMENTOS</h2>
+    <h2 class="font-tangerine">Momentos</h2>
     <div class="g-stack-wrap">
       <div class="g-stack" id="gStack">
         <!-- La PRIMERA en el DOM es la que queda arriba -->
-        <div class="g-card"><img
-            src="IMAGEN2.jpeg?q=80&w=1200&auto=format&fit=crop"
-            alt="Foto 1"></div>
-        <div class="g-card"><img
-            src="IMAGEN3.jpeg?q=80&w=1200&auto=format&fit=crop"
-            alt="Foto 2"></div>
-        <div class="g-card"><img
-            src="IMAGEN4.jpeg?q=80&w=1200&auto=format&fit=crop"
-            alt="Foto 3"></div>
-        <div class="g-card"><img
-            src="IMAGEN5.jpeg?q=80&w=1200&auto=format&fit=crop"
-            alt="Foto 4"></div>
+        <div class="g-card"><img src="./img/IMAGEN2.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 1"></div>
+        <div class="g-card"><img src="./img/IMAGEN3.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 2"></div>
+        <div class="g-card"><img src="./img/IMAGEN4.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 3"></div>
+        <div class="g-card"><img src="./img/IMAGEN5.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
       </div>
       <div class="g-hint">Desliza a la izquierda o derecha para ver las fotos</div>
       <div class="g-actions">
@@ -206,16 +205,60 @@
       <div class="g-empty" id="gEmpty">¡Sin más fotos! Presiona “Reiniciar”.</div>
     </div>
   </section>
+  <!-- Sección 5 — Código de Vestimenta --> <img src="./img/Fondo_portada_arriba.png" alt="" class="flower3 mirror-x"
+    aria-hidden="true" role="presentation">
+
+  <section class="section-dresscode" id="dresscode" aria-labelledby="dc-title">
+    <div class="dc-in">
+
+      <h2 class="dc-eyebrow">Codigo de Vestimenta:</h2>
+      <p class="dc-style" id="dc-title">Formal</p>
+
+      <p class="dc-note">
+        Evitar vestimenta completa de los siguientes colores:
+      </p>
+
+      <ul class="dc-grid" role="list" aria-label="Colores a evitar">
+        <li class="dc-chip" aria-label="Blanco">
+          <span class="dc-swatch dc-white">
+            <span class="dc-x">✕</span>
+          </span>
+          <span class="dc-chip-label">Blanco</span>
+        </li>
+
+        <li class="dc-chip" aria-label="Verde olivo claro">
+          <span class="dc-swatch dc-olive">
+            <span class="dc-x">✕</span>
+          </span>
+          <span class="dc-chip-label">Verde olivo claro</span>
+        </li>
+
+        <li class="dc-chip" aria-label="Beige / arena">
+          <span class="dc-swatch dc-beige">
+            <span class="dc-x">✕</span>
+          </span>
+          <span class="dc-chip-label">Beige / arena</span>
+        </li>
+
+        <li class="dc-chip" aria-label="Azul marino">
+          <span class="dc-swatch dc-navy">
+            <span class="dc-x">✕</span>
+          </span>
+          <span class="dc-chip-label">Azul marino</span>
+        </li>
+      </ul>
+
+
+      <!-- Si quieres dar recomendaciones positivas -->
+    </div>
+  </section>
 
   <!-- Sección 5 (RSVP) -->
   <section class="section3" id="rsvp">
     <div class="card">
-      <!--   <img class="banner"
-        src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=1600&auto=format&fit=crop"
-        alt="Pareja" /> -->
+     
       <div class="card-body">
-        <div class="card-title">CONFIRMA TU ASISTENCIA</div>
-        <div class="card-sub">DRESSCODE: FORMAL/ELEGANTE</div>
+        <div class="card-title">Confirmanos tu asistencia antes del 2 de diciembre.</div>
 
         <div class="actions">
           <a href="https://wa.me/5219211024671?text=¡Hola!%20Quiero%20confirmar%20mi%20asistencia%20a%20la%20boda%20,%20mi%20nombre%20es%20[Tu%20Nombre]."
@@ -223,8 +266,12 @@
             Confirmar por WhatsApp
           </a>
         </div>
+
       </div>
+      <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">
+
     </div>
+
   </section>
 
   <script>

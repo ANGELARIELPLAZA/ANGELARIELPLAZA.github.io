@@ -1,0 +1,198 @@
+/* ===== Base & Variables ===== */
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #eeece9;
+  --dc-bg: #f7f4ef;
+  --black: #000000;
+  --text: #f5f4f4;
+  --muted: #6b7280;
+  --dorado: #ad8a1f;
+  --accent: #2c3e50;
+  --brand: #0037aa;
+  --card: #ffffff;
+  --shadow: 0 10px 25px rgba(0, 0, 0, .08);
+  --radius: 12px;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.container {
+  margin: 0 auto;
+}
+
+img,
+iframe {
+  display: block;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin: 0 0 10px;
+  letter-spacing: .03em;
+}
+
+p {
+  font-size: clamp(.9rem, 2.5vw, 1.1rem);
+  margin: 0 0 20px;
+  color: #f5f5f5;
+}
+
+.fade-transition {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, .42), #fff);
+}
+
+/* Fuente caligráfica Italianno */
+.font-italianno {
+  font-family: 'Italianno', cursive;
+}
+
+/* Fuente elegante Beau Rivage */
+.font-beau {
+  font-family: 'Beau Rivage', cursive;
+}
+
+/* Fuente manuscrita Great Vibes */
+.font-great {
+  font-family: 'Great Vibes', cursive;
+}
+
+/* Fuente ligera y caligráfica Tangerine */
+
+
+.timeline-content {
+  position: relative;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Icono */
+.timeline-icon {
+  width: 50px;
+  /* ajusta el tamaño */
+  height: 50px;
+  display: block;
+  margin: 0 auto 10px;
+  /* centra el ícono arriba del texto */
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+/* Animación sutil al pasar el mouse */
+.timeline-icon:hover {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+
+/* --- Flores decorativas reutilizables --- */
+.flower {
+  position: absolute;
+  width: -webkit-fill-available;
+  /* escala responsiva */
+  height: auto;
+  z-index: 2;
+  /* por encima del fondo, debajo del contenido si usas z>=3 */
+  pointer-events: none;
+  /* no bloquea clics/scroll */
+  user-select: none;
+  opacity: 0.95;
+}
+
+/* Variantes rápidas de esquina/posición */
+.flower--tl {
+  top: 0;
+  left: 0;
+}
+
+.flower--tr {
+  top: 64rem;
+  left: -1%;
+  width: 20%;
+}
+
+.flower--bl {
+  left: 0;
+}
+
+.flower--br {
+  bottom: 0;
+  right: 0;
+  transform: translate(15%, 15%) rotate(-4deg);
+}
+
+/* Variantes de alineación relativa (para pegar junto a tarjetas) */
+.flower--left {
+  left: -60px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-8deg);
+}
+
+.flower--right {
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%) rotate(8deg);
+}
+
+.flower--top {
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+}
+
+.flower--bottom {
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%) rotate(3deg);
+}
+
+/* Contenedores que aceptan decoraciones con posicionamiento absoluto */
+.decor-wrap {
+  position: relative;
+  /* clave para posicionar la flor dentro */
+  isolation: isolate;
+  /* evita mezclas raras de z-index con fondos */
+}
+
+/* Ajustes por sección (opcional) */
+.hero .flower {
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, .15));
+}
+
+.section2 .flower {
+  opacity: .9;
+}
+
+.section4 .flower {
+  opacity: .85;
+}
+
+/* Responsivo: reducir o esconder en pantallas chicas para no tapar texto */
+@media (max-width: 640px) {
+  .flower {
+    width: clamp(380px);
+    opacity: .85;
+  }
+
+  .flower.hide-sm {
+    display: none;
+  }
+}
+
+/* Si usas tema oscuro/claro y tus PNG son muy claros/obscuros puedes atenuarlos */
+@media (prefers-color-scheme: dark) {
+  .flower {
+    filter: brightness(.95) saturate(1.05);
+  }
+}
