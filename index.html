@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Prueba bloqueador móvil</title>
-
-  <!-- CSS crítico inline: va al FINAL del <head> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invitación Boda</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Great+Vibes&family=Italianno&family=Tangerine:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./style/base.css">
+  <link rel="stylesheet" href="./style/hero.css">
+  <link rel="stylesheet" href="./style/donde-cuando.css">
+  <link rel="stylesheet" href="./style/timeline.css">
+  <link rel="stylesheet" href="./style/gallery.css">
+  <link rel="stylesheet" href="./style/dresscode.css">
+  <link rel="stylesheet" href="./style/rsvp.css">
+<!-- CSS crítico inline: va al FINAL del <head> -->
   <style>
     /* Bloqueador hidden por defecto (móvil) */
     .desktop-blocker {
@@ -33,28 +43,396 @@
       body { overflow: hidden !important; }
     }
   </style>
+
+  <audio id="bg-music" autoplay loop muted>
+    <source src="./mp3/musica.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // Cuando el usuario haga el primer clic, quitamos mute
+    document.addEventListener("click", () => {
+      const music = document.getElementById("bg-music");
+      music.muted = false;
+      music.play();
+    }, { once: true });
+  </script>
+
 </head>
+
 <body>
-  <!-- Bloqueador (fuera de #app) -->
-  <div class="desktop-blocker" aria-hidden="true">
+  <!-- Aviso para pantallas grandes (desktop/tablet) -->
+     <div class="desktop-blocker" aria-hidden="true">
     <div class="desktop-blocker__in">
       <h2>Disponible solo en móvil 📱</h2>
       <p>Abre desde tu teléfono o reduce la ventana a menos de 768px de ancho.</p>
     </div>
   </div>
-
-  <!-- Tu sitio dentro de #app -->
-  <main id="app">
+ <main id="app">
     <h1>Contenido del sitio</h1>
     <p>Si ves esto en escritorio, la media query no está aplicando.</p>
     <p><strong>Anchura actual:</strong> <span id="w"></span>px</p>
   </main>
 
+  <!-- Sección 1 -->
+  <div class="container">
+
+    <section class="hero decor-wrap">
+      <div class="overlay"></div>
+      <img src="./img/Fondo_portada_arriba.png" alt="" class="flower flower--tl" aria-hidden="true" role="presentation">
+
+
+      <div class="content">
+        <section class="section-quote">
+          <div class="quote-card">
+            <blockquote>
+              <p class="quote-text">“Mi amado es mío, y yo soy suya.”</p>
+              <footer class="quote-ref">— Cantares 2:16</footer>
+            </blockquote>
+          </div>
+        </section>
+
+        <h1>S|A</h1>
+        <h2 class="textnoscasamos font-tangerine animate-typing">¡Nos casamos!</h2>
+
+        <div class="countdown" id="countdown">
+          <div class="box">
+            <div class="number" id="days">00</div>
+            <div class="label">Dias</div>
+          </div>
+          <div class="box">
+            <div class="number" id="hours">00</div>
+            <div class="label">Horas</div>
+          </div>
+          <div class="box">
+            <div class="number" id="minutes">00</div>
+            <div class="label">Min</div>
+          </div>
+          <div class="box">
+            <div class="number" id="seconds">00</div>
+            <div class="label">Seg</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- Sección 2 -->
+    <section class="section2" id="donde-cuando" aria-labelledby="where-when">
+      <img src="./img/Fondo_Sec2_arriba.png" alt="" class="flower-bg" aria-hidden="true">
+      <p class="textnoscasamos2 font-tangerine">Con la bendición de nuestros queridos padres:</p>
+
+
+      <!-- Bloque de padres (responsive) -->
+      <div class="parents-block" role="list" aria-label="Padres de los novios">
+        <div class="parents-col" role="listitem">
+          <h3 class="parents-title font-tangerine">Padres de la novia</h3>
+          <ul class="parents-list">
+            <li class="font-great">Crisoforo Molina H.</li>
+            <li class="amp  font-italianno" italianno="true">&amp;</li>
+            <li class="font-great">Enriqueta Cazarin L.</li>
+          </ul>
+        </div>
+
+        <div class="parents-col" role="listitem">
+          <h3 class="parents-title font-tangerine">Padres del novio</h3>
+          <ul class="parents-list">
+            <li class="font-great">Angel Alberto Plaza R.</li>
+            <li class="amp  font-italianno" italianno="true">&amp;</li>
+            <li class="font-great">Angela Janely Acuña G.</li>
+          </ul>
+        </div>
+
+        <!-- Nosotros -->
+        <div class="parents-col parents-col--full" role="listitem">
+          <p class="parents-title">Nosotros:</p>
+          <ul class="novios-list font-italianno">
+            <li class="amp" italianno="true">Sinai &amp; Ariel</li>
+          </ul>
+        </div>
+        <p class="textnoscasamos3 invite-line-2">Nos complace invitarles a compartir la alegría de nuestra boda.</p>
+
+        <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">
+
+      </div>
+
+      <!-- Evento + mapa (grid responsive) -->
+      <div class="event-grid" itemscope itemtype="https://schema.org/Event">
+        <article class="event-card">
+
+          <div class="event-date" aria-label="28 de diciembre de 2025">
+            <img src="./img/flor_1.png" alt="" class="flower flower--tr" aria-hidden="true" role="presentation">
+            <span class="day" aria-hidden="true">28</span>
+            <span class="month" aria-hidden="true">Dic</span>
+            <span class="year" aria-hidden="true">2025</span>
+          </div>
+          <div class="event-info font-beau">
+            <h3 class="event-title" itemprop="name">Ceremonia Civil y Recepción</h3>
+            <time class="event-time" datetime="2025-12-28T4:00-06:00" itemprop="startDate">4:00 h pm</time>
+            <p class="event-place" itemprop="location" itemscope itemtype="https://schema.org/Place">
+              <span itemprop="name">Salón de eventos California</span> ·
+              <span itemprop="address">Hueyapan de Ocampo</span>
+            </p>
+          </div>
+        </article>
+
+        <div class="map-wrap" aria-label="Mapa del Salón California en Hueyapan de Ocampo">
+          <iframe title="Ubicación de la ceremonia"
+            src="https://www.google.com/maps/embed?pb=!4v1759555004032!6m8!1m7!1s525mLgdGIuE7X5dVw3oq2w!2m2!1d18.14929584050972!2d-95.14387388140617!3f57.28776490063591!4f2.232769910594513!5f2.232759305552277"
+            allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+  <!-- Sección 3 (Itinerario en línea de tiempo) -->
+  <section class="section4">
+    <h2 class="font-tangerine">Itinerario</h2>
+    <img src="./img/flor_2.png" alt="" class="flower2 flower--bl" aria-hidden="true" role="presentation">
+
+    <div class="timeline">
+      <div class="timeline-item left">
+        <div class="timeline-content">
+          <h3>04:00 pm </h3>
+          <img src="./icons/wedding-arch.png" alt="Icono ceremonia civil" class="timeline-icon">
+          <p>Ceremonia civil</p>
+        </div>
+      </div>
+
+      <div class="timeline-item right">
+        <div class="timeline-content">
+          <h3>05:00 pm </h3>
+          <img src="./icons/wine.png" alt="Icono ceremonia civil" class="timeline-icon">
+          <p>Recepción</p>
+        </div>
+      </div>
+
+      <div class="timeline-item left">
+        <div class="timeline-content">
+          <h3>07:00 pm </h3>
+          <img src="./icons/restaurant.png" alt="Icono ceremonia civil" class="timeline-icon">
+          <p>Cena</p>
+        </div>
+      </div>
+
+      <div class="timeline-item right">
+        <div class="timeline-content">
+          <h3>09:00 pm </h3>
+          <img src="./icons/dance.png" alt="Icono ceremonia civil" class="timeline-icon">
+          <p>Bailes</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección 4 (Galería de fotos) -->
+  <section class="section-gallery" id="galeria">
+    <h2 class="font-tangerine">Momentos</h2>
+    <div class="g-stack-wrap">
+      <div class="g-stack" id="gStack">
+        <!-- La PRIMERA en el DOM es la que queda arriba -->
+        <div class="g-card"><img src="./img/IMAGEN2.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 1"></div>
+        <div class="g-card"><img src="./img/IMAGEN3.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 2"></div>
+        <div class="g-card"><img src="./img/IMAGEN4.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 3"></div>
+        <div class="g-card"><img src="./img/IMAGEN5.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
+      </div>
+      <div class="g-hint">Desliza a la izquierda o derecha para ver las fotos</div>
+      <div class="g-actions">
+        <button class="g-btn" id="gReset">⟲ Reiniciar</button>
+      </div>
+      <div class="g-empty" id="gEmpty">¡Sin más fotos! Presiona “Reiniciar”.</div>
+    </div>
+  </section>
+  <!-- Sección 5 — Código de Vestimenta --> <img src="./img/Fondo_portada_arriba.png" alt="" class="flower3 mirror-x"
+    aria-hidden="true" role="presentation">
+
+  <section class="section-dresscode" id="dresscode" aria-labelledby="dc-title">
+    <div class="dc-in">
+
+      <h2 class="dc-eyebrow">Codigo de Vestimenta:</h2>
+      <p class="dc-style" id="dc-title">Formal</p>
+
+      <p class="dc-note">
+        Evitar vestimenta completa de los siguientes colores:
+      </p>
+
+      <ul class="dc-grid" role="list" aria-label="Colores a evitar">
+        <li class="dc-chip" aria-label="Blanco">
+          <span class="dc-swatch dc-white">
+            <span class="dc-x">✕</span>
+          </span>
+          <span class="dc-chip-label">Blanco</span>
+        </li>
+
+        <li class="dc-chip" aria-label="Verde olivo claro">
+          <span class="dc-swatch dc-olive">
+            <span class="dc-x">✕</span>
+          </span>
+          <span class="dc-chip-label">Verde olivo claro</span>
+        </li>
+
+        <li class="dc-chip" aria-label="Beige / arena">
+          <span class="dc-swatch dc-beige">
+            <span class="dc-x">✕</span>
+          </span>
+          <span class="dc-chip-label">Beige / arena</span>
+        </li>
+
+        <li class="dc-chip" aria-label="Azul marino">
+          <span class="dc-swatch dc-navy">
+            <span class="dc-x">✕</span>
+          </span>
+          <span class="dc-chip-label">Azul marino</span>
+        </li>
+      </ul>
+
+
+      <!-- Si quieres dar recomendaciones positivas -->
+    </div>
+  </section>
+
+  <!-- Sección 5 (RSVP) -->
+  <section class="section3" id="rsvp">
+    <div class="card">
+     
+      <div class="card-body">
+        <div class="card-title">Confirmanos tu asistencia antes del 2 de diciembre.</div>
+
+        <div class="actions">
+          <a href="https://wa.me/5219211024671?text=¡Hola!%20Quiero%20confirmar%20mi%20asistencia%20a%20la%20boda%20,%20mi%20nombre%20es%20[Tu%20Nombre]."
+            target="_blank" class="btn">
+            Confirmar por WhatsApp
+          </a>
+        </div>
+
+      </div>
+      <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">
+
+    </div>
+
+  </section>
+
   <script>
-    // Ayuda para depurar: muestra el ancho real leído por el navegador
+    // Cuenta regresiva
+    const targetDate = new Date("2025-12-28T00:00:00").getTime();
+    function updateCountdown() {
+      const now = Date.now();
+      const distance = Math.max(0, targetDate - now);
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((distance / (1000 * 60)) % 60);
+      const seconds = Math.floor((distance / 1000) % 60);
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+    }
+    setInterval(updateCountdown, 1000); updateCountdown();
+
+    // Formulario RSVP demo
+    const form = document.getElementById('rsvpForm');
+    const msg = document.getElementById('rsvpMsg');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const nombre = data.get('nombre');
+      const asistencia = data.get('asistencia');
+      const pases = data.get('pases');
+      msg.textContent = `¡Gracias, ${nombre}! Hemos registrado tu respuesta (${asistencia === 'si' ? 'asistirás' : 'no asistirás'}) con ${pases} pase(s).`;
+      form.reset();
+    });
+  </script>
+  <script>
+    (function () {
+      const stack = document.getElementById('gStack');
+      const resetBtn = document.getElementById('gReset');
+      const emptyMsg = document.getElementById('gEmpty');
+      const original = stack.innerHTML;
+
+      let currentCard = null;
+      let startX = 0, startY = 0;
+      let dx = 0, dy = 0;
+      let dragging = false;
+
+      const THRESHOLD = 90;    // distancia horizontal para descartar
+      const ROTATION = 18;    // grados máximos de giro
+
+      function topCard() {
+        const cards = stack.querySelectorAll('.g-card');
+        return cards.length ? cards[0] : null;   // primera = arriba
+      }
+
+      function applyTransform(el, x, y) {
+        const rot = (x / window.innerWidth) * ROTATION;
+        el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
+      }
+
+      function start(e) {
+        currentCard = topCard();
+        if (!currentCard) return;
+        dragging = true;
+        const p = (e.touches && e.touches[0]) || e;
+        startX = p.clientX; startY = p.clientY;
+        dx = 0; dy = 0;
+        currentCard.style.transition = 'none';
+      }
+
+      function move(e) {
+        if (!dragging || !currentCard) return;
+        const p = (e.touches && e.touches[0]) || e;
+        dx = p.clientX - startX;
+        dy = p.clientY - startY;
+        if (Math.abs(dx) > Math.abs(dy)) e.preventDefault(); // evita scroll vertical durante el drag
+        applyTransform(currentCard, dx, dy);
+      }
+
+      function end() {
+        if (!dragging || !currentCard) return;
+        dragging = false;
+
+        if (Math.abs(dx) > THRESHOLD) {
+          const dirClass = dx > 0 ? 'g-right' : 'g-left';
+          currentCard.classList.add(dirClass);
+          currentCard.style.transition = ''; // usa la transición del CSS de estado
+          currentCard.addEventListener('transitionend', removeOnce);
+        } else {
+          currentCard.style.transition = 'transform .25s ease';
+          currentCard.style.transform = '';
+        }
+      }
+
+      function removeOnce(ev) {
+        const el = ev.currentTarget;
+        el.removeEventListener('transitionend', removeOnce);
+        if (el.parentElement === stack) stack.removeChild(el);
+        if (!topCard()) emptyMsg.style.display = 'block';
+      }
+
+      function reset() {
+        stack.innerHTML = original;
+        emptyMsg.style.display = 'none';
+      }
+
+      // listeners
+      stack.addEventListener('mousedown', start);
+      stack.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', end);
+
+      stack.addEventListener('touchstart', start, { passive: false });
+      stack.addEventListener('touchmove', move, { passive: false });
+      stack.addEventListener('touchend', end);
+      stack.addEventListener('touchcancel', end);
+
+      resetBtn.addEventListener('click', reset);
+    })();
+     // Ayuda para depurar: muestra el ancho real leído por el navegador
     const span = document.getElementById('w');
     function setW(){ span.textContent = window.innerWidth; }
     setW(); addEventListener('resize', setW);
   </script>
+
 </body>
+
 </html>
