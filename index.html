@@ -16,90 +16,90 @@
   <link rel="stylesheet" href="./style/dresscode.css">
   <link rel="stylesheet" href="./style/rsvp.css">
 
-<script>
-/* Auto-scroll solo hacia abajo (móvil) y se detiene al fondo */
-(function(){
-  if (window.matchMedia('(min-width:768px)').matches) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  <script>
+    /* Auto-scroll solo hacia abajo (móvil) y se detiene al fondo */
+    (function () {
+      if (window.matchMedia('(min-width:768px)').matches) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const SPEED = 40; // px/seg
-  const root = document.scrollingElement || document.documentElement;
+      const SPEED = 40; // px/seg
+      const root = document.scrollingElement || document.documentElement;
 
-  let rafId = null;
-  let lastTs = 0;
-  let paused = false;
-  let ended  = false;   // llegó al fondo
-  let resumeT = null;
+      let rafId = null;
+      let lastTs = 0;
+      let paused = false;
+      let ended = false;   // llegó al fondo
+      let resumeT = null;
 
-  function step(ts){
-    if (!lastTs) lastTs = ts;
-    const dt = (ts - lastTs) / 1000;
-    lastTs = ts;
+      function step(ts) {
+        if (!lastTs) lastTs = ts;
+        const dt = (ts - lastTs) / 1000;
+        lastTs = ts;
 
-    if (!paused && !ended) {
-      const maxY  = root.scrollHeight - root.clientHeight;
-      const nextY = Math.min(root.scrollTop + SPEED * dt, maxY);
-      root.scrollTop = nextY;
+        if (!paused && !ended) {
+          const maxY = root.scrollHeight - root.clientHeight;
+          const nextY = Math.min(root.scrollTop + SPEED * dt, maxY);
+          root.scrollTop = nextY;
 
-      // ¿Estamos al fondo? detén y marca como terminado
-      if (nextY >= maxY - 0.5) {
-        stop(true);
-        return;
+          // ¿Estamos al fondo? detén y marca como terminado
+          if (nextY >= maxY - 0.5) {
+            stop(true);
+            return;
+          }
+        }
+        rafId = requestAnimationFrame(step);
       }
-    }
-    rafId = requestAnimationFrame(step);
-  }
 
-  function start(restart = false){
-    if (ended && !restart) return; // no reanudar automático si ya terminó
-    cancelAnimationFrame(rafId);
-    lastTs = 0;
-    paused = false;
-    rafId = requestAnimationFrame(step);
-  }
+      function start(restart = false) {
+        if (ended && !restart) return; // no reanudar automático si ya terminó
+        cancelAnimationFrame(rafId);
+        lastTs = 0;
+        paused = false;
+        rafId = requestAnimationFrame(step);
+      }
 
-  function stop(reachedBottom = false){
-    cancelAnimationFrame(rafId);
-    rafId = null;
-    lastTs = 0;
-    if (reachedBottom) {
-      ended = true;
-      document.body.classList.add('tour-ended'); // por si quieres estilos
-    }
-  }
+      function stop(reachedBottom = false) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+        lastTs = 0;
+        if (reachedBottom) {
+          ended = true;
+          document.body.classList.add('tour-ended'); // por si quieres estilos
+        }
+      }
 
-  function pauseTemporarily(){
-    if (ended) return; // si ya terminó, no reanudes solo
-    paused = true;
-    clearTimeout(resumeT);
-    resumeT = setTimeout(() => { paused = false; }, 1000);
-  }
+      function pauseTemporarily() {
+        if (ended) return; // si ya terminó, no reanudes solo
+        paused = true;
+        clearTimeout(resumeT);
+        resumeT = setTimeout(() => { paused = false; }, 1000);
+      }
 
-  // Inicia con el primer tap/click (también desmuteas el audio con tu otro listener)
-  document.addEventListener('click', () => start(), { once: true });
+      // Inicia con el primer tap/click (también desmuteas el audio con tu otro listener)
+      document.addEventListener('click', () => start(), { once: true });
 
-  // Pausa ante interacción del usuario (no invierte ni sube)
-  ['wheel','touchstart','keydown','mousedown'].forEach(ev =>
-    window.addEventListener(ev, pauseTemporarily, { passive:true })
-  );
+      // Pausa ante interacción del usuario (no invierte ni sube)
+      ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(ev =>
+        window.addEventListener(ev, pauseTemporarily, { passive: true })
+      );
 
-  // Si la pestaña se oculta, se detiene; al volver, solo reanuda si no terminó
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stop(false);
-    else start();
-  });
+      // Si la pestaña se oculta, se detiene; al volver, solo reanuda si no terminó
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop(false);
+        else start();
+      });
 
-  // (Opcional) permitir reiniciar con tu botón "Iniciar recorrido"
-  const btn = document.getElementById('playTour');
-  if (btn) btn.addEventListener('click', () => {
-    ended = false;
-    document.body.classList.remove('tour-ended');
-    // Si quieres, reinicia desde arriba:
-    root.scrollTo({ top: 0, behavior: 'smooth' });
-    setTimeout(() => start(true), 300);
-  });
-})();
-</script>
+      // (Opcional) permitir reiniciar con tu botón "Iniciar recorrido"
+      const btn = document.getElementById('playTour');
+      if (btn) btn.addEventListener('click', () => {
+        ended = false;
+        document.body.classList.remove('tour-ended');
+        // Si quieres, reinicia desde arriba:
+        root.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => start(true), 300);
+      });
+    })();
+  </script>
 
 
   <audio id="bg-music" autoplay loop muted>
@@ -114,14 +114,14 @@
       music.play();
     }, { once: true });
     // index.html (antes de </body>)
-const observer = new IntersectionObserver((entries)=>
-  entries.forEach(e => e.isIntersecting && e.target.classList.add('is-visible')),
-  { threshold: 0.2 }
-);
-document.querySelectorAll('[data-animate]').forEach(el=>{
-  el.classList.add('animate-in');
-  observer.observe(el);
-});
+    const observer = new IntersectionObserver((entries) =>
+      entries.forEach(e => e.isIntersecting && e.target.classList.add('is-visible')),
+      { threshold: 0.2 }
+    );
+    document.querySelectorAll('[data-animate]').forEach(el => {
+      el.classList.add('animate-in');
+      observer.observe(el);
+    });
 
   </script>
 
@@ -129,12 +129,12 @@ document.querySelectorAll('[data-animate]').forEach(el=>{
 
 <body>
   <!-- Aviso para pantallas grandes (desktop/tablet) -->
-<div class="desktop-blocker" aria-hidden="true">
-  <div class="desktop-blocker__in">
-    <h2>Disponible solo en móvil 📱</h2>
-    <p>Abre esta invitación desde tu teléfono o reduce la ventana a menos de 768px de ancho.</p>
+  <div class="desktop-blocker" aria-hidden="true">
+    <div class="desktop-blocker__in">
+      <h2>Disponible solo en móvil 📱</h2>
+      <p>Abre esta invitación desde tu teléfono o reduce la ventana a menos de 768px de ancho.</p>
+    </div>
   </div>
-</div>
 
   <!-- Sección 1 -->
   <div class="container">
@@ -146,16 +146,16 @@ document.querySelectorAll('[data-animate]').forEach(el=>{
 
       <div class="content">
         <button class="play-tour" id="playTour" type="button" aria-label="Iniciar recorrido automático">
-  <span class="play-tour__icon" aria-hidden="true">
-    <!-- Ícono play con SVG para que se vea nítido -->
-    <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false">
-      <circle cx="32" cy="32" r="31" fill="none" stroke="currentColor" stroke-width="2"/>
-      <path d="M26 22 L46 32 L26 42 Z" fill="currentColor"/>
-    </svg>
-  </span>
-  <span class="play-tour__label">Iniciar recorrido</span>
-  <span class="play-tour__hint">toca para empezar</span>
-</button>
+          <span class="play-tour__icon" aria-hidden="true">
+            <!-- Ícono play con SVG para que se vea nítido -->
+            <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false">
+              <circle cx="32" cy="32" r="31" fill="none" stroke="currentColor" stroke-width="2" />
+              <path d="M26 22 L46 32 L26 42 Z" fill="currentColor" />
+            </svg>
+          </span>
+          <span class="play-tour__label">Iniciar recorrido</span>
+          <span class="play-tour__hint">toca para empezar</span>
+        </button>
 
         <section class="section-quote">
           <div class="quote-card">
@@ -225,7 +225,8 @@ document.querySelectorAll('[data-animate]').forEach(el=>{
             <li class="amp" italianno="true">Sinai &amp; Ariel</li>
           </ul>
         </div>
-        <p class="textnoscasamos3 invite-line-2">Nos complace invitarles a compartir la alegría de nuestra boda.</p>
+        <p class="textnoscasamos3 invite-line-2">Con gran alegría, les invitamos a compartir un nuevo capítulo de nuestra historia de amor:</p>
+        <p class="textnoscasamos4 font-italianno ">Nuestra boda.</p>
 
         <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">
 
@@ -243,7 +244,7 @@ document.querySelectorAll('[data-animate]').forEach(el=>{
           </div>
           <div class="event-info font-beau">
             <h3 class="event-title" itemprop="name">Ceremonia Civil y Recepción</h3>
-            <time class="event-time" datetime="2025-12-28T4:00-06:00" itemprop="startDate">4:00 h pm</time>
+            <time class="event-time" datetime="2025-12-28T4:00-06:00" itemprop="startDate">4:00 pm</time>
             <p class="event-place" itemprop="location" itemscope itemtype="https://schema.org/Place">
               <span itemprop="name">Salón de eventos California</span> ·
               <span itemprop="address">Hueyapan de Ocampo</span>
@@ -251,21 +252,17 @@ document.querySelectorAll('[data-animate]').forEach(el=>{
           </div>
         </article>
 
- <div class="map-wrap" aria-label="Mapa del Salón California en Hueyapan de Ocampo">
-  <a class="map-link"
-     href="https://maps.app.goo.gl/J2DysbKQvpvysB4r6"
-     target="_blank" rel="noopener"
-     aria-label="Abrir indicaciones hacia Salón de eventos California en Google Maps">
-    <img src="./img/salon.jpg"
-         alt="Salón California. Toca para abrir el mapa"
-         class="map-thumb">
-    <span class="map-cta">Ver en Google Maps</span>
-  </a>
-</div>
-
+        <div class="map-wrap" aria-label="Mapa del Salón California en Hueyapan de Ocampo">
+          <a class="map-link" href="https://maps.app.goo.gl/J2DysbKQvpvysB4r6" target="_blank" rel="noopener"
+            aria-label="Abrir indicaciones hacia Salón de eventos California en Google Maps">
+            <img src="./img/salon.jpg" alt="Salón California. Toca para abrir el mapa" class="map-thumb">
+            <span class="map-cta">Ver en Google Maps</span>
+          </a>
         </div>
+
       </div>
-    </section>
+  </div>
+  </section>
   </div>
 
 
@@ -315,10 +312,18 @@ document.querySelectorAll('[data-animate]').forEach(el=>{
     <div class="g-stack-wrap">
       <div class="g-stack" id="gStack">
         <!-- La PRIMERA en el DOM es la que queda arriba -->
-        <div class="g-card"><img src="./img/IMAGEN2.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 1"></div>
-        <div class="g-card"><img src="./img/IMAGEN3.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 2"></div>
-        <div class="g-card"><img src="./img/IMAGEN4.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 3"></div>
-        <div class="g-card"><img src="./img/IMAGEN5.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
+        <div class="g-card"><img src="./img/IMG1.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 1"></div>
+        <div class="g-card"><img src="./img/IMG2.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 2"></div>
+        <div class="g-card"><img src="./img/IMG3.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 3"></div>
+        <div class="g-card"><img src="./img/IMG4.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
+        <div class="g-card"><img src="./img/IMG5.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
+        <div class="g-card"><img src="./img/IMG6.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
+        <div class="g-card"><img src="./img/IMG7.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
+        <div class="g-card"><img src="./img/IMG8.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
+        <div class="g-card"><img src="./img/IMG9.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
+        <div class="g-card"><img src="./img/IMG10.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
+        <div class="g-card"><img src="./img/IMG11.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
+
       </div>
       <div class="g-hint">Desliza a la izquierda o derecha para ver las fotos</div>
       <div class="g-actions">
@@ -378,7 +383,7 @@ document.querySelectorAll('[data-animate]').forEach(el=>{
   <!-- Sección 5 (RSVP) -->
   <section class="section3" id="rsvp">
     <div class="card">
-     
+
       <div class="card-body">
         <div class="card-title">Confirmanos tu asistencia antes del 2 de diciembre.</div>
 

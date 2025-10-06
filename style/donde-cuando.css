@@ -89,7 +89,18 @@
   font-size: 5.4rem;
   align-items: center;
 }
+.textnoscasamos4 {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1.6;
+  font-size: 4.4rem;
+  align-items: center;
+}
+.textnoscasamos4  p{
 
+  color: var(--brand);
+}
 .parents-list .amp {
   font-weight: 700;
   color: var(--brand);
