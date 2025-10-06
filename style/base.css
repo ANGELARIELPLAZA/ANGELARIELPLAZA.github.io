@@ -43,7 +43,6 @@ h1 {
 
 p {
   font-size: clamp(.9rem, 2.5vw, 1.1rem);
-  margin: 0 0 20px;
   color: #f5f5f5;
 }
 
@@ -63,7 +62,8 @@ p {
 
 /* Fuente manuscrita Great Vibes */
 .font-great {
-  font-family: 'Great Vibes', cursive;
+  font-family: 'Italianno', cursive;
+  font-size: 1.4rem;
 }
 
 /* Fuente ligera y caligráfica Tangerine */
@@ -117,9 +117,9 @@ p {
 }
 
 .flower--tr {
-  top: 64rem;
-  left: -1%;
-  width: 20%;
+      top: 69%;
+    left: -1%;
+    width: 20%;
 }
 
 .flower--bl {
@@ -195,14 +195,17 @@ p {
   .flower {
     filter: brightness(.95) saturate(1.05);
   }
-}/* --- Solo móvil: bloquear vista en pantallas >= 768px --- */
+}
+
+/* --- Solo móvil: bloquear vista en pantallas >= 768px --- */
 
 /* Por defecto, el bloqueador NO se ve (móviles) */
 .desktop-blocker {
   display: none;
   position: fixed;
   inset: 0;
-  background: #faf7f3;            /* un tono suave */
+  background: #faf7f3;
+  /* un tono suave */
   z-index: 9999;
   align-items: center;
   justify-content: center;
@@ -219,6 +222,7 @@ p {
 
 /* A partir de 768px: ocultar todo el sitio y mostrar el bloqueador */
 @media (min-width: 768px) {
+
   /* Oculta TODAS las secciones principales de tu página */
   .container,
   .section2,
@@ -233,4 +237,81 @@ p {
   .desktop-blocker {
     display: flex !important;
   }
+}.map-wrap { position: relative; }
+.map-link { display: block; position: relative; cursor: pointer; text-decoration: none; }
+.map-thumb { width: 100%; display: block; border-radius: 12px; }
+
+.map-cta {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  display: inline-block;
+  padding: .6rem .9rem;
+  border-radius: 999px;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  backdrop-filter: blur(2px);
+}
+
+.map-link:active .map-cta,
+.map-link:hover .map-cta { background: rgba(0,0,0,.7); }
+/* Botón “Play / Iniciar recorrido” */
+.play-tour{
+  --bg:#ffffffea;
+  --fg:#222;
+  --shadow:0 10px 25px rgba(0,0,0,.12);
+  display:inline-flex;
+  align-items:center;
+  gap:.6rem;
+  padding:.9rem 1.1rem;
+  border:0;
+  border-radius:999px;
+  background:var(--bg);
+  color:var(--fg);
+  font-weight:700;
+  letter-spacing:.2px;
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  position:relative;
+  margin-top:1.25rem;
+  z-index:5;
+  transition:transform .18s ease, box-shadow .18s ease, opacity .25s ease;
+}
+.play-tour__icon{ display:inline-flex; }
+.play-tour__label{ font-size:1rem; }
+.play-tour__hint{
+  font-size:.78rem;
+  font-weight:600;
+  opacity:.75;
+  margin-left:.15rem;
+}
+
+/* Pulso suave para llamar atención */
+.play-tour::after{
+  content:"";
+  position:absolute; inset:-6px;
+  border-radius:999px;
+  box-shadow:0 0 0 0 rgba(255,255,255,.65);
+  animation:pt-pulse 1.6s ease-out infinite;
+}
+@keyframes pt-pulse{
+  0%{ box-shadow:0 0 0 0 rgba(255,255,255,.55); }
+  100%{ box-shadow:0 0 0 22px rgba(255,255,255,0); }
+}
+
+.play-tour:active{ transform:scale(.98); }
+
+/* En desktop puedes ocultarlo (por si no bloqueas desktop) */
+@media (min-width:768px){
+  .play-tour{ display:none; }
+}
+
+/* Al iniciar el recorrido, ocultamos el botón suavemente */
+.tour-started .play-tour{
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(2px) scale(.99);
 }

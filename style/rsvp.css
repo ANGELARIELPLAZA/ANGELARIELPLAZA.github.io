@@ -27,9 +27,8 @@
 
 .card-title {
     text-align: center;
-    color: var(--brand);
+    color: red;
     font-size: 3rem;
-    letter-spacing: .12em;
     margin: 8px 0 4px;
         font-family: 'Tangerine', cursive;
 

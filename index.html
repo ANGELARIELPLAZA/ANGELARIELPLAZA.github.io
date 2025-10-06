@@ -15,34 +15,59 @@
   <link rel="stylesheet" href="./style/gallery.css">
   <link rel="stylesheet" href="./style/dresscode.css">
   <link rel="stylesheet" href="./style/rsvp.css">
-<!-- CSS crítico inline: va al FINAL del <head> -->
-  <style>
-    /* Bloqueador hidden por defecto (móvil) */
-    .desktop-blocker {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 2147483647;
-      background: #faf7f3;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 2rem;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    }
-    .desktop-blocker__in { max-width: 36rem; margin: 0 auto; line-height: 1.45; }
 
-    /* Contenido real del sitio */
-    #app { padding: 24px; font-family: Arial, sans-serif; }
-    h1 { margin: 0 0 12px; }
+<script>
+/* Auto-scroll continuo (solo móvil) */
+(function(){
+  if (window.matchMedia('(min-width:768px)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    /* A PARTIR de 768px: oculta el sitio y muestra bloqueador */
-    @media (min-width: 768px) {
-      #app { display: none !important; }
-      .desktop-blocker { display: flex !important; }
-      body { overflow: hidden !important; }
+  const SPEED = 40; // px por segundo
+  let rafId = null, lastTs = 0, paused = false, direction = 1;
+  let resumeT = null;
+
+  function step(ts){
+    if (!lastTs) lastTs = ts;
+    const dt = (ts - lastTs) / 1000;
+    lastTs = ts;
+
+    if (!paused) {
+      window.scrollBy(0, direction * SPEED * dt);
+      const atBottom = Math.ceil(window.innerHeight + window.scrollY) >= document.body.scrollHeight;
+      const atTop    = window.scrollY <= 0;
+      if (atBottom) direction = -1;
+      if (atTop && direction === -1) direction = 1;
     }
-  </style>
+    rafId = requestAnimationFrame(step);
+  }
+
+  function start() {
+    cancelAnimationFrame(rafId);
+    lastTs = 0;
+    rafId = requestAnimationFrame(step);
+  }
+
+  function pauseTemporarily() {
+    paused = true;
+    clearTimeout(resumeT);
+    resumeT = setTimeout(() => { paused = false; }, 5000);
+  }
+
+  // Inicia con el primer tap/click (como tu audio)
+  document.addEventListener('click', start, { once: true });
+
+  // Pausa con interacción del usuario
+  ['wheel','touchstart','keydown','mousedown'].forEach(ev =>
+    window.addEventListener(ev, pauseTemporarily, { passive:true })
+  );
+
+  // Limpieza al ocultar/mostrar pestaña
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) cancelAnimationFrame(rafId);
+    else start();
+  });
+})();
+</script>
 
   <audio id="bg-music" autoplay loop muted>
     <source src="./mp3/musica.mp3" type="audio/mpeg">
@@ -61,12 +86,12 @@
 
 <body>
   <!-- Aviso para pantallas grandes (desktop/tablet) -->
-     <div class="desktop-blocker" aria-hidden="true">
-    <div class="desktop-blocker__in">
-      <h2>Disponible solo en móvil 📱</h2>
-      <p>Abre desde tu teléfono o reduce la ventana a menos de 768px de ancho.</p>
-    </div>
+<div class="desktop-blocker" aria-hidden="true">
+  <div class="desktop-blocker__in">
+    <h2>Disponible solo en móvil 📱</h2>
+    <p>Abre esta invitación desde tu teléfono o reduce la ventana a menos de 768px de ancho.</p>
   </div>
+</div>
 
   <!-- Sección 1 -->
   <div class="container">
@@ -77,6 +102,18 @@
 
 
       <div class="content">
+        <button class="play-tour" id="playTour" type="button" aria-label="Iniciar recorrido automático">
+  <span class="play-tour__icon" aria-hidden="true">
+    <!-- Ícono play con SVG para que se vea nítido -->
+    <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false">
+      <circle cx="32" cy="32" r="31" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M26 22 L46 32 L26 42 Z" fill="currentColor"/>
+    </svg>
+  </span>
+  <span class="play-tour__label">Iniciar recorrido</span>
+  <span class="play-tour__hint">toca para empezar</span>
+</button>
+
         <section class="section-quote">
           <div class="quote-card">
             <blockquote>
@@ -171,11 +208,18 @@
           </div>
         </article>
 
-        <div class="map-wrap" aria-label="Mapa del Salón California en Hueyapan de Ocampo">
-          <iframe title="Ubicación de la ceremonia"
-            src="https://www.google.com/maps/embed?pb=!4v1759555004032!6m8!1m7!1s525mLgdGIuE7X5dVw3oq2w!2m2!1d18.14929584050972!2d-95.14387388140617!3f57.28776490063591!4f2.232769910594513!5f2.232759305552277"
-            allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-          </iframe>
+ <div class="map-wrap" aria-label="Mapa del Salón California en Hueyapan de Ocampo">
+  <a class="map-link"
+     href="https://maps.app.goo.gl/J2DysbKQvpvysB4r6"
+     target="_blank" rel="noopener"
+     aria-label="Abrir indicaciones hacia Salón de eventos California en Google Maps">
+    <img src="./img/salon.jpg"
+         alt="Salón California. Toca para abrir el mapa"
+         class="map-thumb">
+    <span class="map-cta">Ver en Google Maps</span>
+  </a>
+</div>
+
         </div>
       </div>
     </section>
@@ -422,10 +466,6 @@
 
       resetBtn.addEventListener('click', reset);
     })();
-     // Ayuda para depurar: muestra el ancho real leído por el navegador
-    const span = document.getElementById('w');
-    function setW(){ span.textContent = window.innerWidth; }
-    setW(); addEventListener('resize', setW);
   </script>
 
 </body>

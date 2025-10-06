@@ -47,7 +47,6 @@
 /* Grid de padres */
 .parents-block {
   max-width: 1000px;
-  margin: 0 auto 22px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
