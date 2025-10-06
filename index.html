@@ -39,9 +39,7 @@
 
  <script defer>
 (function () {
-  // Respetar accesibilidad: si el usuario pide reducir movimiento, no autoscrollees.
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  if (prefersReduced.matches) return;
+  
 
   // Resolver el "root" que realmente scrollea (documento o contenedor con overflow)
   function resolveScrollRoot() {
@@ -113,31 +111,8 @@
       });
     }
 
-    // Auto-start suave (espera un momento por si el layout cambia)
-    setTimeout(() => { start(true); }, 350);
   });
 
-  // Pausar si el usuario interactúa
-  const pauseIfStarted = () => pauseTemporarily();
-  window.addEventListener('wheel',      pauseIfStarted, { passive: true });
-  window.addEventListener('touchstart', pauseIfStarted, { passive: true });
-  window.addEventListener('mousedown',  pauseIfStarted, { passive: true });
-
-  // Reanudar si vuelve la pestaña
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stop(false);
-    else if (!ended && hasStarted) start();
-  });
-
-  // Re-resolver el root si cambia el layout (rotación, resize, etc.)
-  function reevalRoot() {
-    const prev = root;
-    root = resolveScrollRoot();
-    // Si cambió el scroller y estamos activos, continúa el bucle
-    if (prev !== root && hasStarted && !rafId) start();
-  }
-  window.addEventListener('resize', reevalRoot);
-  window.addEventListener('orientationchange', reevalRoot);
 })();
 </script>
 
