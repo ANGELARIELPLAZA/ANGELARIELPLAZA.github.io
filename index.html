@@ -37,97 +37,110 @@
     });
   </script>
 
-  <script defer>
+ <script defer>
 (function () {
-  // 1) Respetar accesibilidad
+  // Respetar accesibilidad: si el usuario pide reducir movimiento, no autoscrollees.
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  if (prefersReduced.matches) return; // el usuario pidió menos movimiento
+  if (prefersReduced.matches) return;
 
-  // 2) “Móvil” de forma fiable (coarse pointer) + umbral de ancho algo mayor
-  const isCoarse = window.matchMedia('(hover: none) and (pointer: coarse)').matches || navigator.maxTouchPoints > 0;
-  const vw = window.visualViewport?.width || window.innerWidth;
-  const isSmallEnough = vw <= 1024; // 1024 tolera iPhone en landscape
-
-  if (!isCoarse && !isSmallEnough) return;
-
-  // 3) Scroll root (tu contenedor en móvil)
-  function getRoot() {
-    return document.querySelector('.container') ||
-           document.scrollingElement ||
-           document.documentElement;
+  // Resolver el "root" que realmente scrollea (documento o contenedor con overflow)
+  function resolveScrollRoot() {
+    const container = document.querySelector('.container');
+    const docRoot = document.scrollingElement || document.documentElement;
+    // Usa el que tenga contenido desbordado (scrolleable)
+    if (container) {
+      const cHasScroll = container.scrollHeight > container.clientHeight;
+      if (cHasScroll) return container;
+    }
+    return docRoot;
   }
-  let root = getRoot();
 
-  const SPEED = 40; // px/s
-  let rafId = null, lastTs = 0, paused = false, ended = false, hasStarted = false;
+  let root = resolveScrollRoot();
 
-  function step(ts){
+  const SPEED = 40; // px/s — ajusta a tu gusto
+  let rafId = null, lastTs = 0;
+  let paused = false, ended = false, hasStarted = false;
+
+  function step(ts) {
     if (!lastTs) lastTs = ts;
-    const dt = (ts - lastTs)/1000; lastTs = ts;
+    const dt = (ts - lastTs) / 1000; lastTs = ts;
+
     if (!paused && !ended) {
       const maxY = root.scrollHeight - root.clientHeight;
-      const nextY = Math.min(root.scrollTop + SPEED*dt, maxY);
+      const nextY = Math.min(root.scrollTop + SPEED * dt, maxY);
       root.scrollTop = nextY;
       if (nextY >= maxY - 0.5) { stop(true); return; }
     }
     rafId = requestAnimationFrame(step);
   }
-  function start(restart=false){
+
+  function start(restart = false) {
     if (ended && !restart) return;
     cancelAnimationFrame(rafId);
-    lastTs = 0; paused = false;
+    lastTs = 0;
+    paused = false;
     rafId = requestAnimationFrame(step);
+    hasStarted = true;
   }
-  function stop(reachedBottom=false){
-    cancelAnimationFrame(rafId); rafId = null; lastTs = 0;
-    if (reachedBottom){ ended = true; document.body.classList.add('tour-ended'); }
-  }
-  function pauseTemporarily(ms=1600){
-    if (!hasStarted || ended) return;
-    paused = true; setTimeout(()=>{ paused = false; }, ms);
-  }
-debugger
-  // 4) Arranques por gesto (iOS a veces no dispara pointerup)
-  const startOnce = () => { hasStarted = true; paused = false; start(); };
-  window.addEventListener('pointerup', startOnce, { once:true });
-  window.addEventListener('touchend', startOnce, { once:true });
 
-  // 5) Botón “Iniciar recorrido”
+  function stop(reachedBottom = false) {
+    cancelAnimationFrame(rafId);
+    rafId = null;
+    lastTs = 0;
+    if (reachedBottom) ended = true;
+  }
+
+  function pauseTemporarily(ms = 1600) {
+    if (!hasStarted || ended) return;
+    paused = true;
+    setTimeout(() => { paused = false; }, ms);
+  }
+
+  // API opcional para control manual
+  window.AutoScroller = { start: () => start(true), stop, pause: pauseTemporarily };
+
+  // Arranque automático cuando el DOM esté listo (sin depender de ancho ni tipo de dispositivo)
   window.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('playTour'); // ya existe en tu HTML :contentReference[oaicite:6]{index=6}
-    if (btn){
+    // Si hay botón de “Iniciar recorrido”, úsalo también
+    const btn = document.getElementById('playTour');
+    if (btn) {
       btn.addEventListener('click', () => {
-        ended = false; hasStarted = true; paused = false;
-        document.body.classList.remove('tour-ended');
-        (root.scrollTo ? root.scrollTo({ top:0, behavior:'smooth' }) : (root.scrollTop = 0));
+        ended = false; paused = false;
+        // resetea al tope
+        if (root.scrollTo) root.scrollTo({ top: 0, behavior: 'smooth' });
+        else root.scrollTop = 0;
         setTimeout(() => start(true), 300);
       });
     }
+
+    // Auto-start suave (espera un momento por si el layout cambia)
+    setTimeout(() => { start(true); }, 350);
   });
 
-  // 6) Pausas por interacción
+  // Pausar si el usuario interactúa
   const pauseIfStarted = () => pauseTemporarily();
-  window.addEventListener('wheel',       pauseIfStarted, { passive:true });
-  window.addEventListener('touchstart',  pauseIfStarted, { passive:true });
+  window.addEventListener('wheel',      pauseIfStarted, { passive: true });
+  window.addEventListener('touchstart', pauseIfStarted, { passive: true });
+  window.addEventListener('mousedown',  pauseIfStarted, { passive: true });
 
-  // 7) Pestaña oculta
+  // Reanudar si vuelve la pestaña
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stop(false);
     else if (!ended && hasStarted) start();
   });
 
-  // 8) Re-evaluar en rotación/resize (clave para iPhone)
-  function reeval(){
-    const nowVw = window.visualViewport?.width || window.innerWidth;
-    const nowSmall = nowVw <= 1024;
-    root = getRoot();
-    if ((!isCoarse && !nowSmall)) { stop(false); return; }
-    if (!ended && hasStarted && !rafId) start();
+  // Re-resolver el root si cambia el layout (rotación, resize, etc.)
+  function reevalRoot() {
+    const prev = root;
+    root = resolveScrollRoot();
+    // Si cambió el scroller y estamos activos, continúa el bucle
+    if (prev !== root && hasStarted && !rafId) start();
   }
-  window.addEventListener('resize', reeval);
-  window.addEventListener('orientationchange', reeval);
+  window.addEventListener('resize', reevalRoot);
+  window.addEventListener('orientationchange', reevalRoot);
 })();
 </script>
+
 
 
   <script defer>
