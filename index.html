@@ -16,103 +16,105 @@
   <link rel="stylesheet" href="./style/dresscode.css">
   <link rel="stylesheet" href="./style/rsvp.css">
 
- <script>
-(function () {
-  // 1) Solo móvil (menor a 768px) y respetar reduced motion
-  const isMobile = !window.matchMedia('(min-width:768px)').matches;
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!isMobile || reduce) return;
+  <script>
+    (function () {
+      // 1) Solo móvil (menor a 768px) y respetar reduced motion
+      const isMobile = !window.matchMedia('(min-width:768px)').matches;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!isMobile || reduce) return;
 
-  // 2) Elegir correctamente el root scroller en iOS/Android
-  function getScrollRoot() {
-    // iOS WebKit suele usar body; otros usan documentElement
-    if ('scrollingElement' in document && document.scrollingElement) return document.scrollingElement;
-    // Heurística WebKit
-    const ua = navigator.userAgent || '';
-    return /AppleWebKit/i.test(ua) ? document.body : document.documentElement;
-  }
-  let root = getScrollRoot();
-
-  // 3) Si el scroll real no es el documento, permite especificar uno
-  //    (opcional) Si usas un wrapper con overflow:
-  // root = document.querySelector('.container') || root;
-
-  const SPEED = 40; // px/s
-  let rafId = null, lastTs = 0, paused = false, ended = false;
-
-  function step(ts) {
-    if (!lastTs) lastTs = ts;
-    const dt = (ts - lastTs) / 1000;
-    lastTs = ts;
-
-    if (!paused && !ended) {
-      const maxY = root.scrollHeight - root.clientHeight;
-      const nextY = Math.min(root.scrollTop + SPEED * dt, maxY);
-      root.scrollTop = nextY;
-
-      if (nextY >= maxY - 0.5) {
-        stop(true);
-        return;
+      // 2) Elegir correctamente el root scroller en iOS/Android
+      function getScrollRoot() {
+        // iOS WebKit suele usar body; otros usan documentElement
+        if ('scrollingElement' in document && document.scrollingElement) return document.scrollingElement;
+        // Heurística WebKit
+        const ua = navigator.userAgent || '';
+        return /AppleWebKit/i.test(ua) ? document.body : document.documentElement;
       }
-    }
-    rafId = requestAnimationFrame(step);
-  }
+      let root = getScrollRoot();
+      root = document.querySelector('.container') || root; // <— ACTÍVALA
 
-  function start(restart = false) {
-    if (ended && !restart) return;
-    cancelAnimationFrame(rafId);
-    lastTs = 0;
-    paused = false;
-    rafId = requestAnimationFrame(step);
-  }
+      // 3) Si el scroll real no es el documento, permite especificar uno
+      //    (opcional) Si usas un wrapper con overflow:
+      // root = document.querySelector('.container') || root;
 
-  function stop(reachedBottom = false) {
-    cancelAnimationFrame(rafId);
-    rafId = null;
-    lastTs = 0;
-    if (reachedBottom) {
-      ended = true;
-      document.body.classList.add('tour-ended');
-    }
-  }
+      const SPEED = 40; // px/s
+      let rafId = null, lastTs = 0, paused = false, ended = false;
 
-  // 4) Evita pausar con cada toque breve: usa un “debounce” corto
-  let pauseTO;
-  function pauseTemporarily() {
-    if (ended) return;
-    paused = true;
-    clearTimeout(pauseTO);
-    pauseTO = setTimeout(() => { paused = false; }, 300); // menos agresivo que 1000ms
-  }
+      function step(ts) {
+        if (!lastTs) lastTs = ts;
+        const dt = (ts - lastTs) / 1000;
+        lastTs = ts;
 
-  // 5) Arrancar tras primer gesto del usuario (tap/touchend mejor que click en iOS)
-  const startOnce = () => { start(); window.removeEventListener('touchend', startOnce); window.removeEventListener('click', startOnce); };
-  window.addEventListener('touchend', startOnce, { passive: true });
-  window.addEventListener('click', startOnce, { passive: true });
+        if (!paused && !ended) {
+          const maxY = root.scrollHeight - root.clientHeight;
+          const nextY = Math.min(root.scrollTop + SPEED * dt, maxY);
+          root.scrollTop = nextY;
 
-  // 6) Botón “Iniciar recorrido” (ahora sí existe porque este script va al final)
-  const btn = document.getElementById('playTour');
-  if (btn) btn.addEventListener('click', () => {
-    ended = false;
-    document.body.classList.remove('tour-ended');
-    (root.scrollTo ? root.scrollTo({ top: 0, behavior: 'smooth' }) : root.scrollTop = 0);
-    setTimeout(() => start(true), 300);
-  });
+          if (nextY >= maxY - 0.5) {
+            stop(true);
+            return;
+          }
+        }
+        rafId = requestAnimationFrame(step);
+      }
 
-  // 7) Pausas por interacción (menos eventos y sin bloquear)
-  window.addEventListener('wheel', pauseTemporarily, { passive: true });
-  window.addEventListener('touchstart', pauseTemporarily, { passive: true });
+      function start(restart = false) {
+        if (ended && !restart) return;
+        cancelAnimationFrame(rafId);
+        lastTs = 0;
+        paused = false;
+        rafId = requestAnimationFrame(step);
+      }
 
-  // 8) Visibilidad de pestaña
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stop(false);
-    else if (!ended) start();
-  });
+      function stop(reachedBottom = false) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+        lastTs = 0;
+        if (reachedBottom) {
+          ended = true;
+          document.body.classList.add('tour-ended');
+        }
+      }
 
-  // 9) Recalcular root si cambia (por ejemplo, CSS que altera overflow)
-  window.addEventListener('resize', () => { root = getScrollRoot(); });
-})();
-</script>
+      // 4) Estado de inicio
+      let hasStarted = false;
+
+      // 5) Arrancar con el primer gesto del usuario (pointerup cubre touch y mouse)
+      const startOnce = () => {
+        hasStarted = true;
+        // Evita quedar en “paused” por el mismo gesto
+        paused = false;
+        start();
+      };
+      document.addEventListener('pointerup', startOnce, { once: true });
+
+      // 6) Botón “Iniciar recorrido”
+      const btn = document.getElementById('playTour');
+      if (btn) btn.addEventListener('click', () => {
+        ended = false;
+        hasStarted = true;
+        paused = false;
+        document.body.classList.remove('tour-ended');
+        (root.scrollTo ? root.scrollTo({ top: 0, behavior: 'smooth' }) : root.scrollTop = 0);
+        setTimeout(() => start(true), 300);
+      });
+
+      // 7) Pausas por interacción (solo después de iniciar)
+      const pauseIfStarted = () => { if (hasStarted && !ended) pauseTemporarily(); };
+      window.addEventListener('wheel', pauseIfStarted, { passive: true });
+      window.addEventListener('touchstart', pauseIfStarted, { passive: true });
+
+      // 8) Visibilidad de pestaña
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop(false);
+        else if (!ended) start();
+      });
+
+      // 9) Recalcular root si cambia (por ejemplo, CSS que altera overflow)
+      window.addEventListener('resize', () => { root = getScrollRoot(); });
+    })();
+  </script>
 
 
   <audio id="bg-music" autoplay loop muted>
@@ -238,7 +240,8 @@
             <li class="amp" italianno="true">Sinai &amp; Ariel</li>
           </ul>
         </div>
-        <p class="textnoscasamos3 invite-line-2">Con gran alegría, les invitamos a compartir un nuevo capítulo de nuestra historia de amor:</p>
+        <p class="textnoscasamos3 invite-line-2">Con gran alegría, les invitamos a compartir un nuevo capítulo de
+          nuestra historia de amor:</p>
         <p class="textnoscasamos4 font-italianno ">Nuestra boda.</p>
 
         <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">

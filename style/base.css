@@ -321,3 +321,17 @@ p {
 
 @keyframes float { 0%,100% { transform:translateY(0);} 50% { transform:translateY(-6px);} }
 .flower { animation: float 8s ease-in-out infinite; }
+
+@media (max-width: 767.98px) {
+  .desktop-blocker { display: none !important; pointer-events: none !important; }
+
+  /* Si .container es el scroller, asegúralo */
+  .container {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    min-height: 100vh; /* evita que no haya nada que scrollear */
+  }
+
+  /* Evita bloquear el scroll del documento si lo tenías */
+  html, body { overflow: visible; height: auto; }
+}
