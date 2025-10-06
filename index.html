@@ -17,13 +17,18 @@
   <link rel="stylesheet" href="./style/rsvp.css">
 
 <script>
-/* Auto-scroll continuo (solo móvil) */
+/* Auto-scroll solo hacia abajo (móvil) y se detiene al fondo */
 (function(){
   if (window.matchMedia('(min-width:768px)').matches) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const SPEED = 40; // px por segundo
-  let rafId = null, lastTs = 0, paused = false, direction = 1;
+  const SPEED = 40; // px/seg
+  const root = document.scrollingElement || document.documentElement;
+
+  let rafId = null;
+  let lastTs = 0;
+  let paused = false;
+  let ended  = false;   // llegó al fondo
   let resumeT = null;
 
   function step(ts){
@@ -31,43 +36,71 @@
     const dt = (ts - lastTs) / 1000;
     lastTs = ts;
 
-    if (!paused) {
-      window.scrollBy(0, direction * SPEED * dt);
-      const atBottom = Math.ceil(window.innerHeight + window.scrollY) >= document.body.scrollHeight;
-      const atTop    = window.scrollY <= 0;
-      if (atBottom) direction = -1;
-      if (atTop && direction === -1) direction = 1;
+    if (!paused && !ended) {
+      const maxY  = root.scrollHeight - root.clientHeight;
+      const nextY = Math.min(root.scrollTop + SPEED * dt, maxY);
+      root.scrollTop = nextY;
+
+      // ¿Estamos al fondo? detén y marca como terminado
+      if (nextY >= maxY - 0.5) {
+        stop(true);
+        return;
+      }
     }
     rafId = requestAnimationFrame(step);
   }
 
-  function start() {
+  function start(restart = false){
+    if (ended && !restart) return; // no reanudar automático si ya terminó
     cancelAnimationFrame(rafId);
     lastTs = 0;
+    paused = false;
     rafId = requestAnimationFrame(step);
   }
 
-  function pauseTemporarily() {
-    paused = true;
-    clearTimeout(resumeT);
-    resumeT = setTimeout(() => { paused = false; }, 5000);
+  function stop(reachedBottom = false){
+    cancelAnimationFrame(rafId);
+    rafId = null;
+    lastTs = 0;
+    if (reachedBottom) {
+      ended = true;
+      document.body.classList.add('tour-ended'); // por si quieres estilos
+    }
   }
 
-  // Inicia con el primer tap/click (como tu audio)
-  document.addEventListener('click', start, { once: true });
+  function pauseTemporarily(){
+    if (ended) return; // si ya terminó, no reanudes solo
+    paused = true;
+    clearTimeout(resumeT);
+    resumeT = setTimeout(() => { paused = false; }, 1000);
+  }
 
-  // Pausa con interacción del usuario
+  // Inicia con el primer tap/click (también desmuteas el audio con tu otro listener)
+  document.addEventListener('click', () => start(), { once: true });
+
+  // Pausa ante interacción del usuario (no invierte ni sube)
   ['wheel','touchstart','keydown','mousedown'].forEach(ev =>
     window.addEventListener(ev, pauseTemporarily, { passive:true })
   );
 
-  // Limpieza al ocultar/mostrar pestaña
+  // Si la pestaña se oculta, se detiene; al volver, solo reanuda si no terminó
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) cancelAnimationFrame(rafId);
+    if (document.hidden) stop(false);
     else start();
+  });
+
+  // (Opcional) permitir reiniciar con tu botón "Iniciar recorrido"
+  const btn = document.getElementById('playTour');
+  if (btn) btn.addEventListener('click', () => {
+    ended = false;
+    document.body.classList.remove('tour-ended');
+    // Si quieres, reinicia desde arriba:
+    root.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => start(true), 300);
   });
 })();
 </script>
+
 
   <audio id="bg-music" autoplay loop muted>
     <source src="./mp3/musica.mp3" type="audio/mpeg">

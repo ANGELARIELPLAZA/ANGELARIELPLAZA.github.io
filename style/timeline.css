@@ -44,6 +44,10 @@
   padding: 20px 30px;
   position: relative;
   width: 50%;
+  opacity: 0;
+  animation: timelineSlideLeft .75s ease forwards;
+  animation-delay: calc(.18s + var(--delay, 0s));
+  will-change: transform, opacity;
 }
 
 .timeline-item::after {
@@ -71,6 +75,17 @@
   left: -10px;
 }
 
+.timeline-item:nth-child(even) {
+  animation-name: timelineSlideRight;
+}
+
+.timeline-item:nth-child(1) { --delay: 0s; }
+.timeline-item:nth-child(2) { --delay: .12s; }
+.timeline-item:nth-child(3) { --delay: .24s; }
+.timeline-item:nth-child(4) { --delay: .36s; }
+.timeline-item:nth-child(5) { --delay: .48s; }
+.timeline-item:nth-child(6) { --delay: .6s; }
+
 .timeline-content {
   padding: 20px;
   background: #f8f8f8;
@@ -89,4 +104,78 @@ font-size: 2.2rem}
   color: var(--brand);
   font-family: 'Tangerine', cursive;
   font-size: 1.6rem;
+}
+
+@keyframes timelineSlideLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-28px, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes timelineSlideRight {
+  from {
+    opacity: 0;
+    transform: translate3d(28px, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline-item {
+    animation: none !important;
+    opacity: 1;
+    transform: none !important;
+  }
+}
+/* ===== Timeline: animación alternada odd/even ===== */
+
+/* Estado base (antes de entrar al viewport) */
+.timeline .timeline-item.animate-in {
+  opacity: 0;
+  will-change: transform, opacity, filter;
+}
+
+/* Pares e impares: direcciones de entrada diferentes */
+@keyframes tl-slide-left {
+  from { opacity: 0; transform: translateX(-28px) scale(.98); filter: blur(2px); }
+  to   { opacity: 1; transform: translateX(0)      scale(1);   filter: blur(0); }
+}
+@keyframes tl-slide-right {
+  from { opacity: 0; transform: translateX(28px) scale(.98); filter: blur(2px); }
+  to   { opacity: 1; transform: translateX(0)    scale(1);   filter: blur(0); }
+}
+
+/* Al hacerse visibles, arrancan sus animaciones */
+.timeline .timeline-item.animate-in.is-visible:nth-child(odd) {
+  animation: tl-slide-left .7s var(--tl-delay, 0ms) cubic-bezier(.22,.61,.36,1) both;
+}
+.timeline .timeline-item.animate-in.is-visible:nth-child(even) {
+  animation: tl-slide-right .7s var(--tl-delay, 0ms) cubic-bezier(.22,.61,.36,1) both;
+}
+
+/* Pequeño “stagger” por posición (opcional) */
+.timeline .timeline-item { --tl-delay: 0ms; }
+.timeline .timeline-item:nth-child(2) { --tl-delay: 90ms; }
+.timeline .timeline-item:nth-child(3) { --tl-delay: 180ms; }
+.timeline .timeline-item:nth-child(4) { --tl-delay: 270ms; }
+.timeline .timeline-item:nth-child(5) { --tl-delay: 360ms; }
+.timeline .timeline-item:nth-child(6) { --tl-delay: 450ms; }
+
+/* Accesibilidad: si el usuario prefiere menos movimiento, desactiva animaciones */
+@media (prefers-reduced-motion: reduce) {
+  .timeline .timeline-item.animate-in,
+  .timeline .timeline-item.animate-in.is-visible {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
 }
