@@ -16,90 +16,103 @@
   <link rel="stylesheet" href="./style/dresscode.css">
   <link rel="stylesheet" href="./style/rsvp.css">
 
-  <script>
-    /* Auto-scroll solo hacia abajo (móvil) y se detiene al fondo */
-    (function () {
-      if (window.matchMedia('(min-width:768px)').matches) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+ <script>
+(function () {
+  // 1) Solo móvil (menor a 768px) y respetar reduced motion
+  const isMobile = !window.matchMedia('(min-width:768px)').matches;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!isMobile || reduce) return;
 
-      const SPEED = 40; // px/seg
-      const root = document.scrollingElement || document.documentElement;
+  // 2) Elegir correctamente el root scroller en iOS/Android
+  function getScrollRoot() {
+    // iOS WebKit suele usar body; otros usan documentElement
+    if ('scrollingElement' in document && document.scrollingElement) return document.scrollingElement;
+    // Heurística WebKit
+    const ua = navigator.userAgent || '';
+    return /AppleWebKit/i.test(ua) ? document.body : document.documentElement;
+  }
+  let root = getScrollRoot();
 
-      let rafId = null;
-      let lastTs = 0;
-      let paused = false;
-      let ended = false;   // llegó al fondo
-      let resumeT = null;
+  // 3) Si el scroll real no es el documento, permite especificar uno
+  //    (opcional) Si usas un wrapper con overflow:
+  // root = document.querySelector('.container') || root;
 
-      function step(ts) {
-        if (!lastTs) lastTs = ts;
-        const dt = (ts - lastTs) / 1000;
-        lastTs = ts;
+  const SPEED = 40; // px/s
+  let rafId = null, lastTs = 0, paused = false, ended = false;
 
-        if (!paused && !ended) {
-          const maxY = root.scrollHeight - root.clientHeight;
-          const nextY = Math.min(root.scrollTop + SPEED * dt, maxY);
-          root.scrollTop = nextY;
+  function step(ts) {
+    if (!lastTs) lastTs = ts;
+    const dt = (ts - lastTs) / 1000;
+    lastTs = ts;
 
-          // ¿Estamos al fondo? detén y marca como terminado
-          if (nextY >= maxY - 0.5) {
-            stop(true);
-            return;
-          }
-        }
-        rafId = requestAnimationFrame(step);
+    if (!paused && !ended) {
+      const maxY = root.scrollHeight - root.clientHeight;
+      const nextY = Math.min(root.scrollTop + SPEED * dt, maxY);
+      root.scrollTop = nextY;
+
+      if (nextY >= maxY - 0.5) {
+        stop(true);
+        return;
       }
+    }
+    rafId = requestAnimationFrame(step);
+  }
 
-      function start(restart = false) {
-        if (ended && !restart) return; // no reanudar automático si ya terminó
-        cancelAnimationFrame(rafId);
-        lastTs = 0;
-        paused = false;
-        rafId = requestAnimationFrame(step);
-      }
+  function start(restart = false) {
+    if (ended && !restart) return;
+    cancelAnimationFrame(rafId);
+    lastTs = 0;
+    paused = false;
+    rafId = requestAnimationFrame(step);
+  }
 
-      function stop(reachedBottom = false) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-        lastTs = 0;
-        if (reachedBottom) {
-          ended = true;
-          document.body.classList.add('tour-ended'); // por si quieres estilos
-        }
-      }
+  function stop(reachedBottom = false) {
+    cancelAnimationFrame(rafId);
+    rafId = null;
+    lastTs = 0;
+    if (reachedBottom) {
+      ended = true;
+      document.body.classList.add('tour-ended');
+    }
+  }
 
-      function pauseTemporarily() {
-        if (ended) return; // si ya terminó, no reanudes solo
-        paused = true;
-        clearTimeout(resumeT);
-        resumeT = setTimeout(() => { paused = false; }, 1000);
-      }
+  // 4) Evita pausar con cada toque breve: usa un “debounce” corto
+  let pauseTO;
+  function pauseTemporarily() {
+    if (ended) return;
+    paused = true;
+    clearTimeout(pauseTO);
+    pauseTO = setTimeout(() => { paused = false; }, 300); // menos agresivo que 1000ms
+  }
 
-      // Inicia con el primer tap/click (también desmuteas el audio con tu otro listener)
-      document.addEventListener('click', () => start(), { once: true });
+  // 5) Arrancar tras primer gesto del usuario (tap/touchend mejor que click en iOS)
+  const startOnce = () => { start(); window.removeEventListener('touchend', startOnce); window.removeEventListener('click', startOnce); };
+  window.addEventListener('touchend', startOnce, { passive: true });
+  window.addEventListener('click', startOnce, { passive: true });
 
-      // Pausa ante interacción del usuario (no invierte ni sube)
-      ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(ev =>
-        window.addEventListener(ev, pauseTemporarily, { passive: true })
-      );
+  // 6) Botón “Iniciar recorrido” (ahora sí existe porque este script va al final)
+  const btn = document.getElementById('playTour');
+  if (btn) btn.addEventListener('click', () => {
+    ended = false;
+    document.body.classList.remove('tour-ended');
+    (root.scrollTo ? root.scrollTo({ top: 0, behavior: 'smooth' }) : root.scrollTop = 0);
+    setTimeout(() => start(true), 300);
+  });
 
-      // Si la pestaña se oculta, se detiene; al volver, solo reanuda si no terminó
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) stop(false);
-        else start();
-      });
+  // 7) Pausas por interacción (menos eventos y sin bloquear)
+  window.addEventListener('wheel', pauseTemporarily, { passive: true });
+  window.addEventListener('touchstart', pauseTemporarily, { passive: true });
 
-      // (Opcional) permitir reiniciar con tu botón "Iniciar recorrido"
-      const btn = document.getElementById('playTour');
-      if (btn) btn.addEventListener('click', () => {
-        ended = false;
-        document.body.classList.remove('tour-ended');
-        // Si quieres, reinicia desde arriba:
-        root.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => start(true), 300);
-      });
-    })();
-  </script>
+  // 8) Visibilidad de pestaña
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stop(false);
+    else if (!ended) start();
+  });
+
+  // 9) Recalcular root si cambia (por ejemplo, CSS que altera overflow)
+  window.addEventListener('resize', () => { root = getScrollRoot(); });
+})();
+</script>
 
 
   <audio id="bg-music" autoplay loop muted>
