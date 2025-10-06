@@ -1,45 +1,68 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Invitación Boda</title>
+
+  <!-- Fuentes -->
   <link
     href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Great+Vibes&family=Italianno&family=Tangerine:wght@400;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="./style/base.css">
-  <link rel="stylesheet" href="./style/hero.css">
-  <link rel="stylesheet" href="./style/donde-cuando.css">
-  <link rel="stylesheet" href="./style/timeline.css">
-  <link rel="stylesheet" href="./style/gallery.css">
-  <link rel="stylesheet" href="./style/dresscode.css">
-  <link rel="stylesheet" href="./style/rsvp.css">
 
-  <script>
+  <!-- CSS (sin cambios de rutas) -->
+  <link rel="stylesheet" href="./style/style.unified.css">
+
+
+  <!-- Música -->
+  <audio id="bg-music" autoplay loop muted>
+    <source src="./mp3/musica.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Scripts: usa defer para asegurar DOM listo -->
+  <script defer>
+    // ===========================
+    // 1) Música: desmutear al 1er gesto
+    // ===========================
+    document.addEventListener("DOMContentLoaded", () => {
+      const music = document.getElementById("bg-music");
+      const unmute = () => {
+        try { music.muted = false; music.play(); } catch {}
+        window.removeEventListener("pointerup", unmute);
+        window.removeEventListener("keydown", unmute);
+      };
+      window.addEventListener("pointerup", unmute, { once: true });
+      window.addEventListener("keydown", unmute, { once: true });
+    });
+  </script>
+
+  <script defer>
+    // ===========================================
+    // 2) Auto-scroll suave solo en móvil (<768px)
+    //    + respeta reduced motion
+    // ===========================================
     (function () {
-      // 1) Solo móvil (menor a 768px) y respetar reduced motion
-      const isMobile = !window.matchMedia('(min-width:768px)').matches;
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isMobile = !matchMedia('(min-width:768px)').matches;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!isMobile || reduce) return;
 
-      // 2) Elegir correctamente el root scroller en iOS/Android
       function getScrollRoot() {
-        // iOS WebKit suele usar body; otros usan documentElement
-        if ('scrollingElement' in document && document.scrollingElement) return document.scrollingElement;
-        // Heurística WebKit
+        if (document.scrollingElement) return document.scrollingElement;
         const ua = navigator.userAgent || '';
         return /AppleWebKit/i.test(ua) ? document.body : document.documentElement;
       }
-      let root = getScrollRoot();
-      root = document.querySelector('.container') || root; // <— ACTÍVALA
 
-      // 3) Si el scroll real no es el documento, permite especificar uno
-      //    (opcional) Si usas un wrapper con overflow:
-      // root = document.querySelector('.container') || root;
+      let root = getScrollRoot();
+      // Si usas un contenedor con overflow, actívalo aquí:
+      const container = document.querySelector('.container');
+      if (container) root = container;
 
       const SPEED = 40; // px/s
-      let rafId = null, lastTs = 0, paused = false, ended = false;
+      let rafId = null, lastTs = 0;
+      let paused = false, ended = false, hasStarted = false;
+      let pauseTimer = null;
 
       function step(ts) {
         if (!lastTs) lastTs = ts;
@@ -77,448 +100,168 @@
         }
       }
 
-      // 4) Estado de inicio
-      let hasStarted = false;
+      function pauseTemporarily(ms = 1600) {
+        if (!hasStarted || ended) return;
+        paused = true;
+        clearTimeout(pauseTimer);
+        pauseTimer = setTimeout(() => { paused = false; }, ms);
+      }
 
-      // 5) Arrancar con el primer gesto del usuario (pointerup cubre touch y mouse)
-      const startOnce = () => {
-        hasStarted = true;
-        // Evita quedar en “paused” por el mismo gesto
-        paused = false;
-        start();
-      };
-      document.addEventListener('pointerup', startOnce, { once: true });
+      // Arranque tras primer gesto
+      const startOnce = () => { hasStarted = true; paused = false; start(); };
+      window.addEventListener('pointerup', startOnce, { once: true });
 
-      // 6) Botón “Iniciar recorrido”
-      const btn = document.getElementById('playTour');
-      if (btn) btn.addEventListener('click', () => {
-        ended = false;
-        hasStarted = true;
-        paused = false;
-        document.body.classList.remove('tour-ended');
-        (root.scrollTo ? root.scrollTo({ top: 0, behavior: 'smooth' }) : root.scrollTop = 0);
-        setTimeout(() => start(true), 300);
+      // Botón “Iniciar recorrido”
+      document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('playTour');
+        if (btn) {
+          btn.addEventListener('click', () => {
+            ended = false;
+            hasStarted = true;
+            paused = false;
+            document.body.classList.remove('tour-ended');
+            if (root.scrollTo) root.scrollTo({ top: 0, behavior: 'smooth' });
+            else root.scrollTop = 0;
+            setTimeout(() => start(true), 300);
+          });
+        }
       });
 
-      // 7) Pausas por interacción (solo después de iniciar)
-      const pauseIfStarted = () => { if (hasStarted && !ended) pauseTemporarily(); };
+      // Pausar al interactuar
+      const pauseIfStarted = () => pauseTemporarily();
       window.addEventListener('wheel', pauseIfStarted, { passive: true });
       window.addEventListener('touchstart', pauseIfStarted, { passive: true });
 
-      // 8) Visibilidad de pestaña
+      // Pestaña oculta
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) stop(false);
-        else if (!ended) start();
+        else if (!ended && hasStarted) start();
       });
 
-      // 9) Recalcular root si cambia (por ejemplo, CSS que altera overflow)
-      window.addEventListener('resize', () => { root = getScrollRoot(); });
+      // Recalcular root por si cambia el layout/overflow
+      window.addEventListener('resize', () => { root = container || getScrollRoot(); });
     })();
   </script>
 
+  <script defer>
+    // ===========================
+    // 3) Animaciones en viewport
+    // ===========================
+    document.addEventListener('DOMContentLoaded', () => {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-visible');
+            io.unobserve(e.target);
+          }
+        }
+      }, { threshold: 0.2 });
 
-  <audio id="bg-music" autoplay loop muted>
-    <source src="./mp3/musica.mp3" type="audio/mpeg">
-  </audio>
-
-  <script>
-    // Cuando el usuario haga el primer clic, quitamos mute
-    document.addEventListener("click", () => {
-      const music = document.getElementById("bg-music");
-      music.muted = false;
-      music.play();
-    }, { once: true });
-    // index.html (antes de </body>)
-    const observer = new IntersectionObserver((entries) =>
-      entries.forEach(e => e.isIntersecting && e.target.classList.add('is-visible')),
-      { threshold: 0.2 }
-    );
-    document.querySelectorAll('[data-animate]').forEach(el => {
-      el.classList.add('animate-in');
-      observer.observe(el);
-    });
-
-  </script>
-
-</head>
-
-<body>
-  <!-- Aviso para pantallas grandes (desktop/tablet) -->
-  <div class="desktop-blocker" aria-hidden="true">
-    <div class="desktop-blocker__in">
-      <h2>Disponible solo en móvil 📱</h2>
-      <p>Abre esta invitación desde tu teléfono o reduce la ventana a menos de 768px de ancho.</p>
-    </div>
-  </div>
-
-  <!-- Sección 1 -->
-  <div class="container">
-
-    <section class="hero decor-wrap">
-      <div class="overlay"></div>
-      <img src="./img/Fondo_portada_arriba.png" alt="" class="flower flower--tl" aria-hidden="true" role="presentation">
-
-
-      <div class="content">
-        <button class="play-tour" id="playTour" type="button" aria-label="Iniciar recorrido automático">
-          <span class="play-tour__icon" aria-hidden="true">
-            <!-- Ícono play con SVG para que se vea nítido -->
-            <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false">
-              <circle cx="32" cy="32" r="31" fill="none" stroke="currentColor" stroke-width="2" />
-              <path d="M26 22 L46 32 L26 42 Z" fill="currentColor" />
-            </svg>
-          </span>
-          <span class="play-tour__label">Iniciar recorrido</span>
-          <span class="play-tour__hint">toca para empezar</span>
-        </button>
-
-        <section class="section-quote">
-          <div class="quote-card">
-            <blockquote>
-              <p class="quote-text">“Mi amado es mío, y yo soy suya.”</p>
-              <footer class="quote-ref">— Cantares 2:16</footer>
-            </blockquote>
-          </div>
-        </section>
-
-        <h1>S|A</h1>
-        <h2 class="textnoscasamos font-tangerine animate-typing">¡Nos casamos!</h2>
-
-        <div class="countdown" id="countdown">
-          <div class="box">
-            <div class="number" id="days">00</div>
-            <div class="label">Dias</div>
-          </div>
-          <div class="box">
-            <div class="number" id="hours">00</div>
-            <div class="label">Horas</div>
-          </div>
-          <div class="box">
-            <div class="number" id="minutes">00</div>
-            <div class="label">Min</div>
-          </div>
-          <div class="box">
-            <div class="number" id="seconds">00</div>
-            <div class="label">Seg</div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-
-    <!-- Sección 2 -->
-    <section class="section2" id="donde-cuando" aria-labelledby="where-when">
-      <img src="./img/Fondo_Sec2_arriba.png" alt="" class="flower-bg" aria-hidden="true">
-      <p class="textnoscasamos2 font-tangerine">Con la bendición de nuestros queridos padres:</p>
-
-
-      <!-- Bloque de padres (responsive) -->
-      <div class="parents-block" role="list" aria-label="Padres de los novios">
-        <div class="parents-col" role="listitem">
-          <h3 class="parents-title font-tangerine">Padres de la novia</h3>
-          <ul class="parents-list">
-            <li class="font-great">Crisoforo Molina H.</li>
-            <li class="amp  font-italianno" italianno="true">&amp;</li>
-            <li class="font-great">Enriqueta Cazarin L.</li>
-          </ul>
-        </div>
-
-        <div class="parents-col" role="listitem">
-          <h3 class="parents-title font-tangerine">Padres del novio</h3>
-          <ul class="parents-list">
-            <li class="font-great">Angel Alberto Plaza R.</li>
-            <li class="amp  font-italianno" italianno="true">&amp;</li>
-            <li class="font-great">Angela Janely Acuña G.</li>
-          </ul>
-        </div>
-
-        <!-- Nosotros -->
-        <div class="parents-col parents-col--full" role="listitem">
-          <p class="parents-title">Nosotros:</p>
-          <ul class="novios-list font-italianno">
-            <li class="amp" italianno="true">Sinai &amp; Ariel</li>
-          </ul>
-        </div>
-        <p class="textnoscasamos3 invite-line-2">Con gran alegría, les invitamos a compartir un nuevo capítulo de
-          nuestra historia de amor:</p>
-        <p class="textnoscasamos4 font-italianno ">Nuestra boda.</p>
-
-        <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">
-
-      </div>
-
-      <!-- Evento + mapa (grid responsive) -->
-      <div class="event-grid" itemscope itemtype="https://schema.org/Event">
-        <article class="event-card">
-
-          <div class="event-date" aria-label="28 de diciembre de 2025">
-            <img src="./img/flor_1.png" alt="" class="flower flower--tr" aria-hidden="true" role="presentation">
-            <span class="day" aria-hidden="true">28</span>
-            <span class="month" aria-hidden="true">Dic</span>
-            <span class="year" aria-hidden="true">2025</span>
-          </div>
-          <div class="event-info font-beau">
-            <h3 class="event-title" itemprop="name">Ceremonia Civil y Recepción</h3>
-            <time class="event-time" datetime="2025-12-28T4:00-06:00" itemprop="startDate">4:00 pm</time>
-            <p class="event-place" itemprop="location" itemscope itemtype="https://schema.org/Place">
-              <span itemprop="name">Salón de eventos California</span> ·
-              <span itemprop="address">Hueyapan de Ocampo</span>
-            </p>
-          </div>
-        </article>
-
-        <div class="map-wrap" aria-label="Mapa del Salón California en Hueyapan de Ocampo">
-          <a class="map-link" href="https://maps.app.goo.gl/J2DysbKQvpvysB4r6" target="_blank" rel="noopener"
-            aria-label="Abrir indicaciones hacia Salón de eventos California en Google Maps">
-            <img src="./img/salon.jpg" alt="Salón California. Toca para abrir el mapa" class="map-thumb">
-            <span class="map-cta">Ver en Google Maps</span>
-          </a>
-        </div>
-
-      </div>
-  </div>
-  </section>
-  </div>
-
-
-  <!-- Sección 3 (Itinerario en línea de tiempo) -->
-  <section class="section4">
-    <h2 class="font-tangerine">Itinerario</h2>
-    <img src="./img/flor_2.png" alt="" class="flower2 flower--bl" aria-hidden="true" role="presentation">
-
-    <div class="timeline">
-      <div class="timeline-item left">
-        <div class="timeline-content">
-          <h3>04:00 pm </h3>
-          <img src="./icons/wedding-arch.png" alt="Icono ceremonia civil" class="timeline-icon">
-          <p>Ceremonia civil</p>
-        </div>
-      </div>
-
-      <div class="timeline-item right">
-        <div class="timeline-content">
-          <h3>05:00 pm </h3>
-          <img src="./icons/wine.png" alt="Icono ceremonia civil" class="timeline-icon">
-          <p>Recepción</p>
-        </div>
-      </div>
-
-      <div class="timeline-item left">
-        <div class="timeline-content">
-          <h3>07:00 pm </h3>
-          <img src="./icons/restaurant.png" alt="Icono ceremonia civil" class="timeline-icon">
-          <p>Cena</p>
-        </div>
-      </div>
-
-      <div class="timeline-item right">
-        <div class="timeline-content">
-          <h3>09:00 pm </h3>
-          <img src="./icons/dance.png" alt="Icono ceremonia civil" class="timeline-icon">
-          <p>Bailes</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Sección 4 (Galería de fotos) -->
-  <section class="section-gallery" id="galeria">
-    <h2 class="font-tangerine">Momentos</h2>
-    <div class="g-stack-wrap">
-      <div class="g-stack" id="gStack">
-        <!-- La PRIMERA en el DOM es la que queda arriba -->
-        <div class="g-card"><img src="./img/IMG1.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 1"></div>
-        <div class="g-card"><img src="./img/IMG2.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 2"></div>
-        <div class="g-card"><img src="./img/IMG3.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 3"></div>
-        <div class="g-card"><img src="./img/IMG4.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
-        <div class="g-card"><img src="./img/IMG5.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
-        <div class="g-card"><img src="./img/IMG6.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
-        <div class="g-card"><img src="./img/IMG7.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
-        <div class="g-card"><img src="./img/IMG8.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
-        <div class="g-card"><img src="./img/IMG9.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
-        <div class="g-card"><img src="./img/IMG10.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
-        <div class="g-card"><img src="./img/IMG11.jpeg?q=80&w=1200&auto=format&fit=crop" alt="Foto 4"></div>
-
-      </div>
-      <div class="g-hint">Desliza a la izquierda o derecha para ver las fotos</div>
-      <div class="g-actions">
-        <button class="g-btn" id="gReset">⟲ Reiniciar</button>
-      </div>
-      <div class="g-empty" id="gEmpty">¡Sin más fotos! Presiona “Reiniciar”.</div>
-    </div>
-  </section>
-  <!-- Sección 5 — Código de Vestimenta --> <img src="./img/Fondo_portada_arriba.png" alt="" class="flower3 mirror-x"
-    aria-hidden="true" role="presentation">
-
-  <section class="section-dresscode" id="dresscode" aria-labelledby="dc-title">
-    <div class="dc-in">
-
-      <h2 class="dc-eyebrow">Codigo de Vestimenta:</h2>
-      <p class="dc-style" id="dc-title">Formal</p>
-
-      <p class="dc-note">
-        Evitar vestimenta completa de los siguientes colores:
-      </p>
-
-      <ul class="dc-grid" role="list" aria-label="Colores a evitar">
-        <li class="dc-chip" aria-label="Blanco">
-          <span class="dc-swatch dc-white">
-            <span class="dc-x">✕</span>
-          </span>
-          <span class="dc-chip-label">Blanco</span>
-        </li>
-
-        <li class="dc-chip" aria-label="Verde olivo claro">
-          <span class="dc-swatch dc-olive">
-            <span class="dc-x">✕</span>
-          </span>
-          <span class="dc-chip-label">Verde olivo claro</span>
-        </li>
-
-        <li class="dc-chip" aria-label="Beige / arena">
-          <span class="dc-swatch dc-beige">
-            <span class="dc-x">✕</span>
-          </span>
-          <span class="dc-chip-label">Beige / arena</span>
-        </li>
-
-        <li class="dc-chip" aria-label="Azul marino">
-          <span class="dc-swatch dc-navy">
-            <span class="dc-x">✕</span>
-          </span>
-          <span class="dc-chip-label">Azul marino</span>
-        </li>
-      </ul>
-
-
-      <!-- Si quieres dar recomendaciones positivas -->
-    </div>
-  </section>
-
-  <!-- Sección 5 (RSVP) -->
-  <section class="section3" id="rsvp">
-    <div class="card">
-
-      <div class="card-body">
-        <div class="card-title">Confirmanos tu asistencia antes del 2 de diciembre.</div>
-
-        <div class="actions">
-          <a href="https://wa.me/5219211024671?text=¡Hola!%20Quiero%20confirmar%20mi%20asistencia%20a%20la%20boda%20,%20mi%20nombre%20es%20[Tu%20Nombre]."
-            target="_blank" class="btn">
-            Confirmar por WhatsApp
-          </a>
-        </div>
-
-      </div>
-      <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">
-
-    </div>
-
-  </section>
-
-  <script>
-    // Cuenta regresiva
-    const targetDate = new Date("2025-12-28T00:00:00").getTime();
-    function updateCountdown() {
-      const now = Date.now();
-      const distance = Math.max(0, targetDate - now);
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((distance / (1000 * 60)) % 60);
-      const seconds = Math.floor((distance / 1000) % 60);
-      document.getElementById('days').textContent = String(days).padStart(2, '0');
-      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-    }
-    setInterval(updateCountdown, 1000); updateCountdown();
-
-    // Formulario RSVP demo
-    const form = document.getElementById('rsvpForm');
-    const msg = document.getElementById('rsvpMsg');
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const data = new FormData(form);
-      const nombre = data.get('nombre');
-      const asistencia = data.get('asistencia');
-      const pases = data.get('pases');
-      msg.textContent = `¡Gracias, ${nombre}! Hemos registrado tu respuesta (${asistencia === 'si' ? 'asistirás' : 'no asistirás'}) con ${pases} pase(s).`;
-      form.reset();
+      document.querySelectorAll('[data-animate]').forEach(el => {
+        el.classList.add('animate-in');
+        io.observe(el);
+      });
     });
   </script>
-  <script>
-    (function () {
+
+  <script defer>
+    // ===========================
+    // 4) Cuenta regresiva
+    // ===========================
+    document.addEventListener('DOMContentLoaded', () => {
+      const els = {
+        days: document.getElementById('days'),
+        hours: document.getElementById('hours'),
+        minutes: document.getElementById('minutes'),
+        seconds: document.getElementById('seconds'),
+      };
+      if (!els.days) return;
+
+      // 28 Dic 2025 16:00 hora CDMX (UTC-6 estándar / UTC-5 si hay DST)
+      const target = new Date('2025-12-28T16:00:00-06:00').getTime();
+
+      const render = () => {
+        const now = Date.now();
+        const dist = Math.max(0, target - now);
+        const d = Math.floor(dist / 86400000);
+        const h = Math.floor((dist % 86400000) / 3600000);
+        const m = Math.floor((dist % 3600000) / 60000);
+        const s = Math.floor((dist % 60000) / 1000);
+        els.days.textContent = String(d).padStart(2, '0');
+        els.hours.textContent = String(h).padStart(2, '0');
+        els.minutes.textContent = String(m).padStart(2, '0');
+        els.seconds.textContent = String(s).padStart(2, '0');
+      };
+      render();
+      setInterval(render, 1000);
+    });
+  </script>
+
+  <script defer>
+    // ===========================================
+    // 5) Galería tipo “stack” con swipe
+    // ===========================================
+    document.addEventListener('DOMContentLoaded', () => {
       const stack = document.getElementById('gStack');
+      if (!stack) return;
       const resetBtn = document.getElementById('gReset');
       const emptyMsg = document.getElementById('gEmpty');
       const original = stack.innerHTML;
 
       let currentCard = null;
-      let startX = 0, startY = 0;
-      let dx = 0, dy = 0;
-      let dragging = false;
+      let startX = 0, startY = 0, dx = 0, dy = 0, dragging = false;
 
-      const THRESHOLD = 90;    // distancia horizontal para descartar
-      const ROTATION = 18;    // grados máximos de giro
+      const THRESHOLD = 90; // px
+      const ROTATION = 18;  // deg
 
-      function topCard() {
-        const cards = stack.querySelectorAll('.g-card');
-        return cards.length ? cards[0] : null;   // primera = arriba
-      }
+      const topCard = () => stack.querySelector('.g-card');
 
-      function applyTransform(el, x, y) {
-        const rot = (x / window.innerWidth) * ROTATION;
+      const applyTransform = (el, x, y) => {
+        const rot = (x / Math.max(320, window.innerWidth)) * ROTATION;
         el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
-      }
+      };
 
-      function start(e) {
+      const start = (e) => {
         currentCard = topCard();
         if (!currentCard) return;
         dragging = true;
-        const p = (e.touches && e.touches[0]) || e;
-        startX = p.clientX; startY = p.clientY;
-        dx = 0; dy = 0;
+        const p = (e.touches?.[0]) || e;
+        startX = p.clientX; startY = p.clientY; dx = 0; dy = 0;
         currentCard.style.transition = 'none';
-      }
+      };
 
-      function move(e) {
+      const move = (e) => {
         if (!dragging || !currentCard) return;
-        const p = (e.touches && e.touches[0]) || e;
-        dx = p.clientX - startX;
-        dy = p.clientY - startY;
-        if (Math.abs(dx) > Math.abs(dy)) e.preventDefault(); // evita scroll vertical durante el drag
+        const p = (e.touches?.[0]) || e;
+        dx = p.clientX - startX; dy = p.clientY - startY;
+        if (Math.abs(dx) > Math.abs(dy)) e.preventDefault(); // prioridad swipe
         applyTransform(currentCard, dx, dy);
-      }
+      };
 
-      function end() {
+      const end = () => {
         if (!dragging || !currentCard) return;
         dragging = false;
 
         if (Math.abs(dx) > THRESHOLD) {
           const dirClass = dx > 0 ? 'g-right' : 'g-left';
           currentCard.classList.add(dirClass);
-          currentCard.style.transition = ''; // usa la transición del CSS de estado
-          currentCard.addEventListener('transitionend', removeOnce);
+          currentCard.style.transition = '';
+          currentCard.addEventListener('transitionend', function removeOnce() {
+            this.removeEventListener('transitionend', removeOnce);
+            if (this.parentElement === stack) stack.removeChild(this);
+            if (!topCard()) emptyMsg.style.display = 'block';
+          });
         } else {
           currentCard.style.transition = 'transform .25s ease';
           currentCard.style.transform = '';
         }
-      }
+      };
 
-      function removeOnce(ev) {
-        const el = ev.currentTarget;
-        el.removeEventListener('transitionend', removeOnce);
-        if (el.parentElement === stack) stack.removeChild(el);
-        if (!topCard()) emptyMsg.style.display = 'block';
-      }
-
-      function reset() {
+      const reset = () => {
         stack.innerHTML = original;
         emptyMsg.style.display = 'none';
-      }
+      };
 
-      // listeners
       stack.addEventListener('mousedown', start);
       stack.addEventListener('mousemove', move);
       document.addEventListener('mouseup', end);
@@ -528,10 +271,237 @@
       stack.addEventListener('touchend', end);
       stack.addEventListener('touchcancel', end);
 
-      resetBtn.addEventListener('click', reset);
-    })();
+      resetBtn?.addEventListener('click', reset);
+    });
   </script>
+</head>
 
+<body>
+  <!-- Aviso para pantallas grandes -->
+  <div class="desktop-blocker" aria-hidden="true">
+    <div class="desktop-blocker__in">
+      <h2>Disponible solo en móvil 📱</h2>
+      <p>Abre esta invitación desde tu teléfono o reduce la ventana a menos de 768px de ancho.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Sección 1 -->
+    <section class="hero decor-wrap">
+      <div class="overlay" aria-hidden="true"></div>
+      <img src="./img/Fondo_portada_arriba.png" alt="" class="flower flower--tl" aria-hidden="true" role="presentation">
+
+      <div class="content">
+        <button class="play-tour" id="playTour" type="button" aria-label="Iniciar recorrido automático">
+          <span class="play-tour__icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false">
+              <circle cx="32" cy="32" r="31" fill="none" stroke="currentColor" stroke-width="2" />
+              <path d="M26 22 L46 32 L26 42 Z" fill="currentColor" />
+            </svg>
+          </span>
+          <span class="play-tour__label">Iniciar recorrido</span>
+          <span class="play-tour__hint">toca para empezar</span>
+        </button>
+
+        <section class="section-quote" data-animate>
+          <div class="quote-card">
+            <blockquote>
+              <p class="quote-text">“Mi amado es mío, y yo soy suya.”</p>
+              <footer class="quote-ref">— Cantares 2:16</footer>
+            </blockquote>
+          </div>
+        </section>
+
+        <h1 class="iniciales" aria-label="Iniciales de los novios">S|A</h1>
+        <h2 class="textnoscasamos font-tangerine animate-typing" data-animate>¡Nos casamos!</h2>
+
+        <div class="countdown" id="countdown" aria-label="Cuenta regresiva" data-animate>
+          <div class="box"><div class="number" id="days">00</div><div class="labelcount">Días</div></div>
+          <div class="box"><div class="number" id="hours">00</div><div class="labelcount">Horas</div></div>
+          <div class="box"><div class="number" id="minutes">00</div><div class="labelcount">Min</div></div>
+          <div class="box"><div class="number" id="seconds">00</div><div class="labelcount">Seg</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 2 -->
+    <section class="section2" id="donde-cuando" aria-labelledby="where-when" data-animate>
+      <img src="./img/Fondo_Sec2_arriba.png" alt="" class="flower-bg" aria-hidden="true">
+      <p class="textnoscasamos2 font-tangerine">Con la bendición de nuestros queridos padres:</p>
+
+      <div class="parents-block" role="list" aria-label="Padres de los novios">
+        <div class="parents-col" role="listitem">
+          <h3 class="parents-title font-tangerine">Padres de la novia</h3>
+          <ul class="parents-list">
+            <li class="font-great">Crisoforo Molina H.</li>
+            <li class="amp font-italianno" italianno="true">&amp;</li>
+            <li class="font-great">Enriqueta Cazarin L.</li>
+          </ul>
+        </div>
+
+        <div class="parents-col" role="listitem">
+          <h3 class="parents-title font-tangerine">Padres del novio</h3>
+          <ul class="parents-list">
+            <li class="font-great">Angel Alberto Plaza R.</li>
+            <li class="amp font-italianno" italianno="true">&amp;</li>
+            <li class="font-great">Angela Janely Acuña G.</li>
+          </ul>
+        </div>
+
+        <div class="parents-col parents-col--full" role="listitem">
+          <p class="parents-title">Nosotros:</p>
+          <ul class="novios-list font-italianno">
+            <li class="amp" italianno="true">Sinai &amp; Ariel</li>
+          </ul>
+        </div>
+
+        <p class="textnoscasamos3 invite-line-2">
+          Con gran alegría, les invitamos a compartir un nuevo capítulo de nuestra historia de amor:
+        </p>
+        <p class="textnoscasamos4 font-italianno">Nuestra boda.</p>
+
+        <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">
+      </div>
+
+      <!-- Evento + mapa -->
+      <div class="event-grid" itemscope itemtype="https://schema.org/Event">
+        <article class="event-card">
+          <div class="event-date" aria-label="28 de diciembre de 2025">
+            <img src="./img/flor_1.png" alt="" class="flower flower--tr" aria-hidden="true" role="presentation">
+            <span class="day" aria-hidden="true">28</span>
+            <span class="month" aria-hidden="true">Dic</span>
+            <span class="year" aria-hidden="true">2025</span>
+          </div>
+          <div class="event-info font-beau">
+            <h3 class="event-title" itemprop="name">Ceremonia Civil y Recepción</h3>
+            <time class="event-time" datetime="2025-12-28T16:00:00-06:00" itemprop="startDate">4:00 pm</time>
+            <p class="event-place" itemprop="location" itemscope itemtype="https://schema.org/Place">
+              <span itemprop="name">Salón de eventos California</span> ·
+              <span itemprop="address">Hueyapan de Ocampo</span>
+            </p>
+          </div>
+        </article>
+
+        <div class="map-wrap" aria-label="Mapa del Salón California en Hueyapan de Ocampo">
+          <a class="map-link" href="https://maps.app.goo.gl/J2DysbKQvpvysB4r6" target="_blank" rel="noopener"
+             aria-label="Abrir indicaciones hacia Salón de eventos California en Google Maps">
+            <img src="./img/salon.jpg" alt="Salón California. Toca para abrir el mapa" class="map-thumb">
+            <span class="map-cta">Ver en Google Maps</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 3 (Itinerario) -->
+    <section class="section4" data-animate>
+      <h2 class="font-tangerine">Itinerario</h2>
+      <img src="./img/flor_2.png" alt="" class="flower2 flower--bl" aria-hidden="true" role="presentation">
+
+      <div class="timeline">
+        <div class="timeline-item left">
+          <div class="timeline-content">
+            <h3>04:00 pm</h3>
+            <img src="./icons/wedding-arch.png" alt="Icono ceremonia civil" class="timeline-icon">
+            <p>Ceremonia civil</p>
+          </div>
+        </div>
+
+        <div class="timeline-item right">
+          <div class="timeline-content">
+            <h3>05:00 pm</h3>
+            <img src="./icons/wine.png" alt="Icono recepción" class="timeline-icon">
+            <p>Recepción</p>
+          </div>
+        </div>
+
+        <div class="timeline-item left">
+          <div class="timeline-content">
+            <h3>07:00 pm</h3>
+            <img src="./icons/restaurant.png" alt="Icono cena" class="timeline-icon">
+            <p>Cena</p>
+          </div>
+        </div>
+
+        <div class="timeline-item right">
+          <div class="timeline-content">
+            <h3>09:00 pm</h3>
+            <img src="./icons/dance.png" alt="Icono baile" class="timeline-icon">
+            <p>Bailes</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 4 (Galería) -->
+    <section class="section-gallery" id="galeria" data-animate>
+      <h2 class="font-tangerine">Momentos</h2>
+      <div class="g-stack-wrap">
+        <div class="g-stack" id="gStack" aria-live="polite">
+          <div class="g-card"><img src="./img/IMG1.jpeg" alt="Foto 1"></div>
+          <div class="g-card"><img src="./img/IMG2.jpeg" alt="Foto 2"></div>
+          <div class="g-card"><img src="./img/IMG3.jpeg" alt="Foto 3"></div>
+          <div class="g-card"><img src="./img/IMG4.jpeg" alt="Foto 4"></div>
+          <div class="g-card"><img src="./img/IMG5.jpeg" alt="Foto 5"></div>
+          <div class="g-card"><img src="./img/IMG6.jpeg" alt="Foto 6"></div>
+          <div class="g-card"><img src="./img/IMG7.jpeg" alt="Foto 7"></div>
+          <div class="g-card"><img src="./img/IMG8.jpeg" alt="Foto 8"></div>
+          <div class="g-card"><img src="./img/IMG9.jpeg" alt="Foto 9"></div>
+          <div class="g-card"><img src="./img/IMG10.jpeg" alt="Foto 10"></div>
+          <div class="g-card"><img src="./img/IMG11.jpeg" alt="Foto 11"></div>
+        </div>
+        <div class="g-hint">Desliza a la izquierda o derecha para ver las fotos</div>
+        <div class="g-actions">
+          <button class="g-btn" id="gReset" type="button">⟲ Reiniciar</button>
+        </div>
+        <div class="g-empty" id="gEmpty" style="display:none">¡Sin más fotos! Presiona “Reiniciar”.</div>
+      </div>
+    </section>
+
+    <!-- Sección 5 — Código de Vestimenta -->
+    <img src="./img/Fondo_portada_arriba.png" alt="" class="flower3 mirror-x" aria-hidden="true" role="presentation">
+    <section class="section-dresscode" id="dresscode" aria-labelledby="dc-title" data-animate>
+      <div class="dc-in">
+        <h2 class="dc-eyebrow">Código de Vestimenta:</h2>
+        <p class="dc-style" id="dc-title">Formal</p>
+<p class="dc-note"><span class="dc-highlight">Evitar</span> vestimenta completa de los siguientes colores:</p>
+
+        <ul class="dc-grid" role="list" aria-label="Colores a evitar">
+          <li class="dc-chip" aria-label="Blanco">
+            <span class="dc-swatch dc-white"><span class="dc-x">✕</span></span>
+            <span class="dc-chip-label">Blanco</span>
+          </li>
+          <li class="dc-chip" aria-label="Verde olivo claro">
+            <span class="dc-swatch dc-olive"><span class="dc-x">✕</span></span>
+            <span class="dc-chip-label">Verde olivo claro</span>
+          </li>
+          <li class="dc-chip" aria-label="Beige / arena">
+            <span class="dc-swatch dc-beige"><span class="dc-x">✕</span></span>
+            <span class="dc-chip-label">Beige / arena</span>
+          </li>
+          <li class="dc-chip" aria-label="Azul marino">
+            <span class="dc-swatch dc-navy"><span class="dc-x">✕</span></span>
+            <span class="dc-chip-label">Azul marino</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Sección 6 (RSVP) -->
+    <section class="section3" id="rsvp" data-animate>
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">Confírmanos tu asistencia antes del 2 de diciembre.</div>
+          <div class="actions">
+            <a
+              href="https://wa.me/5219211024671?text=%C2%A1Hola!%20Quiero%20confirmar%20mi%20asistencia%20a%20la%20boda.%20Mi%20nombre%20es%20[Tu%20Nombre]."
+              target="_blank" rel="noopener" class="btn">
+              Confirmar por WhatsApp
+            </a>
+          </div>
+        </div>
+        <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">
+      </div>
+    </section>
+  </div>
 </body>
-
 </html>
