@@ -1462,7 +1462,6 @@ p {
   flex-direction: column;
   align-items: center;
   gap: .35rem;
-  font-size: 1rem;
   font-family: "Tangerine", cursive;
   letter-spacing: 0.5px;
   text-shadow: 0 0 6px rgba(255,255,255,0.8);
@@ -1519,6 +1518,6 @@ p {
 
 /* Ajuste responsive */
 @media (max-width: 480px){
-  .scroll-hint{ font-size: 1.9rem; gap: .25rem; }
+  .scroll-hint{ font-size: 2.9rem; gap: .25rem; }
   .scroll-hint::after{ width: 12px; height: 12px; }
 }
