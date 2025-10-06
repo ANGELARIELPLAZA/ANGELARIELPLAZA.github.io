@@ -1454,3 +1454,71 @@ p {
 .dc-note .dc-highlight {
   color: var(--dc-x);   /* usa el dorado principal del tema */
 }
+/* Centrado universal para .scroll-hint */
+.scroll-hint{
+  /* diseño bonito que ya tenías mejorado */
+  position: relative;
+  display: inline-flex;           /* se mide como contenido */
+  flex-direction: column;
+  align-items: center;
+  gap: .35rem;
+  font-size: 1rem;
+  font-family: "Tangerine", cursive;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 6px rgba(255,255,255,0.8);
+  animation: hintFade 3s ease-in-out infinite;
+  user-select: none;
+
+  /* === centrado clave === */
+  margin: 1.25rem auto 0;         /* auto en los lados centra en bloque */
+  text-align: center;             /* por si el padre usa text-align distinto */
+}
+
+/* Si .scroll-hint está dentro de un contenedor flex (p.ej. .timeline) */
+.timeline > .scroll-hint,
+.section2 > .scroll-hint,
+.section-gallery > .scroll-hint,
+.section-dresscode > .scroll-hint,
+.section3 > .scroll-hint{
+  align-self: center;             /* céntralo en el eje transversal de ese flex */
+  width: 100%;                    /* para que el margin:auto tenga efecto */
+  display: flex;                  /* y vuelve a centrar su propio contenido */
+  justify-content: center;
+}
+
+/* Variante opcional: flotante solo en la portada (si la quieres sobrepuesta) */
+.hero .scroll-hint--floating{
+  position: absolute;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  margin: 0;                      /* no hace falta auto cuando es absolute */
+}
+
+/* Flecha animada debajo del texto (como antes) */
+.scroll-hint::after{
+  content: "";
+  width: 14px;
+  height: 14px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+  margin-top: 2px;
+  animation: arrowBounce 1.6s ease-in-out infinite;
+  opacity: 0.9;
+}
+
+@keyframes hintFade{
+  0%, 100%{ opacity: 1; text-shadow: 0 0 6px rgba(255,255,255,0.8); transform: translateY(0); }
+  50%{ opacity: 0.6; text-shadow: 0 0 12px rgba(255,255,255,0.9); transform: translateY(2px); }
+}
+@keyframes arrowBounce{
+  0%, 100% { transform: rotate(-45deg) translateY(0); opacity: 0.8; }
+  50%      { transform: rotate(-45deg) translateY(6px); opacity: 0.3; }
+}
+
+/* Ajuste responsive */
+@media (max-width: 480px){
+  .scroll-hint{ font-size: 1.9rem; gap: .25rem; }
+  .scroll-hint::after{ width: 12px; height: 12px; }
+}

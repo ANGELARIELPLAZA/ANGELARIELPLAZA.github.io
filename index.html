@@ -39,22 +39,25 @@
 
   <script defer>
     (function () {
-      // 1) Resolver el root que realmente scrollea
+
+
+      // Resolver el "root" que realmente scrollea (documento o contenedor con overflow)
       function resolveScrollRoot() {
         const container = document.querySelector('.container');
         const docRoot = document.scrollingElement || document.documentElement;
+        // Usa el que tenga contenido desbordado (scrolleable)
         if (container) {
           const cHasScroll = container.scrollHeight > container.clientHeight;
           if (cHasScroll) return container;
         }
         return docRoot;
       }
+
       let root = resolveScrollRoot();
 
-      const SPEED = 40; // px/s
+      const SPEED = 40; // px/s — ajusta a tu gusto
       let rafId = null, lastTs = 0;
-      let paused = false, ended = false, started = false;
-      let resumeT = null;
+      let paused = false, ended = false, hasStarted = false;
 
       function step(ts) {
         if (!lastTs) lastTs = ts;
@@ -70,14 +73,12 @@
       }
 
       function start(restart = false) {
-        if (started && !restart && ended) return;
+        if (ended && !restart) return;
         cancelAnimationFrame(rafId);
         lastTs = 0;
         paused = false;
-        ended = false;
         rafId = requestAnimationFrame(step);
-        started = true;
-        document.body.classList.add('tour-started');
+        hasStarted = true;
       }
 
       function stop(reachedBottom = false) {
@@ -87,46 +88,34 @@
         if (reachedBottom) ended = true;
       }
 
-      function pauseTemporarily(ms = 5000) {
-        if (!started || ended) return;
+      function pauseTemporarily(ms = 1600) {
+        if (!hasStarted || ended) return;
         paused = true;
-        clearTimeout(resumeT);
-        resumeT = setTimeout(() => { paused = false; }, ms);
+        setTimeout(() => { paused = false; }, ms);
       }
 
-      // 2) Gestos que inician el recorrido (global, como en tu versión “que sí funcionaba”)
-      const kick = () => { window.removeEventListener('pointerup', kick); window.removeEventListener('keydown', kick); start(true); };
-      window.addEventListener('pointerup', kick, { once: true });
-      window.addEventListener('keydown', kick, { once: true });
-
-      // 3) Botón opcional
-      window.addEventListener('DOMContentLoaded', () => {
-        const btn = document.getElementById('playTour');
-        if (btn) btn.addEventListener('click', () => {
-          if (root.scrollTo) root.scrollTo({ top: 0, behavior: 'smooth' });
-          else root.scrollTop = 0;
-          setTimeout(() => start(true), 300);
-        });
-      });
-
-      // 4) Pausa con interacción del usuario
-      ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(ev =>
-        window.addEventListener(ev, pauseTemporarily, { passive: true })
-      );
-
-      // 5) Recalcular root si cambian tamaños (imágenes cargan después, etc.)
-      window.addEventListener('load', () => { root = resolveScrollRoot(); });
-
-      // 6) Pausar al cambiar de pestaña y reanudar al volver
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) stop();
-        else if (started && !ended) start(true);
-      });
-
-      // API opcional en consola
+      // API opcional para control manual
       window.AutoScroller = { start: () => start(true), stop, pause: pauseTemporarily };
+
+      // Arranque automático cuando el DOM esté listo (sin depender de ancho ni tipo de dispositivo)
+      window.addEventListener('DOMContentLoaded', () => {
+        // Si hay botón de “Iniciar recorrido”, úsalo también
+        const btn = document.getElementById('playTour');
+        if (btn) {
+          btn.addEventListener('click', () => {
+            ended = false; paused = false;
+            // resetea al tope
+            if (root.scrollTo) root.scrollTo({ top: 0, behavior: 'smooth' });
+            else root.scrollTop = 0;
+            setTimeout(() => start(true), 300);
+          });
+        }
+
+      });
+
     })();
   </script>
+
 
   <script defer>
     // ===========================
@@ -284,8 +273,7 @@
               <path d="M26 22 L46 32 L26 42 Z" fill="currentColor" />
             </svg>
           </span>
-          <span class="play-tour__label">Iniciar recorrido</span>
-          <span class="play-tour__hint">toca para empezar</span>
+          <span class="play-tour__hint">Toca para Reproducir</span>
         </button>
 
         <section class="section-quote" data-animate>
@@ -318,7 +306,10 @@
             <div class="labelcount">Seg</div>
           </div>
         </div>
+        <div class="scroll-hint">Desliza hacia abajo</div>
+
       </div>
+
     </section>
 
     <!-- Sección 2 -->
@@ -387,6 +378,8 @@
           </a>
         </div>
       </div>
+      <div class="scroll-hint">Desliza hacia abajo</div>
+
     </section>
 
     <!-- Sección 3 (Itinerario) -->
@@ -426,7 +419,8 @@
             <p>Bailes</p>
           </div>
         </div>
-      </div>
+
+      </div>        
     </section>
 
     <!-- Sección 4 (Galería) -->
@@ -452,6 +446,8 @@
         </div>
         <div class="g-empty" id="gEmpty" style="display:none">¡Sin más fotos! Presiona “Reiniciar”.</div>
       </div>
+      <div class="scroll-hint">Desliza hacia abajo</div>
+
     </section>
 
     <!-- Sección 5 — Código de Vestimenta -->
@@ -481,13 +477,15 @@
           </li>
         </ul>
       </div>
+      <div class="scroll-hint">Desliza hacia abajo</div>
+
     </section>
 
     <!-- Sección 6 (RSVP) -->
     <section class="section3" id="rsvp" data-animate>
       <div class="card">
         <div class="card-body">
-          <div class="card-title">Confírmanos tu asistencia antes del 2 de diciembre.</div>
+          <div class="card-title">Tu presencia es muy importante para nosotros, por lo que nos gustaría que nos confirmaras antes del 2 de diciembre</div>
           <div class="actions">
             <a href="https://wa.me/5219211024671?text=%C2%A1Hola!%20Quiero%20confirmar%20mi%20asistencia%20a%20la%20boda.%20Mi%20nombre%20es%20[Tu%20Nombre]."
               target="_blank" rel="noopener" class="btn">
