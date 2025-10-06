@@ -38,106 +38,97 @@
   </script>
 
   <script defer>
-    // ===========================================
-    // 2) Auto-scroll suave solo en móvil (<768px)
-    //    + respeta reduced motion
-    // ===========================================
-    (function () {
-      const mqMobile = window.matchMedia('(max-width: 820px)');
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if (!mqMobile.matches || reduce.matches) return;
+(function () {
+  // 1) Respetar accesibilidad
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (prefersReduced.matches) return; // el usuario pidió menos movimiento
 
-      function getScrollRoot() {
-        if (document.scrollingElement) return document.scrollingElement;
-        const ua = navigator.userAgent || '';
-        return /AppleWebKit/i.test(ua) ? document.body : document.documentElement;
-      }
+  // 2) “Móvil” de forma fiable (coarse pointer) + umbral de ancho algo mayor
+  const isCoarse = window.matchMedia('(hover: none) and (pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+  const vw = window.visualViewport?.width || window.innerWidth;
+  const isSmallEnough = vw <= 1024; // 1024 tolera iPhone en landscape
 
-      let root = getScrollRoot();
-      // Si usas un contenedor con overflow, actívalo aquí:
-      const container = document.querySelector('.container');
-      if (container) root = container;
+  if (!isCoarse && !isSmallEnough) return;
 
-      const SPEED = 40; // px/s
-      let rafId = null, lastTs = 0;
-      let paused = false, ended = false, hasStarted = false;
-      let pauseTimer = null;
+  // 3) Scroll root (tu contenedor en móvil)
+  function getRoot() {
+    return document.querySelector('.container') ||
+           document.scrollingElement ||
+           document.documentElement;
+  }
+  let root = getRoot();
 
-      function step(ts) {
-        if (!lastTs) lastTs = ts;
-        const dt = (ts - lastTs) / 1000;
-        lastTs = ts;
+  const SPEED = 40; // px/s
+  let rafId = null, lastTs = 0, paused = false, ended = false, hasStarted = false;
 
-        if (!paused && !ended) {
-          const maxY = root.scrollHeight - root.clientHeight;
-          const nextY = Math.min(root.scrollTop + SPEED * dt, maxY);
-          root.scrollTop = nextY;
+  function step(ts){
+    if (!lastTs) lastTs = ts;
+    const dt = (ts - lastTs)/1000; lastTs = ts;
+    if (!paused && !ended) {
+      const maxY = root.scrollHeight - root.clientHeight;
+      const nextY = Math.min(root.scrollTop + SPEED*dt, maxY);
+      root.scrollTop = nextY;
+      if (nextY >= maxY - 0.5) { stop(true); return; }
+    }
+    rafId = requestAnimationFrame(step);
+  }
+  function start(restart=false){
+    if (ended && !restart) return;
+    cancelAnimationFrame(rafId);
+    lastTs = 0; paused = false;
+    rafId = requestAnimationFrame(step);
+  }
+  function stop(reachedBottom=false){
+    cancelAnimationFrame(rafId); rafId = null; lastTs = 0;
+    if (reachedBottom){ ended = true; document.body.classList.add('tour-ended'); }
+  }
+  function pauseTemporarily(ms=1600){
+    if (!hasStarted || ended) return;
+    paused = true; setTimeout(()=>{ paused = false; }, ms);
+  }
+debugger
+  // 4) Arranques por gesto (iOS a veces no dispara pointerup)
+  const startOnce = () => { hasStarted = true; paused = false; start(); };
+  window.addEventListener('pointerup', startOnce, { once:true });
+  window.addEventListener('touchend', startOnce, { once:true });
 
-          if (nextY >= maxY - 0.5) {
-            stop(true);
-            return;
-          }
-        }
-        rafId = requestAnimationFrame(step);
-      }
-
-      function start(restart = false) {
-        if (ended && !restart) return;
-        cancelAnimationFrame(rafId);
-        lastTs = 0;
-        paused = false;
-        rafId = requestAnimationFrame(step);
-      }
-
-      function stop(reachedBottom = false) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-        lastTs = 0;
-        if (reachedBottom) {
-          ended = true;
-          document.body.classList.add('tour-ended');
-        }
-      }
-
-      function pauseTemporarily(ms = 1600) {
-        if (!hasStarted || ended) return;
-        paused = true;
-        clearTimeout(pauseTimer);
-        pauseTimer = setTimeout(() => { paused = false; }, ms);
-      }
-
-      // Arranque tras primer gesto
-      const startOnce = () => { hasStarted = true; paused = false; start(); };
-      window.addEventListener('pointerup', startOnce, { once: true });
-
-      // Botón “Iniciar recorrido”
-      window.addEventListener('DOMContentLoaded', () => {
-        const btn = document.getElementById('playTour');
-        if (btn) {
-          btn.addEventListener('click', () => {
-            document.body.classList.remove('tour-ended');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => start(true), 300);
-          });
-        }
+  // 5) Botón “Iniciar recorrido”
+  window.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('playTour'); // ya existe en tu HTML :contentReference[oaicite:6]{index=6}
+    if (btn){
+      btn.addEventListener('click', () => {
+        ended = false; hasStarted = true; paused = false;
+        document.body.classList.remove('tour-ended');
+        (root.scrollTo ? root.scrollTo({ top:0, behavior:'smooth' }) : (root.scrollTop = 0));
+        setTimeout(() => start(true), 300);
       });
+    }
+  });
 
+  // 6) Pausas por interacción
+  const pauseIfStarted = () => pauseTemporarily();
+  window.addEventListener('wheel',       pauseIfStarted, { passive:true });
+  window.addEventListener('touchstart',  pauseIfStarted, { passive:true });
 
-      // Pausar al interactuar
-      const pauseIfStarted = () => pauseTemporarily();
-      window.addEventListener('wheel', pauseIfStarted, { passive: true });
-      window.addEventListener('touchstart', pauseIfStarted, { passive: true });
+  // 7) Pestaña oculta
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stop(false);
+    else if (!ended && hasStarted) start();
+  });
 
-      // Pestaña oculta
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) stop(false);
-        else if (!ended && hasStarted) start();
-      });
+  // 8) Re-evaluar en rotación/resize (clave para iPhone)
+  function reeval(){
+    const nowVw = window.visualViewport?.width || window.innerWidth;
+    const nowSmall = nowVw <= 1024;
+    root = getRoot();
+    if ((!isCoarse && !nowSmall)) { stop(false); return; }
+    if (!ended && hasStarted && !rafId) start();
+  }
+  window.addEventListener('resize', reeval);
+  window.addEventListener('orientationchange', reeval);
+})();
+</script>
 
-      // Recalcular root por si cambia el layout/overflow
-      window.addEventListener('resize', () => { root = container || getScrollRoot(); });
-    })();
-  </script>
 
   <script defer>
     // ===========================
