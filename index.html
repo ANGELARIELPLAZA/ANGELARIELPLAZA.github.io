@@ -9,6 +9,1527 @@
     href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Great+Vibes&family=Italianno&family=Tangerine:wght@400;700&display=swap"
     rel="stylesheet">
   <style>
+    /* ===== UNIFIED STYLESHEET (generated) ===== */
+
+
+    /* =========================================
+   Unified Theme Variables & Utilities
+   ========================================= */
+    :root {
+      /* Palette */
+      --bg: #f7f4ef;
+      --dc-bg: #f7f4ef;
+      --black: #000000;
+      --text: #3a3a3a;
+      --muted: #6b7280;
+      --brand: #8b5e3c;
+      /* primary accent */
+      --accent: #bfa37a;
+      /* lighter accent */
+      --card: #ffffff;
+      --shadow-sm: 0 4px 10px rgba(0, 0, 0, .08);
+      --shadow-md: 0 8px 20px rgba(0, 0, 0, .12);
+      --shadow: var(--shadow-md);
+      --radius: 12px;
+      --page-padding: clamp(1rem, 4vw, 3rem);
+    }
+
+    /* Typography helpers */
+    .font-italianno {
+      font-family: 'Italianno', cursive;
+    }
+
+    .font-beau {
+      font-family: 'Beau Rivage', cursive;
+    }
+
+    .font-great {
+      font-family: 'Great Vibes', cursive;
+    }
+
+    .font-tangerine {
+      font-family: 'Tangerine', cursive;
+    }
+
+    /* Generic entrance animation hooks (paired with IntersectionObserver) */
+    .animate-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .is-visible {
+      opacity: 1;
+      transform: none;
+    }
+
+
+    /* ===== BASE ===== */
+
+    /* ===== Base & Variables ===== */
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #f7f4ef;
+      --dc-bg: #f7f4ef;
+      --black: #000000;
+      --text: #3a3a3a;
+      --muted: #6b7280;
+      --dorado: #ad8a1f;
+      --accent: #2c3e50;
+      --brand: #0037aa;
+      --card: #ffffff;
+      --shadow: 0 10px 25px rgba(0, 0, 0, .08);
+      --radius: 12px;
+      --page-padding: clamp(1rem, 4vw, 3rem);
+    }
+
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 var(--page-padding) clamp(3rem, 6vw, 4rem);
+    }
+
+    .container>section:not(.hero) {
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: clamp(2.5rem, 5vw, 4rem) 0;
+    }
+
+    @media (min-width: 1200px) {
+      :root {
+        --page-padding: clamp(3rem, 8vw, 6rem);
+      }
+    }
+
+    img,
+    iframe {
+      display: block;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      letter-spacing: .03em;
+    }
+
+    .iniciales {
+      font-size: clamp(3.5rem, 10vw, 12rem);
+      font-family: 'ui-sans-serif';
+    }
+
+    p {
+      font-size: clamp(.9rem, 2.5vw, 1.1rem);
+      color: #f5f5f5;
+    }
+
+    .fade-transition {
+      background: linear-gradient(to bottom, rgba(0, 0, 0, .42), #fff);
+    }
+
+    /* Fuente caligráfica Italianno */
+    .font-italianno {
+      font-family: 'Italianno', cursive;
+    }
+
+    /* Fuente elegante Beau Rivage */
+    .font-beau {
+      font-family: 'Beau Rivage', cursive;
+    }
+
+    /* Fuente manuscrita Great Vibes */
+    .font-great {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.4rem;
+    }
+
+    /* Fuente ligera y caligráfica Tangerine */
+
+
+    .timeline-content {
+      position: relative;
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    /* Icono */
+    .timeline-icon {
+      width: 50px;
+      /* ajusta el tamaño */
+      height: 50px;
+      display: block;
+      margin: 0 auto 10px;
+      /* centra el ícono arriba del texto */
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+
+    /* Animación sutil al pasar el mouse */
+    .timeline-icon:hover {
+      transform: scale(1.1) rotate(-5deg);
+    }
+
+
+    /* --- Flores decorativas reutilizables --- */
+    .flower {
+      position: absolute;
+            animation: float 8s ease-in-out infinite;
+
+      /* escala responsiva */
+      height: auto;
+      z-index: 2;
+      /* por encima del fondo, debajo del contenido si usas z>=3 */
+      pointer-events: none;
+      /* no bloquea clics/scroll */
+      user-select: none;
+      opacity: 0.95;
+    }
+
+    /* Variantes rápidas de esquina/posición */
+    .flower--tl {
+      top: 0;
+      left: 0;
+    }
+
+    .flower--tr {
+      top: 72%;
+      left: -1%;
+      width: 20%;
+    }
+
+    .flower--bl {
+      left: 0;
+    }
+
+    .flower--br {
+      bottom: 0;
+      right: 0;
+      transform: translate(15%, 15%) rotate(-4deg);
+    }
+
+    /* Variantes de alineación relativa (para pegar junto a tarjetas) */
+    .flower--left {
+      left: -60px;
+      top: 50%;
+      transform: translateY(-50%) rotate(-8deg);
+    }
+
+    .flower--right {
+      right: -60px;
+      top: 50%;
+      transform: translateY(-50%) rotate(8deg);
+    }
+
+    .flower--top {
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-3deg);
+    }
+
+    .flower--bottom {
+      bottom: -60px;
+      left: 50%;
+      transform: translateX(-50%) rotate(3deg);
+    }
+
+    /* Contenedores que aceptan decoraciones con posicionamiento absoluto */
+    .decor-wrap {
+      position: relative;
+      /* clave para posicionar la flor dentro */
+      isolation: isolate;
+      /* evita mezclas raras de z-index con fondos */
+    }
+
+    /* Ajustes por sección (opcional) */
+    .hero .flower {
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, .15));
+    }
+
+    .section2 .flower {
+      opacity: .9;
+    }
+
+    .section4 .flower {
+      opacity: .85;
+    }
+
+    
+
+    .map-wrap {
+      position: relative;
+    }
+
+    .map-link {
+      display: block;
+      position: relative;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .map-thumb {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+    }
+
+    .map-cta {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      display: inline-block;
+      padding: .6rem .9rem;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, .55);
+      color: #fff;
+      font-weight: 600;
+      text-align: center;
+      backdrop-filter: blur(2px);
+    }
+
+    .map-link:active .map-cta,
+    .map-link:hover .map-cta {
+      background: rgba(0, 0, 0, .7);
+    }
+
+    /* Botón “Play / Iniciar recorrido” */
+    .play-tour {
+      --bg: #ffffffea;
+      --fg: #222;
+      --shadow: 0 10px 25px rgba(0, 0, 0, .12);
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .9rem 1.1rem;
+      border: 0;
+      border-radius: 999px;
+      background: var(--bg);
+      color: var(--fg);
+      font-weight: 700;
+      letter-spacing: .2px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      position: relative;
+      margin-top: 1.25rem;
+      z-index: 5;
+      transition: transform .18s ease, box-shadow .18s ease, opacity .25s ease;
+    }
+
+    .play-tour__icon {
+      display: inline-flex;
+    }
+
+    .play-tour__label {
+      font-size: 1rem;
+    }
+
+    .play-tour__hint {
+      font-size: .78rem;
+      font-weight: 600;
+      opacity: .75;
+      margin-left: .15rem;
+    }
+
+    /* Pulso suave para llamar atención */
+    .play-tour::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 999px;
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, .65);
+      animation: pt-pulse 1.6s ease-out infinite;
+    }
+
+    @keyframes pt-pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, .55);
+      }
+
+      100% {
+        box-shadow: 0 0 0 22px rgba(255, 255, 255, 0);
+      }
+    }
+
+    .play-tour:active {
+      transform: scale(.98);
+    }
+
+    /* Al iniciar el recorrido, ocultamos el botón suavemente */
+    .tour-started .play-tour {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(2px) scale(.99);
+    }
+
+    /* Ejemplo base */
+    @keyframes fade-up {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero .content {
+      animation: fade-up 1s ease .3s both;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+
+
+
+    /* ===== HERO ===== */
+
+    /* ===== Sección 1 (Hero) ===== */
+    .hero {
+      position: relative;
+      background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('../img/IMAGEN1.jpeg') no-repeat center center/cover;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      margin-left: calc(-1 * var(--page-padding));
+      margin-right: calc(-1 * var(--page-padding));
+      padding: clamp(2rem, 6vw, 4rem) var(--page-padding);
+    }
+
+    .hero h1 {
+      font-weight: 700;
+      letter-spacing: .05em;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, .4);
+    }
+
+    .section-quote {
+      display: flex;
+      justify-content: center;
+    }
+
+    .quote-card {
+      max-width: 600px;
+      padding: 15px;
+      border-radius: 12px;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .quote-card blockquote {
+      margin: 0;
+      text-align: left;
+    }
+
+    .quote-text {
+      font-size: 2rem;
+      font-style: italic;
+      color: #ffffff;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .quote-ref {
+      font-size: 1rem;
+      color: #ffffff;
+      text-align: right;
+      display: block;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      max-width: 90%;
+      padding: 20px;
+    }
+
+    .countdown {
+      padding-top: 10%;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .textnoscasamos {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      margin-bottom: 20px;
+      color: #f5f5f5;
+    }
+
+    .box {
+      flex: 1;
+      min-width: 70px;
+      background: rgba(255, 255, 255, .2);
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .number {
+      font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+      font-weight: 700;
+    }
+
+    .label {
+      font-size: clamp(.85rem, 2vw, 1.1rem);
+      letter-spacing: 1px;
+      font-family: 'Tangerine', cursive;
+
+    }
+
+
+    /* ===== DONDE & CUANDO ===== */
+
+    /* ===== Sección 2 (Dónde & Cuándo) ===== */
+    .section2 {
+      position: relative;
+      color: var(--text);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .section2 h2 {
+      color: var(--brand);
+      letter-spacing: .1em;
+      font-weight: 600;
+      font-size: 1.6rem;
+      margin: 24px 0 8px;
+    }
+
+    .section2 p {
+      color: var(--black);
+      font-family: 'Tangerine', cursive;
+
+    }
+
+
+    .section2 .flower-bg {
+      position: absolute;
+      left: 50%;
+      width: min(960px, 120%);
+      object-fit: contain;
+      pointer-events: none;
+      z-index: 0;
+      transform: translateX(-50%);
+    }
+
+    .section2 .flower-bg--top {
+      top: -6%;
+    }
+
+    .section2 .flower-bg--bottom {
+      bottom: -8%;
+    }
+
+    .section2>*:not(.flower-bg) {
+      position: relative;
+      z-index: 1;
+    }
+
+    .textnoscasamos2 {
+      font-size: clamp(1.35rem, 3vw, 2.4rem);
+      font-weight: 600;
+      color: var(--black);
+      letter-spacing: .02em;
+      background: #eeece9;
+      box-shadow: var(--shadow);
+
+    }
+
+    .textnoscasamos3 {
+      font-size: clamp(1.35rem, 3vw, 2.4rem);
+      font-weight: 600;
+      color: var(--black);
+      letter-spacing: .02em;
+      background: #eeece9;
+
+    }
+
+    /* Grid de padres */
+    .parents-block {
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .parents-col {
+      background: #f9f7f4;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 16px;
+    }
+
+    .parents-col--full {
+      grid-column: 1 / -1;
+    }
+
+    .parents-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--brand);
+      letter-spacing: .08em;
+      margin: 0 0 8px;
+    }
+
+    .parents-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      color: var(--black);
+      line-height: 1.6;
+      font-size: 1.05rem;
+    }
+
+    .novios-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      color: var(--dorado);
+      line-height: 1.6;
+      font-size: 5.4rem;
+      align-items: center;
+    }
+
+    .textnoscasamos4 {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      line-height: 1.6;
+      font-size: 4.4rem;
+      align-items: center;
+    }
+
+    .textnoscasamos4 p {
+
+      color: var(--brand);
+    }
+
+    .parents-list .amp {
+      font-weight: 700;
+      color: var(--brand);
+      font-size: 1.15rem;
+      margin: 2px 0;
+    }
+
+    .invite-line {
+      margin: 14px auto 10px;
+      color: var(--muted);
+      font-size: 1.8rem;
+      font-family: 'Tangerine', cursive;
+    }
+
+    /* Dónde y Cuándo */
+    .where-when {
+      color: var(--brand);
+      letter-spacing: .06em;
+      font-weight: 700;
+      font-size: clamp(1.2rem, 2.6vw, 1.5rem);
+      margin: 18px 0 16px;
+    }
+
+    /* Event + Map grid */
+    .event-grid {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .event-card {
+      background: var(--card);
+      border: 1px solid #eadfd3;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      text-align: left;
+    }
+
+    .event-date {
+      background: #f5efe9;
+      color: var(--brand);
+      border-radius: 12px;
+      width: 96px;
+      min-width: 96px;
+      padding: 10px 8px;
+      display: grid;
+      place-items: center;
+      line-height: 1;
+    }
+
+    .event-date .day {
+      font-size: 4rem;
+      font-weight: 700;
+      font-family: 'Great Vibes', cursive;
+
+    }
+
+    .event-date .month {
+      font-size: 2rem;
+      letter-spacing: .14em;
+      font-family: 'Great Vibes', cursive;
+
+    }
+
+    .event-date .year {
+      font-size: 2rem;
+      letter-spacing: .12em;
+      color: #8f806f;
+      font-family: 'Great Vibes', cursive;
+
+    }
+
+    .event-info .event-title {
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--brand);
+      letter-spacing: .06em;
+      margin: 2px 0 6px;
+    }
+
+    .event-info .event-time {
+      font-size: 2.5rem;
+      color: #5f5a54;
+      margin: 0 0 6px;
+      letter-spacing: .04em;
+      font-family: 'Tangerine', cursive;
+
+    }
+
+    .event-info {
+      display: grid;
+      place-items: center;
+      /* centra horizontal y vertical */
+      text-align: center;
+    }
+
+    .event-info .font-beau {
+      text-align: center;
+    }
+
+    .event-info .event-place {
+      font-size: 1.5rem;
+      color: var(--black);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Mapa responsive */
+    .map-wrap {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      background: #eee;
+      aspect-ratio: 4 / 3;
+    }
+
+    .map-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* Hover sutil */
+    .event-card:hover {
+      transform: translateY(-1px);
+      transition: transform .2s ease;
+    }
+
+
+    /* ===== TIMELINE ===== */
+
+    /* ===== Sección 3 (Itinerario en línea de tiempo) ===== */
+    .section4 {
+      background: var(--dc-bg);
+      font-family: 'Tangerine', cursive;
+
+    }
+
+    .section4 h2 {
+      text-align: center;
+      font-size: 3.8rem;
+      color: var(--brand);
+      margin-bottom: 0px;
+      letter-spacing: .08em;
+    }
+
+    .timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .font-tangerine {
+      font-family: 'Tangerine', cursive;
+    }
+
+    @media (max-width: 640px) {
+      .flower2 {
+        width: 100%;
+        position: relative;
+
+      }
+    }
+
+    .timeline::after {
+      content: '';
+      position: absolute;
+      width: 3px;
+      background: var(--brand);
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      margin-left: -1.5px;
+    }
+
+    .timeline-item {
+      padding: 20px 30px;
+      position: relative;
+      width: 50%;
+      opacity: 0;
+      animation: timelineSlideLeft .75s ease forwards;
+      animation-delay: calc(.18s + var(--delay, 0s));
+      will-change: transform, opacity;
+    }
+
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      right: -10px;
+      background: var(--brand);
+      border: 3px solid #fff;
+      top: 30px;
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .timeline-item.left {
+      left: 0;
+    }
+
+    .timeline-item.right {
+      left: 50%;
+    }
+
+    .timeline-item.right::after {
+      left: -10px;
+    }
+
+    .timeline-item:nth-child(even) {
+      animation-name: timelineSlideRight;
+    }
+
+    .timeline-item:nth-child(1) {
+      --delay: 0s;
+    }
+
+    .timeline-item:nth-child(2) {
+      --delay: .12s;
+    }
+
+    .timeline-item:nth-child(3) {
+      --delay: .24s;
+    }
+
+    .timeline-item:nth-child(4) {
+      --delay: .36s;
+    }
+
+    .timeline-item:nth-child(5) {
+      --delay: .48s;
+    }
+
+    .timeline-item:nth-child(6) {
+      --delay: .6s;
+    }
+
+    .timeline-content {
+      padding: 20px;
+      background: #f8f8f8;
+      position: relative;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .timeline-content h3 {
+      margin-top: 0;
+      color: var(--brand);
+      font-size: 2.2rem
+    }
+
+    .timeline-content p {
+      margin: 6px 0 0;
+      color: var(--brand);
+      font-family: 'Tangerine', cursive;
+      font-size: 1.6rem;
+    }
+
+    @keyframes timelineSlideLeft {
+      from {
+        opacity: 0;
+        transform: translate3d(-28px, 24px, 0);
+      }
+
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    @keyframes timelineSlideRight {
+      from {
+        opacity: 0;
+        transform: translate3d(28px, 24px, 0);
+      }
+
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .timeline-item {
+        animation: none !important;
+        opacity: 1;
+        transform: none !important;
+      }
+    }
+
+    /* ===== Timeline: animación alternada odd/even ===== */
+
+    /* Estado base (antes de entrar al viewport) */
+    .timeline .timeline-item.animate-in {
+      opacity: 0;
+      will-change: transform, opacity, filter;
+    }
+
+    /* Pares e impares: direcciones de entrada diferentes */
+    @keyframes tl-slide-left {
+      from {
+        opacity: 0;
+        transform: translateX(-28px) scale(.98);
+        filter: blur(2px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes tl-slide-right {
+      from {
+        opacity: 0;
+        transform: translateX(28px) scale(.98);
+        filter: blur(2px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    /* Al hacerse visibles, arrancan sus animaciones */
+    .timeline .timeline-item.animate-in.is-visible:nth-child(odd) {
+      animation: tl-slide-left .7s var(--tl-delay, 0ms) cubic-bezier(.22, .61, .36, 1) both;
+    }
+
+    .timeline .timeline-item.animate-in.is-visible:nth-child(even) {
+      animation: tl-slide-right .7s var(--tl-delay, 0ms) cubic-bezier(.22, .61, .36, 1) both;
+    }
+
+    /* Pequeño “stagger” por posición (opcional) */
+    .timeline .timeline-item {
+      --tl-delay: 0ms;
+    }
+
+    .timeline .timeline-item:nth-child(2) {
+      --tl-delay: 90ms;
+    }
+
+    .timeline .timeline-item:nth-child(3) {
+      --tl-delay: 180ms;
+    }
+
+    .timeline .timeline-item:nth-child(4) {
+      --tl-delay: 270ms;
+    }
+
+    .timeline .timeline-item:nth-child(5) {
+      --tl-delay: 360ms;
+    }
+
+    .timeline .timeline-item:nth-child(6) {
+      --tl-delay: 450ms;
+    }
+
+    /* Accesibilidad: si el usuario prefiere menos movimiento, desactiva animaciones */
+    @media (prefers-reduced-motion: reduce) {
+
+      .timeline .timeline-item.animate-in,
+      .timeline .timeline-item.animate-in.is-visible {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+      }
+    }
+
+
+    /* ===== GALLERY ===== */
+
+    /* ===== Sección Galería (aislada) ===== */
+    .section-gallery {
+      background: #fff;
+      padding: 5px 5px;
+    }
+
+    .section-gallery h2 {
+      text-align: center;
+      font-size: 3.8rem;
+      color: #8b5e3c;
+      margin-bottom: 22px;
+      letter-spacing: .08em;
+    }
+
+    .g-stack-wrap {
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .g-stack {
+      position: relative;
+      height: 560px;
+      user-select: none;
+      touch-action: pan-y;
+    }
+
+    .g-card {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: min(92vw, 420px);
+      height: 560px;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+      background: #ddd;
+      transform-origin: 50% 100%;
+      transition: transform .25s ease, opacity .25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .g-card:first-child {
+      pointer-events: auto;
+    }
+
+    .g-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .g-card:nth-child(1) {
+      transform: translateY(0) scale(1);
+      z-index: 5;
+    }
+
+    .g-card:nth-child(2) {
+      transform: translateY(10px) scale(.98);
+      z-index: 4;
+      opacity: .95;
+    }
+
+    .g-card:nth-child(3) {
+      transform: translateY(20px) scale(.96);
+      z-index: 3;
+      opacity: .9;
+    }
+
+    .g-card:nth-child(n+4) {
+      transform: translateY(30px) scale(.94);
+      z-index: 2;
+      opacity: .85;
+    }
+
+    .g-hint {
+      text-align: center;
+      color: #6b7280;
+      font-size: .9rem;
+      margin-top: 12px;
+    }
+
+    .g-card.g-left {
+      transform: translate(-120vw, -10vh) rotate(-18deg);
+      opacity: 0;
+    }
+
+    .g-card.g-right {
+      transform: translate(120vw, -10vh) rotate(18deg);
+      opacity: 0;
+    }
+
+    .g-empty {
+      text-align: center;
+      color: #6b7280;
+      margin-top: 14px;
+      display: none;
+    }
+
+    .g-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 14px;
+      gap: 8px;
+    }
+
+    .g-btn {
+      background: transparent;
+      border: 1px solid #d6c3af;
+      color: #8b5e3c;
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .g-btn:hover {
+      background: #f7f2ec;
+    }
+
+    /* ===== DRESSCODE ===== */
+
+    .dc-x {
+      position: relative;
+      width: var(--dc-chip-size);
+      height: 0;
+      color: var(--dc-x);
+    }
+
+    .dc-swatch {
+      width: var(--dc-chip-size);
+      height: var(--dc-chip-size);
+      border-radius: 999px;
+      border: 2px solid rgba(0, 0, 0, .12);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .08) inset;
+      position: relative;
+    }
+
+    .dc-chip {
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+    }
+
+    /* ===========================
+   Sección: Código de vestimenta
+   =========================== */
+    .section-dresscode {
+      --dc-bg: #f7f4ef;
+      --dc-text: #3a3a3a;
+      --dc-accent: #8b5e3c;
+      --dc-muted: #6b7280;
+      --dc-chip-size: 72px;
+      --dc-x: #b54646;
+      background: var(--dc-bg);
+      color: var(--dc-text);
+      padding: 56px 20px;
+    }
+
+    .section-dresscode .dc-in {
+      max-width: 980px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .mirror-x {
+      transform: scaleX(-1);
+    }
+
+    @media (max-width: 640px) {
+      .flower3 {
+        position: absolute;
+        width: 24rem;
+        height: auto;
+        z-index: 2;
+        pointer-events: none;
+        user-select: none;
+        opacity: 0.5;
+      }
+    }
+
+
+    .dc-eyebrow {
+      font-family: 'Tangerine', cursive;
+      font-size: 3.8rem;
+      letter-spacing: .1em;
+      color: var(--dc-accent);
+      margin: 0 0 8px;
+    }
+
+    .dc-style {
+      font-family: 'Italianno', cursive;
+      font-size: clamp(2.4rem, 5vw, 3.4rem);
+      font-weight: 700;
+      color: #2e4d86;
+      margin: 0 0 14px;
+
+    }
+
+    .dc-note {
+      font-family: 'Tangerine', cursive;
+      color: var(--dc-accent);
+      font-size: 2rem;
+      letter-spacing: .04em;
+      margin: 0 0 22px;
+    }
+
+    .dc-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      justify-items: center;
+      align-items: start;
+      list-style: none;
+      padding: 0;
+      margin: 0 auto;
+      max-width: 680px;
+    }
+
+    @media (max-width: 640px) {
+      .dc-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+
+
+
+
+
+
+
+
+    .dc-chip-label {
+      font-size: 2rem;
+      color: var(--dc-muted);
+      font-family: 'Tangerine', cursive;
+    }
+
+    .dc-white {
+      background: #f5f5f5;
+    }
+
+    .dc-olive {
+      background: #b8b89b;
+    }
+
+    .dc-beige {
+      background: #d6c7b9;
+    }
+
+    .dc-navy {
+      background: #1e2f53;
+    }
+
+
+
+
+
+
+
+    /* ===== RSVP ===== */
+
+    /* ===== Sección 6 (RSVP) ===== */
+    .section3 {
+      padding: 40px 16px 80px;
+    }
+
+    .card {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card img.banner {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-body {
+      padding: 22px;
+      border-radius: var(--radius);
+
+    }
+
+    .card-title {
+      text-align: center;
+      color: red;
+      font-size: 3rem;
+      margin: 8px 0 4px;
+      font-family: 'Tangerine', cursive;
+
+    }
+
+    .card-sub {
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
+      margin-bottom: 18px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .label {
+      display: block;
+      margin: 0 0 6px;
+      color: var(--text);
+    }
+
+    .labelcount {
+      color: var(--dc-bg);
+
+
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      border: 1px solid #dcdcdc;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      outline: none;
+      transition: box-shadow .2s, border-color .2s;
+      background: #fff;
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+      border-color: #c7b7a2;
+      box-shadow: 0 0 0 4px rgba(139, 94, 60, .12);
+    }
+
+    .textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .options {
+      display: grid;
+      gap: 8px;
+      margin-top: 6px;
+      color: var(--text);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 18px;
+    }
+
+    .btn {
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 22px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(139, 94, 60, .25);
+    }
+
+    .btn:hover {
+      filter: brightness(.95);
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: .85rem;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .dc-note {
+      font-family: 'Tangerine', cursive;
+      color: #3a3a3a;
+      font-size: 2rem;
+      font-weight: 400;
+      letter-spacing: .04em;
+      margin: 0 0 22px;
+    }
+
+    /* Solo resalta la palabra “Evitar” */
+    .dc-note .dc-highlight {
+      color: var(--dc-x);
+      /* usa el dorado principal del tema */
+    }
+
+    /* Centrado universal para .scroll-hint */
+    .scroll-hint {
+      /* diseño bonito que ya tenías mejorado */
+      position: relative;
+      display: inline-flex;
+      /* se mide como contenido */
+      flex-direction: column;
+      align-items: center;
+      gap: .35rem;
+      font-family: "Tangerine", cursive;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+      animation: hintFade 3s ease-in-out infinite;
+      user-select: none;
+
+      /* === centrado clave === */
+      margin: 1.25rem auto 0;
+      /* auto en los lados centra en bloque */
+      text-align: center;
+      /* por si el padre usa text-align distinto */
+    }
+
+    /* Si .scroll-hint está dentro de un contenedor flex (p.ej. .timeline) */
+    .timeline>.scroll-hint,
+    .section2>.scroll-hint,
+    .section-gallery>.scroll-hint,
+    .section-dresscode>.scroll-hint,
+    .section3>.scroll-hint {
+      align-self: center;
+      /* céntralo en el eje transversal de ese flex */
+      width: 100%;
+      /* para que el margin:auto tenga efecto */
+      display: flex;
+      /* y vuelve a centrar su propio contenido */
+      justify-content: center;
+    }
+
+    /* Variante opcional: flotante solo en la portada (si la quieres sobrepuesta) */
+    .hero .scroll-hint--floating {
+      position: absolute;
+      left: 50%;
+      bottom: 1.25rem;
+      transform: translateX(-50%);
+      margin: 0;
+      /* no hace falta auto cuando es absolute */
+    }
+
+    /* Flecha animada debajo del texto (como antes) */
+    .scroll-hint::after {
+      content: "";
+      width: 14px;
+      height: 14px;
+      border-left: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(-45deg);
+      margin-top: 2px;
+      animation: arrowBounce 1.6s ease-in-out infinite;
+      opacity: 0.9;
+    }
+
+    @keyframes hintFade {
+
+      0%,
+      100% {
+        opacity: 1;
+        text-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+        transform: translateY(0);
+      }
+
+      50% {
+        opacity: 0.6;
+        text-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+        transform: translateY(2px);
+      }
+    }
+
+    @keyframes arrowBounce {
+
+      0%,
+      100% {
+        transform: rotate(-45deg) translateY(0);
+        opacity: 0.8;
+      }
+
+      50% {
+        transform: rotate(-45deg) translateY(6px);
+        opacity: 0.3;
+      }
+    }
+
+    /* Ajuste responsive */
+    @media (max-width: 480px) {
+      .scroll-hint {
+        font-size: 2.9rem;
+        gap: .25rem;
+      }
+
+      .scroll-hint::after {
+        width: 12px;
+        height: 12px;
+      }
+    }
+
     /* --------- Reset mínimo --------- */
     *,
     *::before,
@@ -683,45 +2204,6 @@
     </section>
 
 
-    <!-- Sección 3: Ceremonia -->
-    <section class="section" id="s3">
-      <article class="card">
-        <img class="card__media" alt="Iglesia elegante"
-          src="https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=1600&auto=format&fit=crop" />
-        <div class="card__body">
-          <p class="eyebrow">Ceremonia</p>
-          <h2>Parroquia de San Miguel</h2>
-          <p>4:00 PM — Agradecemos llegar con 15 minutos de anticipación para acomodar a todos.</p>
-        </div>
-      </article>
-    </section>
-
-    <!-- Sección 4: Recepción -->
-    <section class="section" id="s4">
-      <article class="card">
-        <img class="card__media" alt="Recepción al aire libre"
-          src="https://images.unsplash.com/photo-1482707272725-473c4f3de1f7?q=80&w=1600&auto=format&fit=crop" />
-        <div class="card__body">
-          <p class="eyebrow">Recepción</p>
-          <h2>Banquete &amp; Celebración</h2>
-          <p>Después de la ceremonia, acompáñanos a disfrutar de una noche inolvidable con música, baile y mucha
-            alegría.</p>
-        </div>
-      </article>
-    </section>
-
-    <!-- Sección 5: Dress Code -->
-    <section class="section" id="s5">
-      <article class="card">
-        <img class="card__media" alt="Vestimenta formal"
-          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop" />
-        <div class="card__body">
-          <p class="eyebrow">Dress Code</p>
-          <h2>Formal de Jardín</h2>
-          <p>Colores sugeridos: neutros, pastel o tierra. Evitar blanco total.</p>
-        </div>
-      </article>
-    </section>
 
     <!-- Sección 6: Confirmación (RSVP) -->
     <section class="section" id="s6">
@@ -854,180 +2336,180 @@
   </main>
 
 
-<script>
-(function () {
-  // ====== Referencias básicas ======
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const root = document.getElementById('root');
-  const startBtn = document.getElementById('startBtn');
-  const hint = document.getElementById('hint');
+  <script>
+    (function () {
+      // ====== Referencias básicas ======
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const root = document.getElementById('root');
+      const startBtn = document.getElementById('startBtn');
+      const hint = document.getElementById('hint');
 
-  if (!root || !startBtn) {
-    // Si falta algo crítico, no hacemos nada para evitar errores
-    console.warn('[tour] Falta #root o #startBtn');
-    return;
-  }
-
-  const sections = Array.from(root.querySelectorAll('.section'));
-
-  // ====== Estado del recorrido ======
-  let running = false;
-  let stopRequested = false;
-
-  // ====== Utilidades ======
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-  function showHint(show) {
-    if (!hint) return;
-    hint.classList.toggle('show', !!show);
-  }
-
-  // Espera hasta que el contenedor deje de moverse o se agote el tiempo
-  function waitForSettle(timeoutMs) {
-    return new Promise((resolve) => {
-      const start = performance.now();
-      let lastY = root.scrollTop;
-      let sameCount = 0;
-
-      function tick() {
-        if (stopRequested) { resolve(true); return; }
-
-        const now = performance.now();
-        const y = root.scrollTop;
-
-        if (Math.abs(y - lastY) < 0.5) {
-          sameCount++;
-          if (sameCount > 6) { resolve(true); return; }
-        } else {
-          sameCount = 0;
-          lastY = y;
-        }
-
-        if (now - start > timeoutMs) { resolve(false); return; }
-        requestAnimationFrame(tick);
-      }
-
-      requestAnimationFrame(tick);
-    });
-  }
-
-  // Identifica la sección más visible para arrancar desde allí
-  function getStartIndex() {
-    let startIndex = 0;
-    let bestRatio = 0;
-    const viewportH = window.innerHeight || document.documentElement.clientHeight;
-
-    sections.forEach((sec, i) => {
-      const rect = sec.getBoundingClientRect();
-      const visible = Math.max(0, Math.min(rect.bottom, viewportH) - Math.max(rect.top, 0));
-      const ratio = visible / Math.max(1, rect.height);
-      if (ratio > bestRatio) { bestRatio = ratio; startIndex = i; }
-    });
-
-    return startIndex;
-  }
-
-  // ====== Recorrido automático ======
-  async function autoTour() {
-    if (prefersReduced.matches) return; // respeta accesibilidad
-
-    running = true;
-    stopRequested = false;
-    showHint(true);
-    startBtn.textContent = 'Pausar recorrido';
-
-    const startIndex = getStartIndex();
-
-    for (let i = startIndex; i < sections.length; i++) {
-      if (stopRequested) break;
-
-      sections[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-      // Espera a que el scroll se asiente, luego una pequeña pausa
-      const settled = await waitForSettle(1400);
-      if (!settled) await sleep(600);
-      await sleep(800);
-    }
-
-    running = false;
-    stopRequested = false;
-    showHint(false);
-    startBtn.textContent = 'Repetir recorrido';
-  }
-
-  // ====== Interacciones ======
-  startBtn.addEventListener('click', () => {
-    if (!running) {
-      autoTour();
-    } else {
-      stopRequested = true;
-      showHint(false);
-      startBtn.textContent = 'Reanudar recorrido';
-    }
-  });
-
-  // Tocar la pantalla también pausa (móvil friendly)
-  root.addEventListener('pointerdown', () => {
-    if (running) {
-      stopRequested = true;
-      showHint(false);
-      startBtn.textContent = 'Reanudar recorrido';
-    }
-  }, { passive: true });
-
-  // Evita que el teclado (iOS) rompa el snap mientras se escribe
-  window.addEventListener('focusin', (e) => {
-    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
-      root.style.scrollSnapType = 'none';
-    }
-  });
-  window.addEventListener('focusout', () => { root.style.scrollSnapType = 'y mandatory'; });
-
-  // Pausa si la pestaña pierde foco (opcional, mejora UX)
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden && running) {
-      stopRequested = true;
-      showHint(false);
-      startBtn.textContent = 'Reanudar recorrido';
-    }
-  });
-
-  // ====== Cuenta regresiva ======
-  (function setupCountdown() {
-    const countdownEl = document.getElementById('countdown');
-    if (!countdownEl) return;
-
-    const dEl = document.getElementById('days');
-    const hEl = document.getElementById('hours');
-    const mEl = document.getElementById('minutes');
-    const sEl = document.getElementById('seconds');
-
-    // Ajusta la fecha/hora de tu evento:
-    const countdownDate = new Date('2025-11-15T17:00:00').getTime();
-
-    const timer = setInterval(() => {
-      const now = Date.now();
-      const distance = countdownDate - now;
-
-      if (distance < 0) {
-        clearInterval(timer);
-        countdownEl.innerHTML = '<p>¡Llegó el gran día!</p>';
+      if (!root || !startBtn) {
+        // Si falta algo crítico, no hacemos nada para evitar errores
+        console.warn('[tour] Falta #root o #startBtn');
         return;
       }
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      const sections = Array.from(root.querySelectorAll('.section'));
 
-      if (dEl) dEl.textContent = String(days).padStart(2, '0');
-      if (hEl) hEl.textContent = String(hours).padStart(2, '0');
-      if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
-      if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
-    }, 1000);
-  })();
-})();
-</script>
+      // ====== Estado del recorrido ======
+      let running = false;
+      let stopRequested = false;
+
+      // ====== Utilidades ======
+      const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+      function showHint(show) {
+        if (!hint) return;
+        hint.classList.toggle('show', !!show);
+      }
+
+      // Espera hasta que el contenedor deje de moverse o se agote el tiempo
+      function waitForSettle(timeoutMs) {
+        return new Promise((resolve) => {
+          const start = performance.now();
+          let lastY = root.scrollTop;
+          let sameCount = 0;
+
+          function tick() {
+            if (stopRequested) { resolve(true); return; }
+
+            const now = performance.now();
+            const y = root.scrollTop;
+
+            if (Math.abs(y - lastY) < 0.5) {
+              sameCount++;
+              if (sameCount > 6) { resolve(true); return; }
+            } else {
+              sameCount = 0;
+              lastY = y;
+            }
+
+            if (now - start > timeoutMs) { resolve(false); return; }
+            requestAnimationFrame(tick);
+          }
+
+          requestAnimationFrame(tick);
+        });
+      }
+
+      // Identifica la sección más visible para arrancar desde allí
+      function getStartIndex() {
+        let startIndex = 0;
+        let bestRatio = 0;
+        const viewportH = window.innerHeight || document.documentElement.clientHeight;
+
+        sections.forEach((sec, i) => {
+          const rect = sec.getBoundingClientRect();
+          const visible = Math.max(0, Math.min(rect.bottom, viewportH) - Math.max(rect.top, 0));
+          const ratio = visible / Math.max(1, rect.height);
+          if (ratio > bestRatio) { bestRatio = ratio; startIndex = i; }
+        });
+
+        return startIndex;
+      }
+
+      // ====== Recorrido automático ======
+      async function autoTour() {
+        if (prefersReduced.matches) return; // respeta accesibilidad
+
+        running = true;
+        stopRequested = false;
+        showHint(true);
+        startBtn.textContent = 'Pausar recorrido';
+
+        const startIndex = getStartIndex();
+
+        for (let i = startIndex; i < sections.length; i++) {
+          if (stopRequested) break;
+
+          sections[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          // Espera a que el scroll se asiente, luego una pequeña pausa
+          const settled = await waitForSettle(1400);
+          if (!settled) await sleep(600);
+          await sleep(800);
+        }
+
+        running = false;
+        stopRequested = false;
+        showHint(false);
+        startBtn.textContent = 'Repetir recorrido';
+      }
+
+      // ====== Interacciones ======
+      startBtn.addEventListener('click', () => {
+        if (!running) {
+          autoTour();
+        } else {
+          stopRequested = true;
+          showHint(false);
+          startBtn.textContent = 'Reanudar recorrido';
+        }
+      });
+
+      // Tocar la pantalla también pausa (móvil friendly)
+      root.addEventListener('pointerdown', () => {
+        if (running) {
+          stopRequested = true;
+          showHint(false);
+          startBtn.textContent = 'Reanudar recorrido';
+        }
+      }, { passive: true });
+
+      // Evita que el teclado (iOS) rompa el snap mientras se escribe
+      window.addEventListener('focusin', (e) => {
+        if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+          root.style.scrollSnapType = 'none';
+        }
+      });
+      window.addEventListener('focusout', () => { root.style.scrollSnapType = 'y mandatory'; });
+
+      // Pausa si la pestaña pierde foco (opcional, mejora UX)
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && running) {
+          stopRequested = true;
+          showHint(false);
+          startBtn.textContent = 'Reanudar recorrido';
+        }
+      });
+
+      // ====== Cuenta regresiva ======
+      (function setupCountdown() {
+        const countdownEl = document.getElementById('countdown');
+        if (!countdownEl) return;
+
+        const dEl = document.getElementById('days');
+        const hEl = document.getElementById('hours');
+        const mEl = document.getElementById('minutes');
+        const sEl = document.getElementById('seconds');
+
+        // Ajusta la fecha/hora de tu evento:
+        const countdownDate = new Date('2025-11-15T17:00:00').getTime();
+
+        const timer = setInterval(() => {
+          const now = Date.now();
+          const distance = countdownDate - now;
+
+          if (distance < 0) {
+            clearInterval(timer);
+            countdownEl.innerHTML = '<p>¡Llegó el gran día!</p>';
+            return;
+          }
+
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          if (dEl) dEl.textContent = String(days).padStart(2, '0');
+          if (hEl) hEl.textContent = String(hours).padStart(2, '0');
+          if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
+          if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
+        }, 1000);
+      })();
+    })();
+  </script>
 
 </body>
 
