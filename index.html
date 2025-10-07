@@ -42,18 +42,49 @@
 
 
       // Resolver el "root" que realmente scrollea (documento o contenedor con overflow)
+      const getDocRoot = () => document.scrollingElement || document.documentElement;
+      const isDocRoot = (node) => node === document.body || node === document.documentElement || node === getDocRoot();
+
       function resolveScrollRoot() {
         const container = document.querySelector('.container');
-        const docRoot = document.scrollingElement || document.documentElement;
-        // Usa el que tenga contenido desbordado (scrolleable)
+        const docRoot = getDocRoot();
         if (container) {
-          const cHasScroll = container.scrollHeight > container.clientHeight;
-          if (cHasScroll) return container;
+          const styles = getComputedStyle(container);
+          const canScroll = /(auto|scroll)/.test(styles.overflowY);
+          if (canScroll && container.scrollHeight - container.clientHeight > 4) {
+            return container;
+          }
         }
         return docRoot;
       }
 
       let root = resolveScrollRoot();
+      let manualTarget = isDocRoot(root) ? window : root;
+
+      const getScrollTop = () => {
+        if (isDocRoot(root)) {
+          const doc = getDocRoot();
+          return window.pageYOffset ?? doc.scrollTop ?? 0;
+        }
+        return root.scrollTop;
+      };
+
+      const setScrollTop = (value) => {
+        if (isDocRoot(root)) {
+          window.scrollTo(0, value);
+        } else {
+          root.scrollTop = value;
+        }
+      };
+
+      const getMaxScrollTop = () => {
+        if (isDocRoot(root)) {
+          const doc = getDocRoot();
+          const viewport = window.innerHeight || doc.clientHeight;
+          return Math.max(doc.scrollHeight - viewport, 0);
+        }
+        return Math.max(root.scrollHeight - root.clientHeight, 0);
+      };
 
       const SPEED = 40; // px/s — ajusta a tu gusto
       let rafId = null, lastTs = 0;
@@ -84,13 +115,13 @@
       const bindManualAbort = () => {
         if (manualListenersBound) return;
         manualListenersBound = true;
-        MANUAL_EVENTS.forEach(([type, opts]) => root.addEventListener(type, manualAbort, opts));
+        MANUAL_EVENTS.forEach(([type, opts]) => manualTarget.addEventListener(type, manualAbort, opts));
       };
 
       const unbindManualAbort = () => {
         if (!manualListenersBound) return;
         manualListenersBound = false;
-        MANUAL_EVENTS.forEach(([type, opts]) => root.removeEventListener(type, manualAbort, opts));
+        MANUAL_EVENTS.forEach(([type, opts]) => manualTarget.removeEventListener(type, manualAbort, opts));
       };
 
       function step(ts) {
@@ -98,9 +129,9 @@
         const dt = (ts - lastTs) / 1000; lastTs = ts;
 
         if (!paused && !ended) {
-          const maxY = root.scrollHeight - root.clientHeight;
-          const nextY = Math.min(root.scrollTop + SPEED * dt, maxY);
-          root.scrollTop = nextY;
+          const maxY = getMaxScrollTop();
+          const nextY = Math.min(getScrollTop() + SPEED * dt, maxY);
+          setScrollTop(nextY);
           if (nextY >= maxY - 0.5) { stop(true); return; }
         }
         rafId = requestAnimationFrame(step);
@@ -110,6 +141,7 @@
         if (ended && !restart) return;
         if (manualListenersBound) unbindManualAbort();
         root = resolveScrollRoot();
+        manualTarget = isDocRoot(root) ? window : root;
         cancelAnimationFrame(rafId);
         lastTs = 0;
         paused = false;
@@ -143,9 +175,14 @@
         if (btn) {
           btn.addEventListener('click', () => {
             ended = false; paused = false;
-            // resetea al tope
-            if (root.scrollTo) root.scrollTo({ top: 0, behavior: 'smooth' });
-            else root.scrollTop = 0;
+            const target = resolveScrollRoot();
+            if (isDocRoot(target)) {
+              window.scrollTo(0, 0);
+            } else if (typeof target.scrollTo === 'function') {
+              target.scrollTo({ top: 0 });
+            } else {
+              target.scrollTop = 0;
+            }
             setTimeout(() => start(true), 300);
           });
         }
