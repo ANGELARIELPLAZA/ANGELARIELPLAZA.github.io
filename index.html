@@ -282,16 +282,73 @@
     </section>
 
     <!-- Sección 2: Cuándo y dónde -->
-    <section class="section" id="s2">
-      <article class="card">
-        <img class="card__media" alt="Jardín con luces"
-          src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop" />
-        <div class="card__body">
-          <p class="eyebrow">Cuándo y Dónde</p>
-          <h2>Sábado 15 de Noviembre, 5:00 PM</h2>
-          <p>Jardín Las Bugambilias · Av. Principal 123 · Ciudad Bella</p>
+     <section class="section2" id="donde-cuando" aria-labelledby="where-when" data-animate>
+      <img src="./img/Fondo_Sec2_arriba.png" alt="" class="flower-bg" aria-hidden="true">
+      <p class="textnoscasamos2 font-tangerine">Con la bendición de nuestros queridos padres:</p>
+
+      <div class="parents-block" role="list" aria-label="Padres de los novios">
+        <div class="parents-col" role="listitem">
+          <h3 class="parents-title font-tangerine">Padres de la novia</h3>
+          <ul class="parents-list">
+            <li class="font-great">Crisoforo Molina H.</li>
+            <li class="amp font-italianno" italianno="true">&amp;</li>
+            <li class="font-great">Enriqueta Cazarin L.</li>
+          </ul>
         </div>
-      </article>
+
+        <div class="parents-col" role="listitem">
+          <h3 class="parents-title font-tangerine">Padres del novio</h3>
+          <ul class="parents-list">
+            <li class="font-great">Angel Alberto Plaza R.</li>
+            <li class="amp font-italianno" italianno="true">&amp;</li>
+            <li class="font-great">Angela Janely Acuña G.</li>
+          </ul>
+        </div>
+
+        <div class="parents-col parents-col--full" role="listitem">
+          <p class="parents-title">Nosotros:</p>
+          <ul class="novios-list font-italianno">
+            <li class="amp" italianno="true">Sinai &amp; Ariel</li>
+          </ul>
+        </div>
+
+        <p class="textnoscasamos3 invite-line-2">
+          Con gran alegría, les invitamos a compartir un nuevo capítulo de nuestra historia de amor:
+        </p>
+        <p class="textnoscasamos4 font-italianno">Nuestra boda.</p>
+
+        <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">
+      </div>
+
+      <!-- Evento + mapa -->
+      <div class="event-grid" itemscope itemtype="https://schema.org/Event">
+        <article class="event-card">
+          <div class="event-date" aria-label="28 de diciembre de 2025">
+            <img src="./img/flor_1.png" alt="" class="flower flower--tr" aria-hidden="true" role="presentation">
+            <span class="day" aria-hidden="true">28</span>
+            <span class="month" aria-hidden="true">Dic</span>
+            <span class="year" aria-hidden="true">2025</span>
+          </div>
+          <div class="event-info font-beau">
+            <h3 class="event-title" itemprop="name">Ceremonia Civil y Recepción</h3>
+            <time class="event-time" datetime="2025-12-28T16:00:00-06:00" itemprop="startDate">4:00 pm</time>
+            <p class="event-place" itemprop="location" itemscope itemtype="https://schema.org/Place">
+              <span itemprop="name">Salón de eventos California</span> ·
+              <span itemprop="address">Hueyapan de Ocampo</span>
+            </p>
+          </div>
+        </article>
+
+        <div class="map-wrap" aria-label="Mapa del Salón California en Hueyapan de Ocampo">
+          <a class="map-link" href="https://maps.app.goo.gl/J2DysbKQvpvysB4r6" target="_blank" rel="noopener"
+            aria-label="Abrir indicaciones hacia Salón de eventos California en Google Maps">
+            <img src="./img/salon.jpg" alt="Salón California. Toca para abrir el mapa" class="map-thumb">
+            <span class="map-cta">Ver en Google Maps</span>
+          </a>
+        </div>
+      </div>
+      <div class="scroll-hint">Desliza hacia abajo</div>
+
     </section>
 
     <!-- Sección 3: Ceremonia -->
