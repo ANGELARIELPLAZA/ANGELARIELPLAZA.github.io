@@ -526,6 +526,7 @@ p {
   position: relative;
   color: var(--text);
   text-align: center;
+  overflow: hidden;
 }
 
 .section2 h2 {
@@ -544,12 +545,26 @@ p {
 
 
 .section2 .flower-bg {
-  top: 0;
-  left: 0;
-  width: 100%;
+  position: absolute;
+  left: 50%;
+  width: min(960px, 120%);
   object-fit: contain;
   pointer-events: none;
   z-index: 0;
+  transform: translateX(-50%);
+}
+
+.section2 .flower-bg--top {
+  top: -6%;
+}
+
+.section2 .flower-bg--bottom {
+  bottom: -8%;
+}
+
+.section2 > *:not(.flower-bg) {
+  position: relative;
+  z-index: 1;
 }
 
 .textnoscasamos2 {
