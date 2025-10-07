@@ -42,41 +42,132 @@
 
 
       // Resolver el "root" que realmente scrollea (documento o contenedor con overflow)
+      const getDocRoot = () => document.scrollingElement || document.documentElement;
+      const isDocRoot = (node) => node === document.body || node === document.documentElement || node === getDocRoot();
+
       function resolveScrollRoot() {
         const container = document.querySelector('.container');
-        const docRoot = document.scrollingElement || document.documentElement;
-        // Usa el que tenga contenido desbordado (scrolleable)
+        const docRoot = getDocRoot();
         if (container) {
-          const cHasScroll = container.scrollHeight > container.clientHeight;
-          if (cHasScroll) return container;
+          const styles = getComputedStyle(container);
+          const canScroll = /(auto|scroll)/.test(styles.overflowY);
+          if (canScroll && container.scrollHeight - container.clientHeight > 4) {
+            return container;
+          }
         }
         return docRoot;
       }
 
       let root = resolveScrollRoot();
+      let manualTarget = isDocRoot(root) ? window : root;
 
-      const SPEED = 40; // px/s — ajusta a tu gusto
+      const toInt = (value) => Math.round(Math.max(value, 0));
+
+      const getScrollTop = () => {
+        if (isDocRoot(root)) {
+          const doc = getDocRoot();
+          const y = window.pageYOffset ?? doc.scrollTop ?? 0;
+          return Math.round(y);
+        }
+        return Math.round(root.scrollTop);
+      };
+
+      const setScrollTop = (value) => {
+        const next = toInt(value);
+        if (isDocRoot(root)) {
+          window.scrollTo(0, next);
+        } else if (typeof root.scrollTo === 'function') {
+          root.scrollTo({ top: next });
+        } else {
+          root.scrollTop = next;
+        }
+      };
+
+      const getMaxScrollTop = () => {
+        if (isDocRoot(root)) {
+          const doc = getDocRoot();
+          const viewport = window.innerHeight || doc.clientHeight;
+          return Math.max(doc.scrollHeight - viewport, 0);
+        }
+        return Math.max(root.scrollHeight - root.clientHeight, 0);
+      };
+
+      const SPEED = 70; // px/s — ajustado para asegurar avance constante en iOS
       let rafId = null, lastTs = 0;
       let paused = false, ended = false, hasStarted = false;
+      let manualListenersBound = false;
+
+      const MANUAL_EVENTS = [
+        ['wheel', { passive: true }],
+        ['touchstart', { passive: true }],
+        ['touchmove', { passive: true }],
+        ['mousedown', { passive: true }],
+        ['keydown', { passive: true }],
+      ];
+
+      const shouldAbortForKey = (evt) => {
+        if (evt.type !== 'keydown') return true;
+        const abortKeys = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '];
+        return abortKeys.includes(evt.key);
+      };
+
+      const manualAbort = (evt) => {
+        if (!rafId || ended) return;
+        if (!shouldAbortForKey(evt)) return;
+        stop();
+        paused = false;
+        ended = false;
+      };
+
+      const bindManualAbort = () => {
+        if (manualListenersBound) return;
+        manualListenersBound = true;
+        MANUAL_EVENTS.forEach(([type, opts]) => manualTarget.addEventListener(type, manualAbort, opts));
+      };
+
+      const unbindManualAbort = () => {
+        if (!manualListenersBound) return;
+        manualListenersBound = false;
+        MANUAL_EVENTS.forEach(([type, opts]) => manualTarget.removeEventListener(type, manualAbort, opts));
+      };
 
       function step(ts) {
         if (!lastTs) lastTs = ts;
         const dt = (ts - lastTs) / 1000; lastTs = ts;
 
         if (!paused && !ended) {
-          const maxY = root.scrollHeight - root.clientHeight;
-          const nextY = Math.min(root.scrollTop + SPEED * dt, maxY);
-          root.scrollTop = nextY;
-          if (nextY >= maxY - 0.5) { stop(true); return; }
+          const maxY = getMaxScrollTop();
+          const currentY = getScrollTop();
+          const remaining = maxY - currentY;
+
+          if (remaining <= 1) {
+            setScrollTop(maxY);
+            stop(true);
+            return;
+          }
+
+          const projected = currentY + SPEED * dt;
+          const ensuredStep = projected - currentY < 1 ? currentY + 1 : projected;
+          const nextY = Math.min(ensuredStep, maxY);
+          setScrollTop(nextY);
+
+          if (nextY >= maxY - 0.5) {
+            stop(true);
+            return;
+          }
         }
         rafId = requestAnimationFrame(step);
       }
 
       function start(restart = false) {
         if (ended && !restart) return;
+        if (manualListenersBound) unbindManualAbort();
+        root = resolveScrollRoot();
+        manualTarget = isDocRoot(root) ? window : root;
         cancelAnimationFrame(rafId);
         lastTs = 0;
         paused = false;
+        bindManualAbort();
         rafId = requestAnimationFrame(step);
         hasStarted = true;
       }
@@ -85,6 +176,8 @@
         cancelAnimationFrame(rafId);
         rafId = null;
         lastTs = 0;
+        unbindManualAbort();
+        hasStarted = false;
         if (reachedBottom) ended = true;
       }
 
@@ -104,9 +197,14 @@
         if (btn) {
           btn.addEventListener('click', () => {
             ended = false; paused = false;
-            // resetea al tope
-            if (root.scrollTo) root.scrollTo({ top: 0, behavior: 'smooth' });
-            else root.scrollTop = 0;
+            const target = resolveScrollRoot();
+            if (isDocRoot(target)) {
+              window.scrollTo(0, 0);
+            } else if (typeof target.scrollTo === 'function') {
+              target.scrollTo({ top: 0 });
+            } else {
+              target.scrollTop = 0;
+            }
             setTimeout(() => start(true), 300);
           });
         }
