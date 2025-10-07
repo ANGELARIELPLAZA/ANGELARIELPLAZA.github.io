@@ -80,112 +80,84 @@
       background: var(--card);
       box-shadow: var(--shadow);
       overflow: hidden;
-      position: relative;
-      border-radius: var(--radius);
-    }
-
-    .card--hero {
-      display: grid;
-    }
-
-    .card--hero .card__media {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .card--hero .overlay {
-      z-index: 4;
     }
 
     .overlay {
       position: absolute;
-      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
       color: white;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.35) 40%, rgba(0, 0, 0, 0.35) 100%);
-      padding: clamp(24px, 5vw, 48px);
-      gap: clamp(10px, 3vw, 18px);
+      background: rgba(0, 0, 0, 0.35);
+      padding: 20px;
     }
 
     blockquote {
       font-style: italic;
-      font-size: clamp(1rem, 3.2vw, 1.3rem);
-      margin: 0;
+      font-size: 1rem;
+      margin: 0 0 20px 0;
     }
 
     .quote-text {
       color: var(--bg);
-      font-size: clamp(1.1rem, 3.6vw, 1.6rem);
+      font-size: 1.2rem;
       font-family: 'Playfair Display', serif;
+
     }
 
     .quote-ref {
-      margin-top: 6px;
-      font-size: clamp(0.85rem, 2.4vw, 1rem);
-      opacity: 0.85;
+      margin-top: 8px;
+      font-size: 0.9rem;
+      opacity: 0.8;
     }
 
 
     .iniciales {
       font-weight: 700;
-      margin: clamp(12px, 3vw, 18px) 0 clamp(6px, 2vw, 12px);
-      font-size: clamp(3.5rem, 10vw, 11rem);
-      letter-spacing: .1em;
+      margin: 10px 0;
+      font-size: clamp(3.5rem, 10vw, 12rem);
       font-family: 'ui-sans-serif';
     }
 
 
     .textnoscasamos {
       font-family: 'Tangerine', cursive;
-      font-size: clamp(2.1rem, 7vw, 3.1rem);
-      margin: 0;
-    }
-
-    .hero-names {
-      font-family: 'Great Vibes', cursive;
-      font-size: clamp(2.2rem, 8vw, 3.4rem);
-      color: var(--bg);
-      margin: 0;
-    }
-
-    .hero-details {
-      margin: 0;
-      color: rgba(255, 255, 255, 0.85);
-      font-size: clamp(1rem, 3vw, 1.2rem);
-      letter-spacing: .06em;
+      font-size: 2.5rem;
+      margin: 10px 0 20px;
     }
 
 
     .countdown {
       display: flex;
-      gap: clamp(10px, 3vw, 18px);
+      gap: 10px;
       justify-content: center;
-      margin-top: clamp(14px, 4vw, 20px);
     }
 
     .box {
-      background: rgba(255, 255, 255, 0.22);
-      border-radius: 12px;
-      padding: clamp(10px, 2.5vw, 16px) clamp(14px, 4vw, 20px);
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 10px 14px;
       text-align: center;
-      min-width: clamp(58px, 16vw, 88px);
-      backdrop-filter: blur(4px);
+      min-width: 60px;
     }
 
     .number {
+      font-weight: bold;
+      font-size: clamp(1.4rem, 3.5vw, 2.4rem);
       font-weight: 700;
-      font-size: clamp(1.4rem, 4vw, 2.6rem);
     }
 
     .labelcount {
-      font-size: clamp(0.95rem, 2.6vw, 1.2rem);
+      font-size: clamp(1rem, 2vw, 1.1rem);
       letter-spacing: 1px;
       font-family: 'Tangerine', cursive;
+
     }
 
     .card__media {
@@ -195,7 +167,7 @@
       object-fit: cover;
     }
 
-    
+
     .card__body {
       padding: clamp(16px, 3.5vw, 28px);
     }
@@ -262,6 +234,32 @@
       opacity: 1;
       transform: translateY(0);
     }
+    /* El contenedor debe ser relativo para posicionar hijos absolutos */
+.card.card--hero { position: relative; }
+
+/* La foto de fondo principal queda en el nivel 1 */
+.card--hero .card__media.sec1 {
+  position: relative;
+  z-index: 1;
+}
+
+/* La flor (primera imagen) va por encima de la foto */
+.flower {
+  position: absolute;
+  z-index: 3;          /* > 1 para estar encima de .card__media */
+  pointer-events: none;/* para no bloquear toques/clics */
+  display: block;
+}
+
+/* Ubícala en la esquina que quieras (top-left en este ejemplo) */
+.flower--tl {
+  top: 0;
+  left: 0;
+ }
+
+/* Ya tienes el overlay en 4, se mantiene encima de todo */
+.card--hero .overlay { z-index: 4; }
+
   </style>
 </head>
 
@@ -274,22 +272,21 @@
 
     <!-- Sección 1: Portada -->
     <section class="section" id="s1">
-      <article class="card card--hero">
-        <img src="./img/Fondo_portada_arriba.png" alt="" class="flower flower--tl" aria-hidden="true" role="presentation">
+<article class="card card--hero">
 
-        <img class="card__media sec1" alt="Pareja al atardecer"
-          src="./img/IMAGEN1.jpeg?q=80&w=1600&auto=format&fit=crop" />
+        <img src="./img/Fondo_portada_arriba.png" alt="" class="flower flower--tl" aria-hidden="true"
+          role="presentation">
+
+        <!-- Esta es la imagen grande de fondo -->
+        <img class="card__media sec1" alt="Pareja al atardecer" src="./img/IMAGEN1.jpeg" />
 
         <div class="overlay">
-          <img src="./img/Fondo_portada_arriba.png" alt="" class="hero-frame" aria-hidden="true" role="presentation">
           <blockquote>
             <p class="quote-text">“Mi amado es mío, y yo soy suya.”</p>
             <footer class="quote-ref">— Cantares 2:16</footer>
           </blockquote>
-          <h1 class="iniciales" aria-label="Iniciales de los novios">S | A</h1>
+          <h1 class="iniciales" aria-label="Iniciales de los novios">S|A</h1>
           <h2 class="textnoscasamos">¡Nos casamos!</h2>
-          <p class="hero-names" aria-label="Sinai y Ariel">Sinai &amp; Ariel</p>
-          <p class="hero-details">28 de diciembre de 2025 · 4:00&nbsp;pm · Hueyapan de Ocampo</p>
           <div class="countdown" id="countdown">
             <div class="box">
               <div class="number" id="days">00</div>
@@ -313,73 +310,16 @@
     </section>
 
     <!-- Sección 2: Cuándo y dónde -->
-    <section class="section2" id="donde-cuando" aria-labelledby="where-when" data-animate>
-      <img src="./img/Fondo_Sec2_arriba.png" alt="" class="flower-bg flower-bg--top" aria-hidden="true">
-      <p class="textnoscasamos2 font-tangerine">Con la bendición de nuestros queridos padres:</p>
-
-      <div class="parents-block" role="list" aria-label="Padres de los novios">
-        <div class="parents-col" role="listitem">
-          <h3 class="parents-title font-tangerine">Padres de la novia</h3>
-          <ul class="parents-list">
-            <li class="font-great">Crisoforo Molina H.</li>
-            <li class="amp font-italianno" italianno="true">&amp;</li>
-            <li class="font-great">Enriqueta Cazarin L.</li>
-          </ul>
+    <section class="section" id="s2">
+      <article class="card">
+        <img class="card__media" alt="Jardín con luces"
+          src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop" />
+        <div class="card__body">
+          <p class="eyebrow">Cuándo y Dónde</p>
+          <h2>Sábado 15 de Noviembre, 5:00 PM</h2>
+          <p>Jardín Las Bugambilias · Av. Principal 123 · Ciudad Bella</p>
         </div>
-
-        <div class="parents-col" role="listitem">
-          <h3 class="parents-title font-tangerine">Padres del novio</h3>
-          <ul class="parents-list">
-            <li class="font-great">Angel Alberto Plaza R.</li>
-            <li class="amp font-italianno" italianno="true">&amp;</li>
-            <li class="font-great">Angela Janely Acuña G.</li>
-          </ul>
-        </div>
-
-        <div class="parents-col parents-col--full" role="listitem">
-          <p class="parents-title">Nosotros:</p>
-          <ul class="novios-list font-italianno">
-            <li class="amp" italianno="true">Sinai &amp; Ariel</li>
-          </ul>
-        </div>
-
-        <p class="textnoscasamos3 invite-line-2">
-          Con gran alegría, les invitamos a compartir un nuevo capítulo de nuestra historia de amor:
-        </p>
-        <p class="textnoscasamos4 font-italianno">Nuestra boda.</p>
-
-        <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg flower-bg--bottom" aria-hidden="true">
-      </div>
-
-      <!-- Evento + mapa -->
-      <div class="event-grid" itemscope itemtype="https://schema.org/Event">
-        <article class="event-card">
-          <div class="event-date" aria-label="28 de diciembre de 2025">
-            <img src="./img/flor_1.png" alt="" class="flower flower--tr" aria-hidden="true" role="presentation">
-            <span class="day" aria-hidden="true">28</span>
-            <span class="month" aria-hidden="true">Dic</span>
-            <span class="year" aria-hidden="true">2025</span>
-          </div>
-          <div class="event-info font-beau">
-            <h3 class="event-title" itemprop="name">Ceremonia Civil y Recepción</h3>
-            <time class="event-time" datetime="2025-12-28T16:00:00-06:00" itemprop="startDate">4:00 pm</time>
-            <p class="event-place" itemprop="location" itemscope itemtype="https://schema.org/Place">
-              <span itemprop="name">Salón de eventos California</span> ·
-              <span itemprop="address">Hueyapan de Ocampo</span>
-            </p>
-          </div>
-        </article>
-
-        <div class="map-wrap" aria-label="Mapa del Salón California en Hueyapan de Ocampo">
-          <a class="map-link" href="https://maps.app.goo.gl/J2DysbKQvpvysB4r6" target="_blank" rel="noopener"
-            aria-label="Abrir indicaciones hacia Salón de eventos California en Google Maps">
-            <img src="./img/salon.jpg" alt="Salón California. Toca para abrir el mapa" class="map-thumb">
-            <span class="map-cta">Ver en Google Maps</span>
-          </a>
-        </div>
-      </div>
-      <div class="scroll-hint">Desliza hacia abajo</div>
-
+      </article>
     </section>
 
     <!-- Sección 3: Ceremonia -->
@@ -555,7 +495,7 @@
 
 
     // Cuenta regresiva
-    const countdownDate = new Date('2025-12-28T16:00:00').getTime();
+    const countdownDate = new Date('2025-11-15T17:00:00').getTime();
     const countdown = setInterval(() => {
       const now = new Date().getTime();
       const distance = countdownDate - now;
