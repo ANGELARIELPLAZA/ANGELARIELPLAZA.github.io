@@ -61,6 +61,12 @@
       let root = resolveScrollRoot();
       let manualTarget = isDocRoot(root) ? window : root;
 
+      const setTourState = (running) => {
+        const host = document.body || document.documentElement;
+        if (!host) return;
+        host.classList.toggle('tour-started', Boolean(running));
+      };
+
       const getScrollTop = () => {
         if (isDocRoot(root)) {
           const doc = getDocRoot();
@@ -148,6 +154,7 @@
         bindManualAbort();
         rafId = requestAnimationFrame(step);
         hasStarted = true;
+        setTourState(true);
       }
 
       function stop(reachedBottom = false) {
@@ -156,6 +163,7 @@
         lastTs = 0;
         unbindManualAbort();
         hasStarted = false;
+        setTourState(false);
         if (reachedBottom) ended = true;
       }
 
@@ -170,22 +178,47 @@
 
       // Arranque automático cuando el DOM esté listo (sin depender de ancho ni tipo de dispositivo)
       window.addEventListener('DOMContentLoaded', () => {
+        const resetScrollPosition = () => {
+          const target = resolveScrollRoot();
+          if (isDocRoot(target)) {
+            window.scrollTo(0, 0);
+          } else if (typeof target.scrollTo === 'function') {
+            target.scrollTo({ top: 0 });
+          } else {
+            target.scrollTop = 0;
+          }
+        };
+
         // Si hay botón de “Iniciar recorrido”, úsalo también
         const btn = document.getElementById('playTour');
         if (btn) {
           btn.addEventListener('click', () => {
             ended = false; paused = false;
-            const target = resolveScrollRoot();
-            if (isDocRoot(target)) {
-              window.scrollTo(0, 0);
-            } else if (typeof target.scrollTo === 'function') {
-              target.scrollTo({ top: 0 });
-            } else {
-              target.scrollTop = 0;
-            }
+            resetScrollPosition();
             setTimeout(() => start(true), 300);
           });
         }
+
+        const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+        const shouldAutoStart = !(prefersReducedMotion && prefersReducedMotion.matches);
+
+        if (shouldAutoStart) {
+          setTimeout(() => {
+            if (hasStarted || ended) return;
+            resetScrollPosition();
+            start(true);
+          }, 600);
+        }
+
+        const motionListener = (evt) => {
+          if (evt.matches || hasStarted || ended) return;
+          ended = false; paused = false;
+          resetScrollPosition();
+          start(true);
+        };
+
+        prefersReducedMotion?.addEventListener?.('change', motionListener);
+        prefersReducedMotion?.addListener?.(motionListener);
 
       });
 
