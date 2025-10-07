@@ -61,25 +61,19 @@
       let root = resolveScrollRoot();
       let manualTarget = isDocRoot(root) ? window : root;
 
-      const toInt = (value) => Math.round(Math.max(value, 0));
-
       const getScrollTop = () => {
         if (isDocRoot(root)) {
           const doc = getDocRoot();
-          const y = window.pageYOffset ?? doc.scrollTop ?? 0;
-          return Math.round(y);
+          return window.pageYOffset ?? doc.scrollTop ?? 0;
         }
-        return Math.round(root.scrollTop);
+        return root.scrollTop;
       };
 
       const setScrollTop = (value) => {
-        const next = toInt(value);
         if (isDocRoot(root)) {
-          window.scrollTo(0, next);
-        } else if (typeof root.scrollTo === 'function') {
-          root.scrollTo({ top: next });
+          window.scrollTo(0, value);
         } else {
-          root.scrollTop = next;
+          root.scrollTop = value;
         }
       };
 
@@ -100,7 +94,6 @@
       const MANUAL_EVENTS = [
         ['wheel', { passive: true }],
         ['touchstart', { passive: true }],
-        ['touchmove', { passive: true }],
         ['mousedown', { passive: true }],
         ['keydown', { passive: true }],
       ];
@@ -137,24 +130,9 @@
 
         if (!paused && !ended) {
           const maxY = getMaxScrollTop();
-          const currentY = getScrollTop();
-          const remaining = maxY - currentY;
-
-          if (remaining <= 1) {
-            setScrollTop(maxY);
-            stop(true);
-            return;
-          }
-
-          const projected = currentY + SPEED * dt;
-          const ensuredStep = projected - currentY < 1 ? currentY + 1 : projected;
-          const nextY = Math.min(ensuredStep, maxY);
+          const nextY = Math.min(getScrollTop() + SPEED * dt, maxY);
           setScrollTop(nextY);
-
-          if (nextY >= maxY - 0.5) {
-            stop(true);
-            return;
-          }
+          if (nextY >= maxY - 0.5) { stop(true); return; }
         }
         rafId = requestAnimationFrame(step);
       }
