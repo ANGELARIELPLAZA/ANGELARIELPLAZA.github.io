@@ -188,7 +188,7 @@
     /* --- Flores decorativas reutilizables --- */
     .flower {
       position: absolute;
-            animation: float 8s ease-in-out infinite;
+      animation: float 8s ease-in-out infinite;
 
       /* escala responsiva */
       height: auto;
@@ -268,7 +268,7 @@
       opacity: .85;
     }
 
-    
+
 
     .map-wrap {
       position: relative;
@@ -484,12 +484,7 @@
       flex-wrap: wrap;
     }
 
-    .textnoscasamos {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      margin-bottom: 20px;
-      color: #f5f5f5;
-    }
-
+   
     .box {
       flex: 1;
       min-width: 70px;
@@ -1654,7 +1649,7 @@
 
     .textnoscasamos {
       font-family: 'Tangerine', cursive;
-      font-size: 2.5rem;
+      font-size: 5.5rem;
       margin: 10px 0 20px;
     }
 
@@ -1730,7 +1725,7 @@
       margin: 8px 0 0 0;
     }
 
-  
+
 
     /* --------- Indicador sutil --------- */
     .hint {
@@ -2089,6 +2084,83 @@
       transform: scale(1.05);
     }
   </style>
+  <script defer>
+    // ===========================================
+    // 5) Galería tipo “stack” con swipe
+    // ===========================================
+    document.addEventListener('DOMContentLoaded', () => {
+      const stack = document.getElementById('gStack');
+      if (!stack) return;
+      const resetBtn = document.getElementById('gReset');
+      const emptyMsg = document.getElementById('gEmpty');
+      const original = stack.innerHTML;
+
+      let currentCard = null;
+      let startX = 0, startY = 0, dx = 0, dy = 0, dragging = false;
+
+      const THRESHOLD = 90; // px
+      const ROTATION = 18;  // deg
+
+      const topCard = () => stack.querySelector('.g-card');
+
+      const applyTransform = (el, x, y) => {
+        const rot = (x / Math.max(320, window.innerWidth)) * ROTATION;
+        el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
+      };
+
+      const start = (e) => {
+        currentCard = topCard();
+        if (!currentCard) return;
+        dragging = true;
+        const p = (e.touches?.[0]) || e;
+        startX = p.clientX; startY = p.clientY; dx = 0; dy = 0;
+        currentCard.style.transition = 'none';
+      };
+
+      const move = (e) => {
+        if (!dragging || !currentCard) return;
+        const p = (e.touches?.[0]) || e;
+        dx = p.clientX - startX; dy = p.clientY - startY;
+        if (Math.abs(dx) > Math.abs(dy)) e.preventDefault(); // prioridad swipe
+        applyTransform(currentCard, dx, dy);
+      };
+
+      const end = () => {
+        if (!dragging || !currentCard) return;
+        dragging = false;
+
+        if (Math.abs(dx) > THRESHOLD) {
+          const dirClass = dx > 0 ? 'g-right' : 'g-left';
+          currentCard.classList.add(dirClass);
+          currentCard.style.transition = '';
+          currentCard.addEventListener('transitionend', function removeOnce() {
+            this.removeEventListener('transitionend', removeOnce);
+            if (this.parentElement === stack) stack.removeChild(this);
+            if (!topCard()) emptyMsg.style.display = 'block';
+          });
+        } else {
+          currentCard.style.transition = 'transform .25s ease';
+          currentCard.style.transform = '';
+        }
+      };
+
+      const reset = () => {
+        stack.innerHTML = original;
+        emptyMsg.style.display = 'none';
+      };
+
+      stack.addEventListener('mousedown', start);
+      stack.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', end);
+
+      stack.addEventListener('touchstart', start, { passive: false });
+      stack.addEventListener('touchmove', move, { passive: false });
+      stack.addEventListener('touchend', end);
+      stack.addEventListener('touchcancel', end);
+
+      resetBtn?.addEventListener('click', reset);
+    });
+  </script>
 </head>
 
 <body>
@@ -2201,9 +2273,7 @@
       </article>
     </section>
 
-
-
-    <!-- Sección 6: Confirmación (RSVP) -->
+    <!-- Sección 3: Confirmación (RSVP) -->
     <section class="section" id="s6">
       <article class="card">
         <img class="card__media" alt="Tarjeta RSVP"
@@ -2215,7 +2285,7 @@
         </div>
       </article>
     </section>
-    <!-- Sección 3 (Itinerario) -->
+    <!-- Sección 4 (Itinerario) -->
     <section class="section" id="s7">
 
       <h2 class="font-tangerine">Itinerario</h2>
@@ -2257,7 +2327,7 @@
       </div>
     </section>
 
-    <!-- Sección 4 (Galería) -->
+    <!-- Sección 5 (Galería) -->
     <section class="section" id="s8">
       <h2 class="font-tangerine">Momentos</h2>
       <div class="g-stack-wrap">
@@ -2284,7 +2354,7 @@
 
     </section>
 
-    <!-- Sección 5 — Código de Vestimenta -->
+    <!-- Sección 6 — Código de Vestimenta -->
     <img src="./img/Fondo_portada_arriba.png" alt="" class="flower3 mirror-x" aria-hidden="true" role="presentation">
     <section class="section" id="s9">
       <div class="dc-in">
@@ -2315,7 +2385,7 @@
 
     </section>
 
-    <!-- Sección 6 (RSVP) -->
+    <!-- Sección 7 (RSVP) -->
     <section class="section" id="s9">
       <div class="card">
         <div class="card-body">
@@ -2455,7 +2525,7 @@
         }
       }, { passive: true });
 
-     
+
       window.addEventListener('focusout', () => { root.style.scrollSnapType = 'y mandatory'; });
 
       // Pausa si la pestaña pierde foco (opcional, mejora UX)
