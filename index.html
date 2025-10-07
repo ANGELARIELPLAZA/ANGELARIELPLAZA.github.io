@@ -58,6 +58,40 @@
       const SPEED = 40; // px/s — ajusta a tu gusto
       let rafId = null, lastTs = 0;
       let paused = false, ended = false, hasStarted = false;
+      let manualListenersBound = false;
+
+      const MANUAL_EVENTS = [
+        ['wheel', { passive: true }],
+        ['touchstart', { passive: true }],
+        ['mousedown', { passive: true }],
+        ['keydown', { passive: true }],
+      ];
+
+      const shouldAbortForKey = (evt) => {
+        if (evt.type !== 'keydown') return true;
+        const abortKeys = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '];
+        return abortKeys.includes(evt.key);
+      };
+
+      const manualAbort = (evt) => {
+        if (!rafId || ended) return;
+        if (!shouldAbortForKey(evt)) return;
+        stop();
+        paused = false;
+        ended = false;
+      };
+
+      const bindManualAbort = () => {
+        if (manualListenersBound) return;
+        manualListenersBound = true;
+        MANUAL_EVENTS.forEach(([type, opts]) => root.addEventListener(type, manualAbort, opts));
+      };
+
+      const unbindManualAbort = () => {
+        if (!manualListenersBound) return;
+        manualListenersBound = false;
+        MANUAL_EVENTS.forEach(([type, opts]) => root.removeEventListener(type, manualAbort, opts));
+      };
 
       function step(ts) {
         if (!lastTs) lastTs = ts;
@@ -74,9 +108,12 @@
 
       function start(restart = false) {
         if (ended && !restart) return;
+        if (manualListenersBound) unbindManualAbort();
+        root = resolveScrollRoot();
         cancelAnimationFrame(rafId);
         lastTs = 0;
         paused = false;
+        bindManualAbort();
         rafId = requestAnimationFrame(step);
         hasStarted = true;
       }
@@ -85,6 +122,8 @@
         cancelAnimationFrame(rafId);
         rafId = null;
         lastTs = 0;
+        unbindManualAbort();
+        hasStarted = false;
         if (reachedBottom) ended = true;
       }
 
