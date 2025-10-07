@@ -823,7 +823,7 @@
     .timeline-item {
       padding: 20px 30px;
       position: relative;
-      width: 50%;
+      width: 100%;
       opacity: 0;
       animation: timelineSlideLeft .75s ease forwards;
       animation-delay: calc(.18s + var(--delay, 0s));
@@ -1730,9 +1730,7 @@
       margin: 8px 0 0 0;
     }
 
-    .start-wrap {
-      margin: -137%;
-    }
+  
 
     /* --------- Indicador sutil --------- */
     .hint {
@@ -2457,12 +2455,7 @@
         }
       }, { passive: true });
 
-      // Evita que el teclado (iOS) rompa el snap mientras se escribe
-      window.addEventListener('focusin', (e) => {
-        if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
-          root.style.scrollSnapType = 'none';
-        }
-      });
+     
       window.addEventListener('focusout', () => { root.style.scrollSnapType = 'y mandatory'; });
 
       // Pausa si la pestaña pierde foco (opcional, mejora UX)
@@ -2512,5 +2505,3 @@
   </script>
 
 </body>
-
-</html>
