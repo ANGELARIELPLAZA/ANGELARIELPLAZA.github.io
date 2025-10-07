@@ -1,604 +1,305 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Invitación Boda</title>
+  <title>Invitación de Boda — Recorrido en 6 secciones</title>
+  <style>
+    /* --------- Reset mínimo --------- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    img { display: block; max-width: 100%; height: auto; }
 
-  <!-- Fuentes -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Great+Vibes&family=Italianno&family=Tangerine:wght@400;700&display=swap"
-    rel="stylesheet">
+    /* --------- Tipografía / Colores --------- */
+    :root{
+      --bg: #fffaf7;
+      --text: #2c2c2c;
+      --muted: #6b6b6b;
+      --brand: #b57a6a;         /* rosa tostado */
+      --brand-2: #d9c6be;       /* arena suave */
+      --card: #ffffff;
+      --shadow: 0 10px 24px rgba(0,0,0,.10);
+      --radius: 18px;
+    }
 
-  <!-- CSS (sin cambios de rutas) -->
-  <link rel="stylesheet" href="./style/style.unified.css">
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth; /* apoyo para scrollIntoView */
+    }
 
+    /* --------- Layout con scroll-snap (ideal móvil) --------- */
+    main{
+      scroll-snap-type: y mandatory;
+      overflow-y: auto;
+      height: 100dvh; /* 100% de viewport dinámico en móvil */
+    }
+    section.section{
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      background: linear-gradient(180deg, rgba(217,198,190,.25), rgba(255,250,247,1));
+    }
 
-  <!-- Música -->
-  <audio id="bg-music" autoplay loop muted>
-    <source src="./mp3/musica.mp3" type="audio/mpeg">
-  </audio>
+    /* --------- Tarjetas --------- */
+    .card{
+      width: min(920px, 94vw);
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card__media{
+      aspect-ratio: 16/9;
+      width: 100%;
+      object-fit: cover;
+      background: #eee;
+    }
+    .card__body{
+      padding: clamp(16px, 3.5vw, 28px);
+    }
+    .eyebrow{
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: .78rem;
+      color: var(--brand);
+      margin: 0 0 8px 0;
+      font-weight: 700;
+    }
+    h2{
+      margin: 0 0 6px 0;
+      font-size: clamp(1.4rem, 4.5vw, 2rem);
+    }
+    p{ color: var(--muted); margin: 8px 0 0 0; }
 
-  <!-- Scripts: usa defer para asegurar DOM listo -->
-  <script defer>
-    // ===========================
-    // 1) Música: desmutear al 1er gesto
-    // ===========================
-    document.addEventListener("DOMContentLoaded", () => {
-      const music = document.getElementById("bg-music");
-      const unmute = () => {
-        try { music.muted = false; music.play(); } catch { }
-        window.removeEventListener("pointerup", unmute);
-        window.removeEventListener("keydown", unmute);
-      };
-      window.addEventListener("pointerup", unmute, { once: true });
-      window.addEventListener("keydown", unmute, { once: true });
-    });
-  </script>
+    /* --------- Botón de inicio fijo --------- */
+    .start-wrap{
+      position: fixed;
+      inset: auto 12px 16px 12px; /* bottom */
+      display: grid;
+      place-items: center;
+      z-index: 50;
+      pointer-events: none; /* permite clics solo en el botón */
+    }
+    .start-btn{
+      pointer-events: auto;
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      background: var(--brand);
+      color: white;
+      box-shadow: var(--shadow);
+    }
 
-  <script defer>
-    (function () {
+    /* --------- Indicador sutil --------- */
+    .hint{
+      position: fixed;
+      top: 12px; right: 12px;
+      background: rgba(0,0,0,.55);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: .8rem;
+      z-index: 40;
+      opacity: .0;
+      transform: translateY(-8px);
+      transition: opacity .4s ease, transform .4s ease;
+      user-select: none;
+    }
+    .hint.show{ opacity: 1; transform: translateY(0); }
 
+    /* --------- Accesibilidad (reduce motion) --------- */
+    @media (prefers-reduced-motion: reduce){
+      main{ scroll-snap-type: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Indicador (aparece cuando inicia el recorrido) -->
+  <div id="hint" class="hint">Recorrido en curso… toca para pausar</div>
 
-      // Resolver el "root" que realmente scrollea (documento o contenedor con overflow)
-      const getDocRoot = () => document.scrollingElement || document.documentElement;
-      const isDocRoot = (node) => node === document.body || node === document.documentElement || node === getDocRoot();
+  <!-- Contenido con scroll-snap -->
+  <main id="root">
 
-      function resolveScrollRoot() {
-        const container = document.querySelector('.container');
-        const docRoot = getDocRoot();
-        if (container) {
-          const styles = getComputedStyle(container);
-          const canScroll = /(auto|scroll)/.test(styles.overflowY);
-          if (canScroll && container.scrollHeight - container.clientHeight > 4) {
-            return container;
+    <!-- Sección 1: Portada -->
+    <section class="section" id="s1">
+      <article class="card">
+        <img class="card__media" alt="Pareja al atardecer" src="https://images.unsplash.com/photo-1529680459049-bf0340fa0755?q=80&w=1600&auto=format&fit=crop" />
+        <div class="card__body">
+          <p class="eyebrow">Nuestra Boda</p>
+          <h2>María &amp; José</h2>
+          <p>Nos encantaría celebrar contigo este gran día. Desliza o presiona “Iniciar Recorrido”.</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Sección 2: Cuándo y dónde -->
+    <section class="section" id="s2">
+      <article class="card">
+        <img class="card__media" alt="Jardín con luces" src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop" />
+        <div class="card__body">
+          <p class="eyebrow">Cuándo y Dónde</p>
+          <h2>Sábado 15 de Noviembre, 5:00 PM</h2>
+          <p>Jardín Las Bugambilias · Av. Principal 123 · Ciudad Bella</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Sección 3: Ceremonia -->
+    <section class="section" id="s3">
+      <article class="card">
+        <img class="card__media" alt="Iglesia elegante" src="https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=1600&auto=format&fit=crop" />
+        <div class="card__body">
+          <p class="eyebrow">Ceremonia</p>
+          <h2>Parroquia de San Miguel</h2>
+          <p>4:00 PM — Agradecemos llegar con 15 minutos de anticipación para acomodar a todos.</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Sección 4: Recepción -->
+    <section class="section" id="s4">
+      <article class="card">
+        <img class="card__media" alt="Recepción al aire libre" src="https://images.unsplash.com/photo-1482707272725-473c4f3de1f7?q=80&w=1600&auto=format&fit=crop" />
+        <div class="card__body">
+          <p class="eyebrow">Recepción</p>
+          <h2>Banquete &amp; Celebración</h2>
+          <p>Después de la ceremonia, acompáñanos a disfrutar de una noche inolvidable con música, baile y mucha alegría.</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Sección 5: Dress Code -->
+    <section class="section" id="s5">
+      <article class="card">
+        <img class="card__media" alt="Vestimenta formal" src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop" />
+        <div class="card__body">
+          <p class="eyebrow">Dress Code</p>
+          <h2>Formal de Jardín</h2>
+          <p>Colores sugeridos: neutros, pastel o tierra. Evitar blanco total.</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Sección 6: Confirmación (RSVP) -->
+    <section class="section" id="s6">
+      <article class="card">
+        <img class="card__media" alt="Tarjeta RSVP" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1600&auto=format&fit=crop" />
+        <div class="card__body">
+          <p class="eyebrow">¡Te esperamos!</p>
+          <h2>Confirma tu asistencia</h2>
+          <p>Escríbenos o confirma en el enlace que te compartimos. ¡Gracias por acompañarnos!</p>
+        </div>
+      </article>
+    </section>
+
+  </main>
+
+  <!-- Botón de inicio/pausa del recorrido -->
+  <div class="start-wrap">
+    <button id="startBtn" class="start-btn" type="button">Iniciar recorrido</button>
+  </div>
+
+  <script>
+    (function(){
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const root = document.getElementById('root');
+      const sections = Array.from(root.querySelectorAll('.section'));
+      const startBtn = document.getElementById('startBtn');
+      const hint = document.getElementById('hint');
+
+      let running = false;
+      let stopRequested = false;
+
+      function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+      function showHint(show){
+        if(!hint) return;
+        if(show){ hint.classList.add('show'); }
+        else { hint.classList.remove('show'); }
+      }
+
+      async function autoTour(){
+        if(prefersReduced.matches) return; // respeta accesibilidad
+        running = true; stopRequested = false; showHint(true);
+        startBtn.textContent = 'Pausar recorrido';
+
+        // Identifica la sección más visible para empezar desde ahí
+        let startIndex = 0;
+        let bestRatio = 0;
+        const viewportH = window.innerHeight || document.documentElement.clientHeight;
+        sections.forEach((sec, i)=>{
+          const rect = sec.getBoundingClientRect();
+          const visible = Math.max(0, Math.min(rect.bottom, viewportH) - Math.max(rect.top, 0));
+          const ratio = visible / Math.max(1, rect.height);
+          if(ratio > bestRatio){ bestRatio = ratio; startIndex = i; }
+        });
+
+        for(let i = startIndex; i < sections.length; i++){
+          if(stopRequested) break;
+          sections[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          // espera hasta que el scroll se estabilice o se cumpla un timeout
+          const settled = await waitForSettle(1400);
+          if(!settled) await sleep(600); // colchón extra si hizo falta
+          await sleep(800); // pausa entre secciones
+        }
+
+        running = false; stopRequested = false; showHint(false);
+        startBtn.textContent = 'Repetir recorrido';
+      }
+
+      function waitForSettle(timeoutMs){
+        return new Promise((resolve)=>{
+          const start = performance.now();
+          let lastY = root.scrollTop;
+          let sameCount = 0;
+
+          function tick(){
+            if(stopRequested){ resolve(true); return; }
+            const now = performance.now();
+            const y = root.scrollTop;
+            if(Math.abs(y - lastY) < 0.5){
+              sameCount++;
+              if(sameCount > 6){ resolve(true); return; }
+            } else {
+              sameCount = 0; lastY = y;
+            }
+            if(now - start > timeoutMs){ resolve(false); return; }
+            requestAnimationFrame(tick);
           }
-        }
-        return docRoot;
+          requestAnimationFrame(tick);
+        });
       }
 
-      let root = resolveScrollRoot();
-      let manualTarget = isDocRoot(root) ? window : root;
-
-      const setTourState = (running) => {
-        const host = document.body || document.documentElement;
-        if (!host) return;
-        host.classList.toggle('tour-started', Boolean(running));
-      };
-
-      const getScrollTop = () => {
-        if (isDocRoot(root)) {
-          const doc = getDocRoot();
-          return window.pageYOffset ?? doc.scrollTop ?? 0;
-        }
-        return root.scrollTop;
-      };
-
-      const setScrollTop = (value) => {
-        if (isDocRoot(root)) {
-          window.scrollTo(0, value);
-        } else {
-          root.scrollTop = value;
-        }
-      };
-
-      const getMaxScrollTop = () => {
-        if (isDocRoot(root)) {
-          const doc = getDocRoot();
-          const viewport = window.innerHeight || doc.clientHeight;
-          return Math.max(doc.scrollHeight - viewport, 0);
-        }
-        return Math.max(root.scrollHeight - root.clientHeight, 0);
-      };
-
-      const SPEED = 40; // px/s — ajusta a tu gusto
-      let rafId = null, lastTs = 0;
-      let paused = false, ended = false, hasStarted = false;
-      let manualListenersBound = false;
-
-      const MANUAL_EVENTS = [
-        ['wheel', { passive: true }],
-        ['touchstart', { passive: true }],
-        ['mousedown', { passive: true }],
-        ['keydown', { passive: true }],
-      ];
-
-      const shouldAbortForKey = (evt) => {
-        if (evt.type !== 'keydown') return true;
-        const abortKeys = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '];
-        return abortKeys.includes(evt.key);
-      };
-
-      const manualAbort = (evt) => {
-        if (!rafId || ended) return;
-        if (!shouldAbortForKey(evt)) return;
-        stop();
-        paused = false;
-        ended = false;
-      };
-
-      const bindManualAbort = () => {
-        if (manualListenersBound) return;
-        manualListenersBound = true;
-        MANUAL_EVENTS.forEach(([type, opts]) => manualTarget.addEventListener(type, manualAbort, opts));
-      };
-
-      const unbindManualAbort = () => {
-        if (!manualListenersBound) return;
-        manualListenersBound = false;
-        MANUAL_EVENTS.forEach(([type, opts]) => manualTarget.removeEventListener(type, manualAbort, opts));
-      };
-
-      function step(ts) {
-        if (!lastTs) lastTs = ts;
-        const dt = (ts - lastTs) / 1000; lastTs = ts;
-
-        if (!paused && !ended) {
-          const maxY = getMaxScrollTop();
-          const nextY = Math.min(getScrollTop() + SPEED * dt, maxY);
-          setScrollTop(nextY);
-          if (nextY >= maxY - 0.5) { stop(true); return; }
-        }
-        rafId = requestAnimationFrame(step);
-      }
-
-      function start(restart = false) {
-        if (ended && !restart) return;
-        if (manualListenersBound) unbindManualAbort();
-        root = resolveScrollRoot();
-        manualTarget = isDocRoot(root) ? window : root;
-        cancelAnimationFrame(rafId);
-        lastTs = 0;
-        paused = false;
-        bindManualAbort();
-        rafId = requestAnimationFrame(step);
-        hasStarted = true;
-        setTourState(true);
-      }
-
-      function stop(reachedBottom = false) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-        lastTs = 0;
-        unbindManualAbort();
-        hasStarted = false;
-        setTourState(false);
-        if (reachedBottom) ended = true;
-      }
-
-      function pauseTemporarily(ms = 1600) {
-        if (!hasStarted || ended) return;
-        paused = true;
-        setTimeout(() => { paused = false; }, ms);
-      }
-
-      // API opcional para control manual
-      window.AutoScroller = { start: () => start(true), stop, pause: pauseTemporarily };
-
-      // Arranque automático cuando el DOM esté listo (sin depender de ancho ni tipo de dispositivo)
-      window.addEventListener('DOMContentLoaded', () => {
-        const resetScrollPosition = () => {
-          const target = resolveScrollRoot();
-          if (isDocRoot(target)) {
-            window.scrollTo(0, 0);
-          } else if (typeof target.scrollTo === 'function') {
-            target.scrollTo({ top: 0 });
-          } else {
-            target.scrollTop = 0;
-          }
-        };
-
-        // Si hay botón de “Iniciar recorrido”, úsalo también
-        const btn = document.getElementById('playTour');
-        if (btn) {
-          btn.addEventListener('click', () => {
-            ended = false; paused = false;
-            resetScrollPosition();
-            setTimeout(() => start(true), 300);
-          });
-        }
-
-        const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-        const shouldAutoStart = !(prefersReducedMotion && prefersReducedMotion.matches);
-
-        if (shouldAutoStart) {
-          setTimeout(() => {
-            if (hasStarted || ended) return;
-            resetScrollPosition();
-            start(true);
-          }, 600);
-        }
-
-        const motionListener = (evt) => {
-          if (evt.matches || hasStarted || ended) return;
-          ended = false; paused = false;
-          resetScrollPosition();
-          start(true);
-        };
-
-        prefersReducedMotion?.addEventListener?.('change', motionListener);
-        prefersReducedMotion?.addListener?.(motionListener);
-
+      // Alterna entre iniciar y pausar
+      startBtn.addEventListener('click', () => {
+        if(!running){ autoTour(); }
+        else { stopRequested = true; startBtn.textContent = 'Reanudar recorrido'; showHint(false); }
       });
 
+      // Tocar la pantalla también pausa/reanuda (móvil friendly)
+      root.addEventListener('pointerdown', () => {
+        if(running){ stopRequested = true; startBtn.textContent = 'Reanudar recorrido'; showHint(false); }
+      }, { passive: true });
+
+      // Evita que el teclado suba el viewport y rompa el snap (iOS)
+      window.addEventListener('focusin', (e)=>{
+        if(e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')){
+          root.style.scrollSnapType = 'none';
+        }
+      });
+      window.addEventListener('focusout', ()=>{ root.style.scrollSnapType = 'y mandatory'; });
     })();
   </script>
-
-
-  <script defer>
-    // ===========================
-    // 3) Animaciones en viewport
-    // ===========================
-    document.addEventListener('DOMContentLoaded', () => {
-      const io = new IntersectionObserver((entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add('is-visible');
-            io.unobserve(e.target);
-          }
-        }
-      }, { threshold: 0.2 });
-
-      document.querySelectorAll('[data-animate]').forEach(el => {
-        el.classList.add('animate-in');
-        io.observe(el);
-      });
-    });
-  </script>
-
-  <script defer>
-    // ===========================
-    // 4) Cuenta regresiva
-    // ===========================
-    document.addEventListener('DOMContentLoaded', () => {
-      const els = {
-        days: document.getElementById('days'),
-        hours: document.getElementById('hours'),
-        minutes: document.getElementById('minutes'),
-        seconds: document.getElementById('seconds'),
-      };
-      if (!els.days) return;
-
-      // 28 Dic 2025 16:00 hora CDMX (UTC-6 estándar / UTC-5 si hay DST)
-      const target = new Date('2025-12-28T16:00:00-06:00').getTime();
-
-      const render = () => {
-        const now = Date.now();
-        const dist = Math.max(0, target - now);
-        const d = Math.floor(dist / 86400000);
-        const h = Math.floor((dist % 86400000) / 3600000);
-        const m = Math.floor((dist % 3600000) / 60000);
-        const s = Math.floor((dist % 60000) / 1000);
-        els.days.textContent = String(d).padStart(2, '0');
-        els.hours.textContent = String(h).padStart(2, '0');
-        els.minutes.textContent = String(m).padStart(2, '0');
-        els.seconds.textContent = String(s).padStart(2, '0');
-      };
-      render();
-      setInterval(render, 1000);
-    });
-  </script>
-
-  <script defer>
-    // ===========================================
-    // 5) Galería tipo “stack” con swipe
-    // ===========================================
-    document.addEventListener('DOMContentLoaded', () => {
-      const stack = document.getElementById('gStack');
-      if (!stack) return;
-      const resetBtn = document.getElementById('gReset');
-      const emptyMsg = document.getElementById('gEmpty');
-      const original = stack.innerHTML;
-
-      let currentCard = null;
-      let startX = 0, startY = 0, dx = 0, dy = 0, dragging = false;
-
-      const THRESHOLD = 90; // px
-      const ROTATION = 18;  // deg
-
-      const topCard = () => stack.querySelector('.g-card');
-
-      const applyTransform = (el, x, y) => {
-        const rot = (x / Math.max(320, window.innerWidth)) * ROTATION;
-        el.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
-      };
-
-      const start = (e) => {
-        currentCard = topCard();
-        if (!currentCard) return;
-        dragging = true;
-        const p = (e.touches?.[0]) || e;
-        startX = p.clientX; startY = p.clientY; dx = 0; dy = 0;
-        currentCard.style.transition = 'none';
-      };
-
-      const move = (e) => {
-        if (!dragging || !currentCard) return;
-        const p = (e.touches?.[0]) || e;
-        dx = p.clientX - startX; dy = p.clientY - startY;
-        if (Math.abs(dx) > Math.abs(dy)) e.preventDefault(); // prioridad swipe
-        applyTransform(currentCard, dx, dy);
-      };
-
-      const end = () => {
-        if (!dragging || !currentCard) return;
-        dragging = false;
-
-        if (Math.abs(dx) > THRESHOLD) {
-          const dirClass = dx > 0 ? 'g-right' : 'g-left';
-          currentCard.classList.add(dirClass);
-          currentCard.style.transition = '';
-          currentCard.addEventListener('transitionend', function removeOnce() {
-            this.removeEventListener('transitionend', removeOnce);
-            if (this.parentElement === stack) stack.removeChild(this);
-            if (!topCard()) emptyMsg.style.display = 'block';
-          });
-        } else {
-          currentCard.style.transition = 'transform .25s ease';
-          currentCard.style.transform = '';
-        }
-      };
-
-      const reset = () => {
-        stack.innerHTML = original;
-        emptyMsg.style.display = 'none';
-      };
-
-      stack.addEventListener('mousedown', start);
-      stack.addEventListener('mousemove', move);
-      document.addEventListener('mouseup', end);
-
-      stack.addEventListener('touchstart', start, { passive: false });
-      stack.addEventListener('touchmove', move, { passive: false });
-      stack.addEventListener('touchend', end);
-      stack.addEventListener('touchcancel', end);
-
-      resetBtn?.addEventListener('click', reset);
-    });
-  </script>
-</head>
-
-<body>
-  <div class="container">
-    <!-- Sección 1 -->
-    <section class="hero decor-wrap">
-      <div class="overlay" aria-hidden="true"></div>
-      <img src="./img/Fondo_portada_arriba.png" alt="" class="flower flower--tl" aria-hidden="true" role="presentation">
-
-      <div class="content">
-        <button class="play-tour" id="playTour" type="button" aria-label="Iniciar recorrido automático">
-          <span class="play-tour__icon" aria-hidden="true">
-            <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false">
-              <circle cx="32" cy="32" r="31" fill="none" stroke="currentColor" stroke-width="2" />
-              <path d="M26 22 L46 32 L26 42 Z" fill="currentColor" />
-            </svg>
-          </span>
-          <span class="play-tour__hint">Toca para Reproducir</span>
-        </button>
-
-        <section class="section-quote" data-animate>
-          <div class="quote-card">
-            <blockquote>
-              <p class="quote-text">“Mi amado es mío, y yo soy suya.”</p>
-              <footer class="quote-ref">— Cantares 2:16</footer>
-            </blockquote>
-          </div>
-        </section>
-
-        <h1 class="iniciales" aria-label="Iniciales de los novios">S|A</h1>
-        <h2 class="textnoscasamos font-tangerine animate-typing" data-animate>¡Nos casamos!</h2>
-
-        <div class="countdown" id="countdown" aria-label="Cuenta regresiva" data-animate>
-          <div class="box">
-            <div class="number" id="days">00</div>
-            <div class="labelcount">Días</div>
-          </div>
-          <div class="box">
-            <div class="number" id="hours">00</div>
-            <div class="labelcount">Horas</div>
-          </div>
-          <div class="box">
-            <div class="number" id="minutes">00</div>
-            <div class="labelcount">Min</div>
-          </div>
-          <div class="box">
-            <div class="number" id="seconds">00</div>
-            <div class="labelcount">Seg</div>
-          </div>
-        </div>
-        <div class="scroll-hint">Desliza hacia abajo</div>
-
-      </div>
-
-    </section>
-
-    <!-- Sección 2 -->
-    <section class="section2" id="donde-cuando" aria-labelledby="where-when" data-animate>
-      <img src="./img/Fondo_Sec2_arriba.png" alt="" class="flower-bg" aria-hidden="true">
-      <p class="textnoscasamos2 font-tangerine">Con la bendición de nuestros queridos padres:</p>
-
-      <div class="parents-block" role="list" aria-label="Padres de los novios">
-        <div class="parents-col" role="listitem">
-          <h3 class="parents-title font-tangerine">Padres de la novia</h3>
-          <ul class="parents-list">
-            <li class="font-great">Crisoforo Molina H.</li>
-            <li class="amp font-italianno" italianno="true">&amp;</li>
-            <li class="font-great">Enriqueta Cazarin L.</li>
-          </ul>
-        </div>
-
-        <div class="parents-col" role="listitem">
-          <h3 class="parents-title font-tangerine">Padres del novio</h3>
-          <ul class="parents-list">
-            <li class="font-great">Angel Alberto Plaza R.</li>
-            <li class="amp font-italianno" italianno="true">&amp;</li>
-            <li class="font-great">Angela Janely Acuña G.</li>
-          </ul>
-        </div>
-
-        <div class="parents-col parents-col--full" role="listitem">
-          <p class="parents-title">Nosotros:</p>
-          <ul class="novios-list font-italianno">
-            <li class="amp" italianno="true">Sinai &amp; Ariel</li>
-          </ul>
-        </div>
-
-        <p class="textnoscasamos3 invite-line-2">
-          Con gran alegría, les invitamos a compartir un nuevo capítulo de nuestra historia de amor:
-        </p>
-        <p class="textnoscasamos4 font-italianno">Nuestra boda.</p>
-
-        <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">
-      </div>
-
-      <!-- Evento + mapa -->
-      <div class="event-grid" itemscope itemtype="https://schema.org/Event">
-        <article class="event-card">
-          <div class="event-date" aria-label="28 de diciembre de 2025">
-            <img src="./img/flor_1.png" alt="" class="flower flower--tr" aria-hidden="true" role="presentation">
-            <span class="day" aria-hidden="true">28</span>
-            <span class="month" aria-hidden="true">Dic</span>
-            <span class="year" aria-hidden="true">2025</span>
-          </div>
-          <div class="event-info font-beau">
-            <h3 class="event-title" itemprop="name">Ceremonia Civil y Recepción</h3>
-            <time class="event-time" datetime="2025-12-28T16:00:00-06:00" itemprop="startDate">4:00 pm</time>
-            <p class="event-place" itemprop="location" itemscope itemtype="https://schema.org/Place">
-              <span itemprop="name">Salón de eventos California</span> ·
-              <span itemprop="address">Hueyapan de Ocampo</span>
-            </p>
-          </div>
-        </article>
-
-        <div class="map-wrap" aria-label="Mapa del Salón California en Hueyapan de Ocampo">
-          <a class="map-link" href="https://maps.app.goo.gl/J2DysbKQvpvysB4r6" target="_blank" rel="noopener"
-            aria-label="Abrir indicaciones hacia Salón de eventos California en Google Maps">
-            <img src="./img/salon.jpg" alt="Salón California. Toca para abrir el mapa" class="map-thumb">
-            <span class="map-cta">Ver en Google Maps</span>
-          </a>
-        </div>
-      </div>
-      <div class="scroll-hint">Desliza hacia abajo</div>
-
-    </section>
-
-    <!-- Sección 3 (Itinerario) -->
-    <section class="section4" data-animate>
-      
-      <h2 class="font-tangerine">Itinerario</h2>
-      <img src="./img/flor_2.png" alt="" class="flower2 flower--bl" aria-hidden="true" role="presentation">
-
-      <div class="timeline">
-        <div class="timeline-item left">
-          <div class="timeline-content">
-            <h3>04:00 pm</h3>
-            <img src="./icons/wedding-arch.png" alt="Icono ceremonia civil" class="timeline-icon">
-            <p>Ceremonia civil</p>
-          </div>
-        </div>
-
-        <div class="timeline-item right">
-          <div class="timeline-content">
-            <h3>05:00 pm</h3>
-            <img src="./icons/wine.png" alt="Icono recepción" class="timeline-icon">
-            <p>Recepción</p>
-          </div>
-        </div>
-
-        <div class="timeline-item left">
-          <div class="timeline-content">
-            <h3>07:00 pm</h3>
-            <img src="./icons/restaurant.png" alt="Icono cena" class="timeline-icon">
-            <p>Cena</p>
-          </div>
-        </div>
-
-        <div class="timeline-item right">
-          <div class="timeline-content">
-            <h3>09:00 pm</h3>
-            <img src="./icons/dance.png" alt="Icono baile" class="timeline-icon">
-            <p>Bailes</p>
-          </div>
-        </div>
-
-      </div>        
-    </section>
-
-    <!-- Sección 4 (Galería) -->
-    <section class="section-gallery" id="galeria" data-animate>
-      <h2 class="font-tangerine">Momentos</h2>
-      <div class="g-stack-wrap">
-        <div class="g-stack" id="gStack" aria-live="polite">
-          <div class="g-card"><img src="./img/IMG1.jpeg" alt="Foto 1"></div>
-          <div class="g-card"><img src="./img/IMG2.jpeg" alt="Foto 2"></div>
-          <div class="g-card"><img src="./img/IMG3.jpeg" alt="Foto 3"></div>
-          <div class="g-card"><img src="./img/IMG4.jpeg" alt="Foto 4"></div>
-          <div class="g-card"><img src="./img/IMG5.jpeg" alt="Foto 5"></div>
-          <div class="g-card"><img src="./img/IMG6.jpeg" alt="Foto 6"></div>
-          <div class="g-card"><img src="./img/IMG7.jpeg" alt="Foto 7"></div>
-          <div class="g-card"><img src="./img/IMG8.jpeg" alt="Foto 8"></div>
-          <div class="g-card"><img src="./img/IMG9.jpeg" alt="Foto 9"></div>
-          <div class="g-card"><img src="./img/IMG10.jpeg" alt="Foto 10"></div>
-          <div class="g-card"><img src="./img/IMG11.jpeg" alt="Foto 11"></div>
-        </div>
-        <div class="g-hint">Desliza a la izquierda o derecha para ver las fotos</div>
-        <div class="g-actions">
-          <button class="g-btn" id="gReset" type="button">⟲ Reiniciar</button>
-        </div>
-        <div class="g-empty" id="gEmpty" style="display:none">¡Sin más fotos! Presiona “Reiniciar”.</div>
-      </div>
-      <div class="scroll-hint">Desliza hacia abajo</div>
-
-    </section>
-
-    <!-- Sección 5 — Código de Vestimenta -->
-    <img src="./img/Fondo_portada_arriba.png" alt="" class="flower3 mirror-x" aria-hidden="true" role="presentation">
-    <section class="section-dresscode" id="dresscode" aria-labelledby="dc-title" data-animate>
-      <div class="dc-in">
-        <h2 class="dc-eyebrow">Código de Vestimenta:</h2>
-        <p class="dc-style" id="dc-title">Formal</p>
-        <p class="dc-note"><span class="dc-highlight">Evitar</span> vestimenta completa de los siguientes colores:</p>
-
-        <ul class="dc-grid" role="list" aria-label="Colores a evitar">
-          <li class="dc-chip" aria-label="Blanco">
-            <span class="dc-swatch dc-white"><span class="dc-x">✕</span></span>
-            <span class="dc-chip-label">Blanco</span>
-          </li>
-          <li class="dc-chip" aria-label="Verde olivo claro">
-            <span class="dc-swatch dc-olive"><span class="dc-x">✕</span></span>
-            <span class="dc-chip-label">Verde olivo claro</span>
-          </li>
-          <li class="dc-chip" aria-label="Beige / arena">
-            <span class="dc-swatch dc-beige"><span class="dc-x">✕</span></span>
-            <span class="dc-chip-label">Beige / arena</span>
-          </li>
-          <li class="dc-chip" aria-label="Azul marino">
-            <span class="dc-swatch dc-navy"><span class="dc-x">✕</span></span>
-            <span class="dc-chip-label">Azul marino</span>
-          </li>
-        </ul>
-      </div>
-      <div class="scroll-hint">Desliza hacia abajo</div>
-
-    </section>
-
-    <!-- Sección 6 (RSVP) -->
-    <section class="section3" id="rsvp" data-animate>
-      <div class="card">
-        <div class="card-body">
-          <div class="card-title">Tu presencia es muy importante para nosotros, por lo que nos gustaría que nos confirmaras antes del 2 de diciembre</div>
-          <div class="actions">
-            <a href="https://wa.me/5219211024671?text=%C2%A1Hola!%20Quiero%20confirmar%20mi%20asistencia%20a%20la%20boda.%20Mi%20nombre%20es%20[Tu%20Nombre]."
-              target="_blank" rel="noopener" class="btn">
-              Confirmar por WhatsApp
-            </a>
-          </div>
-        </div>
-        <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">
-      </div>
-    </section>
-  </div>
 </body>
-
 </html>
