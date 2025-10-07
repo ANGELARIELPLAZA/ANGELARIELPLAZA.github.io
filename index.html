@@ -1,71 +1,178 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Invitación de Boda — Recorrido en 6 secciones</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Great+Vibes&family=Italianno&family=Tangerine:wght@400;700&display=swap"
+    rel="stylesheet">
   <style>
     /* --------- Reset mínimo --------- */
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; height: 100%; }
-    img { display: block; max-width: 100%; height: auto; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
 
     /* --------- Tipografía / Colores --------- */
-    :root{
+    :root {
       --bg: #fffaf7;
       --text: #2c2c2c;
       --muted: #6b6b6b;
-      --brand: #b57a6a;         /* rosa tostado */
-      --brand-2: #d9c6be;       /* arena suave */
+      --brand: #b57a6a;
+      /* rosa tostado */
+      --brand-2: #d9c6be;
+      /* arena suave */
       --card: #ffffff;
-      --shadow: 0 10px 24px rgba(0,0,0,.10);
+      --shadow: 0 10px 24px rgba(0, 0, 0, .10);
       --radius: 18px;
     }
 
-    body{
+    body {
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
       background: var(--bg);
       color: var(--text);
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      scroll-behavior: smooth; /* apoyo para scrollIntoView */
+      scroll-behavior: smooth;
+      /* apoyo para scrollIntoView */
     }
 
     /* --------- Layout con scroll-snap (ideal móvil) --------- */
-    main{
+    main {
       scroll-snap-type: y mandatory;
       overflow-y: auto;
-      height: 100dvh; /* 100% de viewport dinámico en móvil */
+      height: 100dvh;
+      /* 100% de viewport dinámico en móvil */
     }
-    section.section{
+
+    section.section {
       min-height: 100dvh;
       display: grid;
       place-items: center;
-      padding: 20px;
+      padding: 0;
       scroll-snap-align: start;
       scroll-snap-stop: always;
-      background: linear-gradient(180deg, rgba(217,198,190,.25), rgba(255,250,247,1));
+      position: relative;
     }
 
     /* --------- Tarjetas --------- */
-    .card{
-      width: min(920px, 94vw);
+    .card {
+      width: 98.8vw;
+      height: 100%;
+      /* ocupa todo el ancho */
       background: var(--card);
-      border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
     }
-    .card__media{
-      aspect-ratio: 16/9;
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 20px;
+    }
+
+    blockquote {
+      font-style: italic;
+      font-size: 1rem;
+      margin: 0 0 20px 0;
+    }
+
+    .quote-text {
+      color: var(--bg);
+      font-size: 1.2rem;
+      font-family: 'Playfair Display', serif;
+
+    }
+
+    .quote-ref {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+
+    .iniciales {
+      font-weight: 700;
+      margin: 10px 0;
+      font-size: clamp(3.5rem, 10vw, 12rem);
+      font-family: 'ui-sans-serif';
+    }
+
+
+    .textnoscasamos {
+      font-family: 'Tangerine', cursive;
+      font-size: 2.5rem;
+      margin: 10px 0 20px;
+    }
+
+
+    .countdown {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .box {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      text-align: center;
+      min-width: 60px;
+    }
+
+    .number {
+      font-weight: bold;
+      font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+      font-weight: 700;
+    }
+
+    .labelcount {
+      font-size: clamp(1rem, 2vw, 1.1rem);
+      letter-spacing: 1px;
+      font-family: 'Tangerine', cursive;
+
+    }
+
+    .card__media {
+      width: 100%;
       width: 100%;
       object-fit: cover;
-      background: #eee;
+      object-fit: cover;
     }
-    .card__body{
+
+    
+    .card__body {
       padding: clamp(16px, 3.5vw, 28px);
     }
-    .eyebrow{
+
+    .eyebrow {
       text-transform: uppercase;
       letter-spacing: .12em;
       font-size: .78rem;
@@ -73,22 +180,28 @@
       margin: 0 0 8px 0;
       font-weight: 700;
     }
-    h2{
+
+    h2 {
       margin: 0 0 6px 0;
       font-size: clamp(1.4rem, 4.5vw, 2rem);
     }
-    p{ color: var(--muted); margin: 8px 0 0 0; }
+
+    p {
+      color: var(--muted);
+      margin: 8px 0 0 0;
+    }
 
     /* --------- Botón de inicio fijo --------- */
-    .start-wrap{
+    .start-wrap {
       position: fixed;
-      inset: auto 12px 16px 12px; /* bottom */
+      inset: auto 12px 16px 12px;
       display: grid;
       place-items: center;
       z-index: 50;
-      pointer-events: none; /* permite clics solo en el botón */
+      pointer-events: none;
     }
-    .start-btn{
+
+    .start-btn {
       pointer-events: auto;
       border: 0;
       border-radius: 999px;
@@ -101,10 +214,11 @@
     }
 
     /* --------- Indicador sutil --------- */
-    .hint{
+    .hint {
       position: fixed;
-      top: 12px; right: 12px;
-      background: rgba(0,0,0,.55);
+      top: 12px;
+      right: 12px;
+      background: rgba(0, 0, 0, .55);
       color: #fff;
       padding: 6px 10px;
       border-radius: 999px;
@@ -115,14 +229,14 @@
       transition: opacity .4s ease, transform .4s ease;
       user-select: none;
     }
-    .hint.show{ opacity: 1; transform: translateY(0); }
 
-    /* --------- Accesibilidad (reduce motion) --------- */
-    @media (prefers-reduced-motion: reduce){
-      main{ scroll-snap-type: none; }
+    .hint.show {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
+
 <body>
   <!-- Indicador (aparece cuando inicia el recorrido) -->
   <div id="hint" class="hint">Recorrido en curso… toca para pausar</div>
@@ -133,11 +247,36 @@
     <!-- Sección 1: Portada -->
     <section class="section" id="s1">
       <article class="card">
-        <img class="card__media" alt="Pareja al atardecer" src="https://images.unsplash.com/photo-1529680459049-bf0340fa0755?q=80&w=1600&auto=format&fit=crop" />
-        <div class="card__body">
-          <p class="eyebrow">Nuestra Boda</p>
-          <h2>María &amp; José</h2>
-          <p>Nos encantaría celebrar contigo este gran día. Desliza o presiona “Iniciar Recorrido”.</p>
+              <img src="./img/Fondo_portada_arriba.png" alt="" class="flower flower--tl" aria-hidden="true" role="presentation">
+
+        <img class="card__media sec1" alt="Pareja al atardecer"
+          src="./img/IMAGEN1.jpeg?q=80&w=1600&auto=format&fit=crop" />
+
+        <div class="overlay">
+          <blockquote>
+            <p class="quote-text">“Mi amado es mío, y yo soy suya.”</p>
+            <footer class="quote-ref">— Cantares 2:16</footer>
+          </blockquote>
+          <h1 class="iniciales" aria-label="Iniciales de los novios">S|A</h1>
+          <h2 class="textnoscasamos">¡Nos casamos!</h2>
+          <div class="countdown" id="countdown">
+            <div class="box">
+              <div class="number" id="days">00</div>
+              <div class="labelcount">Días</div>
+            </div>
+            <div class="box">
+              <div class="number" id="hours">00</div>
+              <div class="labelcount">Horas</div>
+            </div>
+            <div class="box">
+              <div class="number" id="minutes">00</div>
+              <div class="labelcount">Min</div>
+            </div>
+            <div class="box">
+              <div class="number" id="seconds">00</div>
+              <div class="labelcount">Seg</div>
+            </div>
+          </div>
         </div>
       </article>
     </section>
@@ -145,7 +284,8 @@
     <!-- Sección 2: Cuándo y dónde -->
     <section class="section" id="s2">
       <article class="card">
-        <img class="card__media" alt="Jardín con luces" src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop" />
+        <img class="card__media" alt="Jardín con luces"
+          src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop" />
         <div class="card__body">
           <p class="eyebrow">Cuándo y Dónde</p>
           <h2>Sábado 15 de Noviembre, 5:00 PM</h2>
@@ -157,7 +297,8 @@
     <!-- Sección 3: Ceremonia -->
     <section class="section" id="s3">
       <article class="card">
-        <img class="card__media" alt="Iglesia elegante" src="https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=1600&auto=format&fit=crop" />
+        <img class="card__media" alt="Iglesia elegante"
+          src="https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=1600&auto=format&fit=crop" />
         <div class="card__body">
           <p class="eyebrow">Ceremonia</p>
           <h2>Parroquia de San Miguel</h2>
@@ -169,11 +310,13 @@
     <!-- Sección 4: Recepción -->
     <section class="section" id="s4">
       <article class="card">
-        <img class="card__media" alt="Recepción al aire libre" src="https://images.unsplash.com/photo-1482707272725-473c4f3de1f7?q=80&w=1600&auto=format&fit=crop" />
+        <img class="card__media" alt="Recepción al aire libre"
+          src="https://images.unsplash.com/photo-1482707272725-473c4f3de1f7?q=80&w=1600&auto=format&fit=crop" />
         <div class="card__body">
           <p class="eyebrow">Recepción</p>
           <h2>Banquete &amp; Celebración</h2>
-          <p>Después de la ceremonia, acompáñanos a disfrutar de una noche inolvidable con música, baile y mucha alegría.</p>
+          <p>Después de la ceremonia, acompáñanos a disfrutar de una noche inolvidable con música, baile y mucha
+            alegría.</p>
         </div>
       </article>
     </section>
@@ -181,7 +324,8 @@
     <!-- Sección 5: Dress Code -->
     <section class="section" id="s5">
       <article class="card">
-        <img class="card__media" alt="Vestimenta formal" src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop" />
+        <img class="card__media" alt="Vestimenta formal"
+          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop" />
         <div class="card__body">
           <p class="eyebrow">Dress Code</p>
           <h2>Formal de Jardín</h2>
@@ -193,7 +337,8 @@
     <!-- Sección 6: Confirmación (RSVP) -->
     <section class="section" id="s6">
       <article class="card">
-        <img class="card__media" alt="Tarjeta RSVP" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1600&auto=format&fit=crop" />
+        <img class="card__media" alt="Tarjeta RSVP"
+          src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1600&auto=format&fit=crop" />
         <div class="card__body">
           <p class="eyebrow">¡Te esperamos!</p>
           <h2>Confirma tu asistencia</h2>
@@ -210,7 +355,7 @@
   </div>
 
   <script>
-    (function(){
+    (function () {
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
       const root = document.getElementById('root');
       const sections = Array.from(root.querySelectorAll('.section'));
@@ -220,16 +365,16 @@
       let running = false;
       let stopRequested = false;
 
-      function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+      function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-      function showHint(show){
-        if(!hint) return;
-        if(show){ hint.classList.add('show'); }
+      function showHint(show) {
+        if (!hint) return;
+        if (show) { hint.classList.add('show'); }
         else { hint.classList.remove('show'); }
       }
 
-      async function autoTour(){
-        if(prefersReduced.matches) return; // respeta accesibilidad
+      async function autoTour() {
+        if (prefersReduced.matches) return; // respeta accesibilidad
         running = true; stopRequested = false; showHint(true);
         startBtn.textContent = 'Pausar recorrido';
 
@@ -237,20 +382,20 @@
         let startIndex = 0;
         let bestRatio = 0;
         const viewportH = window.innerHeight || document.documentElement.clientHeight;
-        sections.forEach((sec, i)=>{
+        sections.forEach((sec, i) => {
           const rect = sec.getBoundingClientRect();
           const visible = Math.max(0, Math.min(rect.bottom, viewportH) - Math.max(rect.top, 0));
           const ratio = visible / Math.max(1, rect.height);
-          if(ratio > bestRatio){ bestRatio = ratio; startIndex = i; }
+          if (ratio > bestRatio) { bestRatio = ratio; startIndex = i; }
         });
 
-        for(let i = startIndex; i < sections.length; i++){
-          if(stopRequested) break;
+        for (let i = startIndex; i < sections.length; i++) {
+          if (stopRequested) break;
           sections[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
 
           // espera hasta que el scroll se estabilice o se cumpla un timeout
           const settled = await waitForSettle(1400);
-          if(!settled) await sleep(600); // colchón extra si hizo falta
+          if (!settled) await sleep(600); // colchón extra si hizo falta
           await sleep(800); // pausa entre secciones
         }
 
@@ -258,23 +403,23 @@
         startBtn.textContent = 'Repetir recorrido';
       }
 
-      function waitForSettle(timeoutMs){
-        return new Promise((resolve)=>{
+      function waitForSettle(timeoutMs) {
+        return new Promise((resolve) => {
           const start = performance.now();
           let lastY = root.scrollTop;
           let sameCount = 0;
 
-          function tick(){
-            if(stopRequested){ resolve(true); return; }
+          function tick() {
+            if (stopRequested) { resolve(true); return; }
             const now = performance.now();
             const y = root.scrollTop;
-            if(Math.abs(y - lastY) < 0.5){
+            if (Math.abs(y - lastY) < 0.5) {
               sameCount++;
-              if(sameCount > 6){ resolve(true); return; }
+              if (sameCount > 6) { resolve(true); return; }
             } else {
               sameCount = 0; lastY = y;
             }
-            if(now - start > timeoutMs){ resolve(false); return; }
+            if (now - start > timeoutMs) { resolve(false); return; }
             requestAnimationFrame(tick);
           }
           requestAnimationFrame(tick);
@@ -283,23 +428,64 @@
 
       // Alterna entre iniciar y pausar
       startBtn.addEventListener('click', () => {
-        if(!running){ autoTour(); }
+        if (!running) { autoTour(); }
         else { stopRequested = true; startBtn.textContent = 'Reanudar recorrido'; showHint(false); }
       });
 
       // Tocar la pantalla también pausa/reanuda (móvil friendly)
       root.addEventListener('pointerdown', () => {
-        if(running){ stopRequested = true; startBtn.textContent = 'Reanudar recorrido'; showHint(false); }
+        if (running) { stopRequested = true; startBtn.textContent = 'Reanudar recorrido'; showHint(false); }
       }, { passive: true });
 
       // Evita que el teclado suba el viewport y rompa el snap (iOS)
-      window.addEventListener('focusin', (e)=>{
-        if(e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')){
+      window.addEventListener('focusin', (e) => {
+        if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
           root.style.scrollSnapType = 'none';
         }
       });
-      window.addEventListener('focusout', ()=>{ root.style.scrollSnapType = 'y mandatory'; });
+      window.addEventListener('focusout', () => { root.style.scrollSnapType = 'y mandatory'; });
     })();
   </script>
+  <script>
+    (function () {
+      const root = document.getElementById('root');
+      const sections = Array.from(root.querySelectorAll('.section'));
+      const btn = document.getElementById('startBtn');
+      let running = false, stop = false;
+      const sleep = ms => new Promise(r => setTimeout(r, ms));
+      async function autoScroll() {
+        running = true; stop = false; btn.textContent = 'Pausar recorrido';
+        for (const sec of sections) {
+          if (stop) break;
+          sec.scrollIntoView({ behavior: 'smooth' });
+          await sleep(2000);
+        }
+        running = false; stop = false; btn.textContent = 'Repetir recorrido';
+      }
+      btn.addEventListener('click', () => { if (!running) autoScroll(); else { stop = true; btn.textContent = 'Reanudar recorrido'; } });
+    })();
+
+
+    // Cuenta regresiva
+    const countdownDate = new Date('2025-11-15T17:00:00').getTime();
+    const countdown = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = countdownDate - now;
+      if (distance < 0) {
+        clearInterval(countdown);
+        document.getElementById('countdown').innerHTML = '<p>¡Llegó el gran día!</p>';
+        return;
+      }
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      document.getElementById('days').textContent = days.toString().padStart(2, '0');
+      document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+      document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+      document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+    }, 1000);
+  </script>
 </body>
+
 </html>
