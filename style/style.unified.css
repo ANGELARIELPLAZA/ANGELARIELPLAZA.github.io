@@ -367,15 +367,12 @@ blockquote {
   font-family: "Tangerine", cursive;
 }
 
-.section4 {
-  font-family: "Tangerine", cursive;
-  font-size: clamp(2.6rem, 5vw, 2.2rem);
-
-}
+.section4,
 .section5 {
   font-family: "Tangerine", cursive;
   font-size: clamp(2.6rem, 5vw, 2.2rem);
-
+  text-align: center;
+  margin: 0;
 }
 /* Flowers & decorative elements */
 .flower {
