@@ -201,23 +201,62 @@
 
     <!-- Sección 3: Ubicacion -->
     <section class="section" id="s6">
-      <article class="card">
-        <img class="card__media" alt="Tarjeta RSVP"
-          src="./img/salon.jpg?q=80&w=1600&auto=format&fit=crop" />
-        <div class="card__body">
-          <div class="event-date" aria-label="28 de diciembre de 2025">
+      <article class="card card--venue" aria-labelledby="s6-title">
+        <div class="venue-media">
+          <img class="card__media" alt="Salón decorado con luces cálidas"
+            src="./img/salon.jpg?q=80&w=1600&auto=format&fit=crop" />
+          <span class="venue-badge">¡Te esperamos!</span>
+        </div>
+
+        <div class="venue-body">
+          <header class="venue-header">
+            <p class="venue-eyebrow">Sección 3 · Ubicación</p>
+            <h2 id="s6-title" class="venue-title font-tangerine">Nuestro lugar especial</h2>
+            <p class="venue-intro">Acompáñanos a celebrar la ceremonia civil y la recepción en un espacio
+              acogedor donde cada detalle está pensado para compartir con ustedes.</p>
+          </header>
+
+          <div class="venue-highlight" aria-label="28 de diciembre de 2025, 4:00 pm">
             <img src="./img/flor_1.png" alt="" class="flower flower--tr" aria-hidden="true" role="presentation">
-            <span class="day" aria-hidden="true">28</span>
-            <span class="month" aria-hidden="true">Dic</span>
-            <span class="year" aria-hidden="true">2025</span>
+            <div class="venue-calendar" aria-hidden="true">
+              <span class="venue-day">28</span>
+              <span class="venue-month">Dic</span>
+              <span class="venue-year">2025</span>
+            </div>
+            <div class="venue-schedule">
+              <h3 class="venue-event" itemprop="name">Ceremonia Civil y Recepción</h3>
+              <time class="venue-time" datetime="2025-12-28T16:00:00-06:00" itemprop="startDate">4:00 pm</time>
+              <p class="venue-place" itemprop="location" itemscope itemtype="https://schema.org/Place">
+                <span itemprop="name">Salón de eventos California</span><br>
+                <span itemprop="address">Hueyapan de Ocampo, Veracruz</span>
+              </p>
+            </div>
           </div>
-          <div class="event-info font-beau">
-            <h3 class="event-title" itemprop="name">Ceremonia Civil y Recepción</h3>
-            <time class="event-time" datetime="2025-12-28T16:00:00-06:00" itemprop="startDate">4:00 pm</time>
-            <p class="event-place" itemprop="location" itemscope itemtype="https://schema.org/Place">
-              <span itemprop="name">Salón de eventos California</span> ·
-              <span itemprop="address">Hueyapan de Ocampo</span>
-            </p>
+
+          <ul class="venue-details">
+            <li>
+              <span class="venue-detail-title">Ambiente</span>
+              <span class="venue-detail-text">Jardines iluminados, espacios al aire libre y salones climatizados para tu
+                comodidad.</span>
+            </li>
+            <li>
+              <span class="venue-detail-title">Llegada sugerida</span>
+              <span class="venue-detail-text">Planea llegar 20 minutos antes para estacionarte con calma y disfrutar el
+                recibimiento.</span>
+            </li>
+            <li>
+              <span class="venue-detail-title">Servicios</span>
+              <span class="venue-detail-text">Estacionamiento gratuito, personal de apoyo y zona designada para dejar tus
+                obsequios.</span>
+            </li>
+          </ul>
+
+          <div class="venue-actions">
+            <a class="venue-btn" href="https://maps.app.goo.gl/kXj51P8h9oYXyQv57" target="_blank" rel="noopener">
+              Cómo llegar
+            </a>
+            <p class="venue-footnote">Si necesitas transporte o tienes dudas, contáctanos y con gusto te
+              ayudamos.</p>
           </div>
         </div>
       </article>
