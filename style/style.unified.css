@@ -807,7 +807,7 @@
     .timeline-item {
       padding: 20px 30px;
       position: relative;
-      width: 100%;
+      width: 50%;
       opacity: 0;
       animation: timelineSlideLeft .75s ease forwards;
       animation-delay: calc(.18s + var(--delay, 0s));
@@ -1171,10 +1171,20 @@
       max-width: 980px;
       margin: 0 auto;
       text-align: center;
+
     }
 
     .mirror-x {
       transform: scaleX(-1);
+      position: absolute;
+      /* escala responsiva */
+      height: auto;
+      z-index: 2;
+      /* por encima del fondo, debajo del contenido si usas z>=3 */
+      pointer-events: none;
+      /* no bloquea clics/scroll */
+      user-select: none;
+      opacity: 0.3;
     }
 
     @media (max-width: 640px) {
@@ -1280,7 +1290,6 @@
       max-width: 720px;
       margin: 0 auto;
       background: var(--card);
-      border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
     }
@@ -1294,17 +1303,20 @@
 
     .card-body {
       padding: 22px;
-      border-radius: var(--radius);
 
     }
 
     .card-title {
       text-align: center;
+
+    }
+
+    .section10 {
+      text-align: center;
       color: red;
       font-size: 3rem;
       margin: 8px 0 4px;
       font-family: 'Tangerine', cursive;
-
     }
 
     .card-sub {

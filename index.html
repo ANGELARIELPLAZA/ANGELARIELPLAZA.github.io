@@ -213,109 +213,121 @@
     </section>
     <!-- Sección 4 (Itinerario) -->
     <section class="section" id="s7">
+      <div class="card">
+        <div class="card-body">
 
-      <h2 class="font-tangerine">Itinerario</h2>
-      <img src="./img/flor_2.png" alt="" class="flower2 flower--bl" aria-hidden="true" role="presentation">
+          <h2 class="font-tangerine">Itinerario</h2>
+          <img src="./img/flor_2.png" alt="" class="flower2 flower--bl" aria-hidden="true" role="presentation">
 
-      <div class="timeline">
-        <div class="timeline-item left">
-          <div class="timeline-content">
-            <h3>04:00 pm</h3>
-            <img src="./icons/wedding-arch.png" alt="Icono ceremonia civil" class="timeline-icon">
-            <p>Ceremonia civil</p>
+          <div class="timeline">
+            <div class="timeline-item left">
+              <div class="timeline-content">
+                <h3>04:00 pm</h3>
+                <img src="./icons/wedding-arch.png" alt="Icono ceremonia civil" class="timeline-icon">
+                <p>Ceremonia civil</p>
+              </div>
+            </div>
+
+            <div class="timeline-item right">
+              <div class="timeline-content">
+                <h3>05:00 pm</h3>
+                <img src="./icons/wine.png" alt="Icono recepción" class="timeline-icon">
+                <p>Recepción</p>
+              </div>
+            </div>
+
+            <div class="timeline-item left">
+              <div class="timeline-content">
+                <h3>07:00 pm</h3>
+                <img src="./icons/restaurant.png" alt="Icono cena" class="timeline-icon">
+                <p>Cena</p>
+              </div>
+            </div>
+
+            <div class="timeline-item right">
+              <div class="timeline-content">
+                <h3>09:00 pm</h3>
+                <img src="./icons/dance.png" alt="Icono baile" class="timeline-icon">
+                <p>Bailes</p>
+              </div>
+            </div>
+
           </div>
         </div>
-
-        <div class="timeline-item right">
-          <div class="timeline-content">
-            <h3>05:00 pm</h3>
-            <img src="./icons/wine.png" alt="Icono recepción" class="timeline-icon">
-            <p>Recepción</p>
-          </div>
-        </div>
-
-        <div class="timeline-item left">
-          <div class="timeline-content">
-            <h3>07:00 pm</h3>
-            <img src="./icons/restaurant.png" alt="Icono cena" class="timeline-icon">
-            <p>Cena</p>
-          </div>
-        </div>
-
-        <div class="timeline-item right">
-          <div class="timeline-content">
-            <h3>09:00 pm</h3>
-            <img src="./icons/dance.png" alt="Icono baile" class="timeline-icon">
-            <p>Bailes</p>
-          </div>
-        </div>
-
       </div>
+
     </section>
 
     <!-- Sección 5 (Galería) -->
     <section class="section" id="s8">
-      <h2 class="font-tangerine">Momentos</h2>
-      <div class="g-stack-wrap">
-        <div class="g-stack" id="gStack" aria-live="polite">
-          <div class="g-card"><img src="./img/IMG1.jpeg" alt="Foto 1"></div>
-          <div class="g-card"><img src="./img/IMG2.jpeg" alt="Foto 2"></div>
-          <div class="g-card"><img src="./img/IMG3.jpeg" alt="Foto 3"></div>
-          <div class="g-card"><img src="./img/IMG4.jpeg" alt="Foto 4"></div>
-          <div class="g-card"><img src="./img/IMG5.jpeg" alt="Foto 5"></div>
-          <div class="g-card"><img src="./img/IMG6.jpeg" alt="Foto 6"></div>
-          <div class="g-card"><img src="./img/IMG7.jpeg" alt="Foto 7"></div>
-          <div class="g-card"><img src="./img/IMG8.jpeg" alt="Foto 8"></div>
-          <div class="g-card"><img src="./img/IMG9.jpeg" alt="Foto 9"></div>
-          <div class="g-card"><img src="./img/IMG10.jpeg" alt="Foto 10"></div>
-          <div class="g-card"><img src="./img/IMG11.jpeg" alt="Foto 11"></div>
+      <div class="card">
+        <div class="card-body">
+          <h2 class="font-tangerine">Momentos</h2>
+          <div class="g-stack-wrap">
+            <div class="g-stack" id="gStack" aria-live="polite">
+              <div class="g-card"><img src="./img/IMG1.jpeg" alt="Foto 1"></div>
+              <div class="g-card"><img src="./img/IMG2.jpeg" alt="Foto 2"></div>
+              <div class="g-card"><img src="./img/IMG3.jpeg" alt="Foto 3"></div>
+              <div class="g-card"><img src="./img/IMG4.jpeg" alt="Foto 4"></div>
+              <div class="g-card"><img src="./img/IMG5.jpeg" alt="Foto 5"></div>
+              <div class="g-card"><img src="./img/IMG6.jpeg" alt="Foto 6"></div>
+              <div class="g-card"><img src="./img/IMG7.jpeg" alt="Foto 7"></div>
+              <div class="g-card"><img src="./img/IMG8.jpeg" alt="Foto 8"></div>
+              <div class="g-card"><img src="./img/IMG9.jpeg" alt="Foto 9"></div>
+              <div class="g-card"><img src="./img/IMG10.jpeg" alt="Foto 10"></div>
+              <div class="g-card"><img src="./img/IMG11.jpeg" alt="Foto 11"></div>
+            </div>
+            <div class="g-hint">Desliza a la izquierda o derecha para ver las fotos</div>
+            <div class="g-actions">
+              <button class="g-btn" id="gReset" type="button">⟲ Reiniciar</button>
+            </div>
+            <div class="g-empty" id="gEmpty" style="display:none">¡Sin más fotos! Presiona “Reiniciar”.</div>
+          </div>
         </div>
-        <div class="g-hint">Desliza a la izquierda o derecha para ver las fotos</div>
-        <div class="g-actions">
-          <button class="g-btn" id="gReset" type="button">⟲ Reiniciar</button>
-        </div>
-        <div class="g-empty" id="gEmpty" style="display:none">¡Sin más fotos! Presiona “Reiniciar”.</div>
       </div>
-      <div class="scroll-hint">Desliza hacia abajo</div>
-
     </section>
 
     <!-- Sección 6 — Código de Vestimenta -->
-    <img src="./img/Fondo_portada_arriba.png" alt="" class="flower3 mirror-x" aria-hidden="true" role="presentation">
-    <section class="section" id="s9">
-      <div class="dc-in">
-        <h2 class="dc-eyebrow">Código de Vestimenta:</h2>
-        <p class="dc-style" id="dc-title">Formal</p>
-        <p class="dc-note"><span class="dc-highlight">Evitar</span> vestimenta completa de los siguientes colores:</p>
 
-        <ul class="dc-grid" role="list" aria-label="Colores a evitar">
-          <li class="dc-chip" aria-label="Blanco">
-            <span class="dc-swatch dc-white"><span class="dc-x">✕</span></span>
-            <span class="dc-chip-label">Blanco</span>
-          </li>
-          <li class="dc-chip" aria-label="Verde olivo claro">
-            <span class="dc-swatch dc-olive"><span class="dc-x">✕</span></span>
-            <span class="dc-chip-label">Verde olivo claro</span>
-          </li>
-          <li class="dc-chip" aria-label="Beige / arena">
-            <span class="dc-swatch dc-beige"><span class="dc-x">✕</span></span>
-            <span class="dc-chip-label">Beige / arena</span>
-          </li>
-          <li class="dc-chip" aria-label="Azul marino">
-            <span class="dc-swatch dc-navy"><span class="dc-x">✕</span></span>
-            <span class="dc-chip-label">Azul marino</span>
-          </li>
-        </ul>
-      </div>
-      <div class="scroll-hint">Desliza hacia abajo</div>
-
-    </section>
-
-    <!-- Sección 7 (RSVP) -->
     <section class="section" id="s9">
       <div class="card">
         <div class="card-body">
-          <div class="card-title">Tu presencia es muy importante para nosotros, por lo que nos gustaría que nos
+          <img src="./img/Fondo_portada_arriba.png" alt="" class="mirror-x" aria-hidden="true" role="presentation">
+
+          <div class="dc-in ">
+            <h2 class="dc-eyebrow">Código de Vestimenta:</h2>
+            <p class="dc-style" id="dc-title">Formal</p>
+            <p class="dc-note"><span class="dc-highlight">Evitar</span> vestimenta completa de los siguientes colores:
+            </p>
+
+            <ul class="dc-grid" role="list" aria-label="Colores a evitar">
+              <li class="dc-chip" aria-label="Blanco">
+                <span class="dc-swatch dc-white"><span class="dc-x">✕</span></span>
+                <span class="dc-chip-label">Blanco</span>
+              </li>
+              <li class="dc-chip" aria-label="Verde olivo claro">
+                <span class="dc-swatch dc-olive"><span class="dc-x">✕</span></span>
+                <span class="dc-chip-label">Verde olivo claro</span>
+              </li>
+              <li class="dc-chip" aria-label="Beige / arena">
+                <span class="dc-swatch dc-beige"><span class="dc-x">✕</span></span>
+                <span class="dc-chip-label">Beige / arena</span>
+              </li>
+              <li class="dc-chip" aria-label="Azul marino">
+                <span class="dc-swatch dc-navy"><span class="dc-x">✕</span></span>
+                <span class="dc-chip-label">Azul marino</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 7 (RSVP) -->
+    <section class="section" id="s10">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title section10">Tu presencia es muy importante para nosotros, por lo que nos gustaría que nos
             confirmaras antes del 2 de diciembre</div>
           <div class="actions">
             <a href="https://wa.me/5219211024671?text=%C2%A1Hola!%20Quiero%20confirmar%20mi%20asistencia%20a%20la%20boda.%20Mi%20nombre%20es%20[Tu%20Nombre]."
@@ -324,7 +336,7 @@
             </a>
           </div>
         </div>
-        <img src="./img/Fondo_Sec2_abajo.png" alt="" class="flower-bg" aria-hidden="true">
+        <img src="./img/Fondo_Sec2_abajo.png" alt="" class="card__media card__media--bottom" aria-hidden="true">
       </div>
     </section>
   </main>
@@ -501,4 +513,5 @@
   </script>
 
 </body>
+
 </html>
