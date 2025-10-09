@@ -96,6 +96,8 @@
   <!-- Contenido con scroll-snap -->
   <main id="root">
 
+    <audio id="bgMusic" src="./mp3/musica.mp3" preload="auto" loop aria-hidden="true"></audio>
+
     <!-- Sección 1: Portada -->
     <section class="section" id="s1">
       <article class="card card--hero">
@@ -384,6 +386,7 @@
       const root = document.getElementById('root');
       const startBtn = document.getElementById('startBtn');
       const hint = document.getElementById('hint');
+      const bgMusic = document.getElementById('bgMusic');
 
       if (!root || !startBtn) {
         // Si falta algo crítico, no hacemos nada para evitar errores
@@ -451,6 +454,23 @@
       }
 
       // ====== Recorrido automático ======
+      async function playMusic() {
+        if (!bgMusic) return;
+        if (!bgMusic.paused) return;
+
+        try {
+          await bgMusic.play();
+        } catch (err) {
+          console.warn('[audio] No se pudo reproducir automáticamente:', err);
+        }
+      }
+
+      function pauseMusic() {
+        if (!bgMusic) return;
+        if (bgMusic.paused) return;
+        bgMusic.pause();
+      }
+
       async function autoTour() {
         if (prefersReduced.matches) return; // respeta accesibilidad
 
@@ -460,6 +480,8 @@
         startBtn.textContent = 'Pausar recorrido';
 
         const startIndex = getStartIndex();
+
+        await playMusic();
 
         const slowScrollTo = (section, duration = 2400) => {
           const targetTop = section.offsetTop;
@@ -517,6 +539,7 @@
           autoTour();
         } else {
           stopRequested = true;
+          pauseMusic();
           showHint(false);
           startBtn.textContent = 'Reanudar recorrido';
         }
@@ -526,6 +549,7 @@
       root.addEventListener('pointerdown', () => {
         if (running) {
           stopRequested = true;
+          pauseMusic();
           showHint(false);
           startBtn.textContent = 'Reanudar recorrido';
         }
@@ -538,6 +562,7 @@
       document.addEventListener('visibilitychange', () => {
         if (document.hidden && running) {
           stopRequested = true;
+          pauseMusic();
           showHint(false);
           startBtn.textContent = 'Reanudar recorrido';
         }
