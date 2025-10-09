@@ -461,15 +461,48 @@
 
         const startIndex = getStartIndex();
 
+        const slowScrollTo = (section, duration = 2400) => {
+          const targetTop = section.offsetTop;
+          const startTop = root.scrollTop;
+          const distance = targetTop - startTop;
+          const startTime = performance.now();
+          const originalSnap = root.style.scrollSnapType;
+          root.style.scrollSnapType = 'none';
+
+          return new Promise((resolve) => {
+            function step(now) {
+              if (stopRequested) {
+                root.style.scrollSnapType = originalSnap;
+                resolve();
+                return;
+              }
+
+              const elapsed = now - startTime;
+              const t = Math.min(1, elapsed / duration);
+              const eased = 1 - Math.pow(1 - t, 3);
+              root.scrollTop = startTop + distance * eased;
+
+              if (t < 1) {
+                requestAnimationFrame(step);
+              } else {
+                root.style.scrollSnapType = originalSnap;
+                resolve();
+              }
+            }
+
+            requestAnimationFrame(step);
+          });
+        };
+
         for (let i = startIndex; i < sections.length; i++) {
           if (stopRequested) break;
 
-          sections[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+          await slowScrollTo(sections[i]);
 
-          // Espera a que el scroll se asiente, luego una pequeña pausa
-          const settled = await waitForSettle(1400);
-          if (!settled) await sleep(600);
-          await sleep(800);
+          // Espera a que el scroll se asiente, luego una pausa más larga
+          const settled = await waitForSettle(1800);
+          if (!settled) await sleep(800);
+          await sleep(1200);
         }
 
         running = false;
