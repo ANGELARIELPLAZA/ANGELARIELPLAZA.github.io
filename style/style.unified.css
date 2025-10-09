@@ -4,6 +4,7 @@
   --muted: #6b6b6b;
   --brand: #b57a6a;
   --brand-dark: #5f5a54;
+  --blue-dark: #1e2f53;
   --card: #ffffff;
   --shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
   --radius: 18px;
@@ -57,8 +58,6 @@ main {
   position: relative;
   width: min(94vw, 960px);
   background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
   overflow: hidden;
 }
 
@@ -303,7 +302,8 @@ blockquote {
   max-width: 520px;
   color: var(--muted);
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 2.1rem;
+  font-family: "Tangerine", cursive;
 }
 
 .invite-cta {
@@ -320,9 +320,9 @@ blockquote {
 
 .section10 {
   text-align: center;
-  color: var(--brand);
+  color: var(--blue-dark);
   font-family: "Tangerine", cursive;
-  font-size: clamp(2.6rem, 6vw, 3.4rem);
+  font-size: clamp(1.8rem, 6vw, 3.4rem);
   margin: 0 0 1.5rem;
 }
 
@@ -338,7 +338,7 @@ blockquote {
   gap: 0.5rem;
   padding: 0.85rem 1.8rem;
   border-radius: 999px;
-  background: var(--brand);
+  background: var(--blue-dark);
   color: #fff;
   text-decoration: none;
   font-weight: 600;
@@ -367,12 +367,21 @@ blockquote {
   font-family: "Tangerine", cursive;
 }
 
+.section4 {
+  font-family: "Tangerine", cursive;
+  font-size: clamp(2.6rem, 5vw, 2.2rem);
+
+}
+.section5 {
+  font-family: "Tangerine", cursive;
+  font-size: clamp(2.6rem, 5vw, 2.2rem);
+
+}
 /* Flowers & decorative elements */
 .flower {
   position: absolute;
   pointer-events: none;
   user-select: none;
-  z-index: 3;
 }
 
 .flower--tl {
@@ -494,6 +503,7 @@ blockquote {
     opacity: 0;
     transform: translateY(28px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -636,21 +646,24 @@ blockquote {
 }
 
 .dc-eyebrow {
-  font-size: clamp(1.2rem, 3vw, 1.5rem);
-  text-transform: uppercase;
+  font-size: clamp(2.2rem, 3vw, 1.5rem);
   letter-spacing: 0.12em;
   margin: 0 0 0.75rem;
+  font-family: "Tangerine", cursive;
+
 }
 
 .dc-style {
   margin: 0;
-  font-size: clamp(2.2rem, 6vw, 3rem);
-  color: var(--brand);
+  font-size: clamp(6.2rem, 6vw, 3rem);
+  color: var(--blue-dark);
+  font-family: "Tangerine", cursive;
+
 }
 
 .dc-note {
   margin: 1rem 0 1.5rem;
-  font-size: clamp(1.4rem, 5vw, 2.2rem);
+  font-size: clamp(1.9rem, 5vw, 2.2rem);
   color: var(--brand);
   font-family: "Tangerine", cursive;
 }
