@@ -32,6 +32,77 @@ body {
   scroll-behavior: smooth;
 }
 
+.audio-player {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(181, 122, 106, 0.28);
+  box-shadow: 0 10px 30px rgba(31, 41, 55, 0.18);
+  backdrop-filter: blur(6px);
+}
+
+.audio-player__control {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.35rem 0.75rem;
+  border: none;
+  border-radius: 999px;
+  background: rgba(181, 122, 106, 0.18);
+  color: var(--brand-dark);
+  font: 600 0.95rem/1.2 "Segoe UI", Roboto, sans-serif;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.audio-player__control:hover,
+.audio-player__control:focus-visible {
+  background: rgba(181, 122, 106, 0.3);
+  color: var(--blue-dark);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.audio-player__control.is-playing {
+  background: rgba(181, 122, 106, 0.85);
+  color: #fff;
+}
+
+.audio-player__icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.audio-player__label {
+  font-size: 0.95rem;
+}
+
+@media (max-width: 600px) {
+  .audio-player {
+    top: 0.65rem;
+    left: 0.65rem;
+    padding: 0.45rem 0.75rem;
+  }
+
+  .audio-player__control {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .audio-player__icon {
+    font-size: 0.9rem;
+  }
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -874,35 +945,6 @@ blockquote {
   text-align: center;
   color: var(--muted);
   display: none;
-}
-
-.audio-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: fit-content;
-  margin: 1rem auto 0;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 999px;
-  background: var(--color-primary, #c9a46c);
-  color: #fff;
-  font-family: inherit;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.audio-btn:hover,
-.audio-btn:focus {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  outline: none;
-}
-
-.audio-btn.is-playing {
-  background: var(--color-secondary, #6b9071);
 }
 
 .console-output {
