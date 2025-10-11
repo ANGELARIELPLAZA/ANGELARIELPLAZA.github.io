@@ -145,7 +145,7 @@ main {
 }
 
 .venue-media .card__media {
-  height: clamp(220px, 38vh, 360px);
+  height: clamp(220px, 18vh, 360px);
   width: 100%;
   object-fit: cover;
 }
@@ -364,7 +364,7 @@ main {
 
 
 .card--hero {
-  min-height: clamp(520px, 100vh, 720px);
+  min-height: clamp(520px, 100vh, 936px);
   display: flex;
   align-items: stretch;
 }
