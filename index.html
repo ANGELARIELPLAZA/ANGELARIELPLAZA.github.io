@@ -100,14 +100,17 @@
 
 <body>
   <main id="root">
-    <!-- Audio único -->
+    <div class="audio-player" role="region" aria-label="Reproductor de música">
+      <audio id="bgMusic" src="./mp3/musica.mp3" preload="auto" loop playsinline aria-hidden="true"></audio>
+      <button type="button" id="playMusicBtn" class="audio-player__control" aria-controls="bgMusic"
+        aria-pressed="false">
+        <span class="audio-player__icon" aria-hidden="true">▶</span>
+        <span class="audio-player__label">Reproducir</span>
+      </button>
+    </div>
 
     <!-- ==================== Sección 1: Portada ==================== -->
     <section class="section" id="s1">
-      <audio id="bgMusic" src="./mp3/musica.mp3" preload="auto" loop playsinline aria-hidden="true"></audio>
-      <button type="button" id="playMusicBtn" class="audio-btn" aria-controls="bgMusic">
-        ▶ Reproducir música
-      </button>
       <article class="card card--hero">
         <img src="./img/Fondo_portada_arriba.png" alt="" class="card__media2 flower flower--tl" aria-hidden="true"
           role="presentation">
@@ -416,6 +419,16 @@
       // Reproducir audio al primer gesto (móvil/desktop)
       const audio = document.getElementById('bgMusic');
       const playBtn = document.getElementById('playMusicBtn');
+      const icon = playBtn?.querySelector('.audio-player__icon');
+      const label = playBtn?.querySelector('.audio-player__label');
+
+      const setPlayingState = (isPlaying) => {
+        if (!playBtn) return;
+        playBtn.classList.toggle('is-playing', isPlaying);
+        playBtn.setAttribute('aria-pressed', String(isPlaying));
+        if (icon) icon.textContent = isPlaying ? '⏸' : '▶';
+        if (label) label.textContent = isPlaying ? 'Pausar' : 'Reproducir';
+      };
 
       const playMusic = () => {
         if (!audio) return;
@@ -423,10 +436,18 @@
         audio.volume = 0.7;    // ajusta a gusto
         const attempt = audio.play();
         if (attempt?.catch) attempt.catch(console.warn);
+        return attempt;
       };
 
+      if (audio) {
+        setPlayingState(!audio.paused);
+        audio.addEventListener('play', () => setPlayingState(true));
+        audio.addEventListener('pause', () => setPlayingState(false));
+      }
+
       function unlockAndPlay() {
-        playMusic();
+        const attempt = playMusic();
+        if (!attempt?.then) setPlayingState(true);
 
         // Eliminar listeners (solo una vez)
         window.removeEventListener('pointerdown', unlockAndPlay);
@@ -434,12 +455,14 @@
         window.removeEventListener('touchend', unlockAndPlay);
       }
 
-      if (playBtn) {
+      if (playBtn && audio) {
         playBtn.addEventListener('click', () => {
-          playMusic();
-          playBtn.classList.add('is-playing');
-          playBtn.setAttribute('aria-pressed', 'true');
-          playBtn.textContent = '🔊 Música reproduciéndose';
+          if (audio.paused) {
+            const attempt = playMusic();
+            if (!attempt?.then) setPlayingState(true);
+          } else {
+            audio.pause();
+          }
         });
       }
       window.addEventListener('pointerdown', unlockAndPlay, { once: true });
