@@ -90,9 +90,6 @@
 </head>
 
 <body>
-  <!-- Indicador (aparece cuando inicia el recorrido) -->
-  <div id="hint" class="hint">Recorrido en curso… toca para pausar</div>
-
   <!-- Contenido con scroll-snap -->
   <main id="root">
 
@@ -133,11 +130,9 @@
               <div class="labelcount">Seg</div>
             </div>
           </div>
-          <!-- Botón de inicio/pausa del recorrido -->
-          <div class="start-wrap">
-            <button id="startBtn" class="start-btn" type="button" aria-controls="root">
-              Iniciar recorrido
-            </button>
+          <div class="swipe-indicator" aria-hidden="true">
+            <span class="swipe-indicator__hand" aria-hidden="true">👇</span>
+            <span class="swipe-indicator__text">Desliza hacia abajo</span>
           </div>
 
         </div>
@@ -381,194 +376,50 @@
 
   <script>
     (function () {
-      // ====== Referencias básicas ======
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
       const root = document.getElementById('root');
-      const startBtn = document.getElementById('startBtn');
-      const hint = document.getElementById('hint');
+      const indicator = document.querySelector('.swipe-indicator');
       const bgMusic = document.getElementById('bgMusic');
 
-      if (!root || !startBtn) {
-        // Si falta algo crítico, no hacemos nada para evitar errores
-        console.warn('[tour] Falta #root o #startBtn');
-        return;
-      }
+      let indicatorHidden = false;
+      let musicAttempted = false;
 
-      const sections = Array.from(root.querySelectorAll('.section'));
+      const hideIndicator = () => {
+        if (indicatorHidden || !indicator) return;
+        indicatorHidden = true;
+        indicator.classList.add('swipe-indicator--hidden');
+      };
 
-      // ====== Estado del recorrido ======
-      let running = false;
-      let stopRequested = false;
+      const tryPlayMusic = () => {
+        if (musicAttempted || !bgMusic) return;
+        musicAttempted = true;
+        bgMusic.play().catch(() => { /* ignoramos fallos de autoplay */ });
+      };
 
-      // ====== Utilidades ======
-      const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-      function showHint(show) {
-        if (!hint) return;
-        hint.classList.toggle('show', !!show);
-      }
-
-      // Espera hasta que el contenedor deje de moverse o se agote el tiempo
-      function waitForSettle(timeoutMs) {
-        return new Promise((resolve) => {
-          const start = performance.now();
-          let lastY = root.scrollTop;
-          let sameCount = 0;
-
-          function tick() {
-            if (stopRequested) { resolve(true); return; }
-
-            const now = performance.now();
-            const y = root.scrollTop;
-
-            if (Math.abs(y - lastY) < 0.5) {
-              sameCount++;
-              if (sameCount > 6) { resolve(true); return; }
-            } else {
-              sameCount = 0;
-              lastY = y;
-            }
-
-            if (now - start > timeoutMs) { resolve(false); return; }
-            requestAnimationFrame(tick);
+      if (root) {
+        const onFirstScroll = () => {
+          if (root.scrollTop > 8) {
+            hideIndicator();
+            tryPlayMusic();
+            root.removeEventListener('scroll', onFirstScroll);
           }
-
-          requestAnimationFrame(tick);
-        });
-      }
-
-      // Identifica la sección más visible para arrancar desde allí
-      function getStartIndex() {
-        let startIndex = 0;
-        let bestRatio = 0;
-        const viewportH = window.innerHeight || document.documentElement.clientHeight;
-
-        sections.forEach((sec, i) => {
-          const rect = sec.getBoundingClientRect();
-          const visible = Math.max(0, Math.min(rect.bottom, viewportH) - Math.max(rect.top, 0));
-          const ratio = visible / Math.max(1, rect.height);
-          if (ratio > bestRatio) { bestRatio = ratio; startIndex = i; }
-        });
-
-        return startIndex;
-      }
-
-      // ====== Recorrido automático ======
-      async function playMusic() {
-        if (!bgMusic) return;
-        if (!bgMusic.paused) return;
-
-        try {
-          await bgMusic.play();
-        } catch (err) {
-          console.warn('[audio] No se pudo reproducir automáticamente:', err);
-        }
-      }
-
-      function pauseMusic() {
-        if (!bgMusic) return;
-        if (bgMusic.paused) return;
-        bgMusic.pause();
-      }
-
-      async function autoTour() {
-        if (prefersReduced.matches) return; // respeta accesibilidad
-
-        running = true;
-        stopRequested = false;
-        showHint(true);
-        startBtn.textContent = 'Pausar recorrido';
-
-        const startIndex = getStartIndex();
-
-        await playMusic();
-
-        const slowScrollTo = (section, duration = 2400) => {
-          const targetTop = section.offsetTop;
-          const startTop = root.scrollTop;
-          const distance = targetTop - startTop;
-          const startTime = performance.now();
-          const originalSnap = root.style.scrollSnapType;
-          root.style.scrollSnapType = 'none';
-
-          return new Promise((resolve) => {
-            function step(now) {
-              if (stopRequested) {
-                root.style.scrollSnapType = originalSnap;
-                resolve();
-                return;
-              }
-
-              const elapsed = now - startTime;
-              const t = Math.min(1, elapsed / duration);
-              const eased = 1 - Math.pow(1 - t, 3);
-              root.scrollTop = startTop + distance * eased;
-
-              if (t < 1) {
-                requestAnimationFrame(step);
-              } else {
-                root.style.scrollSnapType = originalSnap;
-                resolve();
-              }
-            }
-
-            requestAnimationFrame(step);
-          });
         };
 
-        for (let i = startIndex; i < sections.length; i++) {
-          if (stopRequested) break;
-
-          await slowScrollTo(sections[i]);
-
-          // Espera a que el scroll se asiente, luego una pausa más larga
-          const settled = await waitForSettle(1800);
-          if (!settled) await sleep(800);
-          await sleep(1200);
-        }
-
-        running = false;
-        stopRequested = false;
-        showHint(false);
-        startBtn.textContent = 'Repetir recorrido';
+        root.addEventListener('scroll', onFirstScroll, { passive: true });
+        root.addEventListener('touchstart', () => {
+          hideIndicator();
+          tryPlayMusic();
+        }, { once: true, passive: true });
       }
 
-      // ====== Interacciones ======
-      startBtn.addEventListener('click', () => {
-        if (!running) {
-          autoTour();
-        } else {
-          stopRequested = true;
-          pauseMusic();
-          showHint(false);
-          startBtn.textContent = 'Reanudar recorrido';
-        }
-      });
+      window.addEventListener('wheel', () => {
+        hideIndicator();
+        tryPlayMusic();
+      }, { once: true, passive: true });
 
-      // Tocar la pantalla también pausa (móvil friendly)
-      root.addEventListener('pointerdown', () => {
-        if (running) {
-          stopRequested = true;
-          pauseMusic();
-          showHint(false);
-          startBtn.textContent = 'Reanudar recorrido';
-        }
-      }, { passive: true });
+      document.addEventListener('click', () => {
+        tryPlayMusic();
+      }, { once: true });
 
-
-      window.addEventListener('focusout', () => { root.style.scrollSnapType = 'y mandatory'; });
-
-      // Pausa si la pestaña pierde foco (opcional, mejora UX)
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden && running) {
-          stopRequested = true;
-          pauseMusic();
-          showHint(false);
-          startBtn.textContent = 'Reanudar recorrido';
-        }
-      });
-
-      // ====== Cuenta regresiva ======
       (function setupCountdown() {
         const countdownEl = document.getElementById('countdown');
         if (!countdownEl) return;
@@ -578,7 +429,6 @@
         const mEl = document.getElementById('minutes');
         const sEl = document.getElementById('seconds');
 
-        // Ajusta la fecha/hora de tu evento:
         const countdownDate = new Date('2025-12-28T17:00:00').getTime();
 
         const timer = setInterval(() => {
