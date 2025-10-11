@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Invitación de Boda — S&A</title>
 
   <!-- Fuentes -->
-  <link href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Great+Vibes&family=Italianno&family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Great+Vibes&family=Italianno&family=Tangerine:wght@400;700&display=swap"
+    rel="stylesheet">
   <!-- Estilos -->
   <link rel="stylesheet" href="style/style.unified.css" />
 
@@ -40,8 +43,8 @@
         if (!currentCard) return;
         dragging = true;
         const p = (e.touches?.[0]) || e;
-        startX = p.clientX; 
-        startY = p.clientY; 
+        startX = p.clientX;
+        startY = p.clientY;
         dx = 0; dy = 0;
         currentCard.style.transition = 'none';
       };
@@ -49,7 +52,7 @@
       const move = (e) => {
         if (!dragging || !currentCard) return;
         const p = (e.touches?.[0]) || e;
-        dx = p.clientX - startX; 
+        dx = p.clientX - startX;
         dy = p.clientY - startY;
         if (Math.abs(dx) > Math.abs(dy)) e.preventDefault(); // dar prioridad al swipe horizontal
         applyTransform(currentCard, dx, dy);
@@ -98,15 +101,16 @@
 <body>
   <main id="root">
     <!-- Audio único -->
-    <audio id="bgMusic" src="./mp3/musica.mp3" preload="auto" loop playsinline aria-hidden="true"></audio>
-    <button type="button" id="playMusicBtn" class="audio-btn" aria-controls="bgMusic">
-      ▶ Reproducir música
-    </button>
 
     <!-- ==================== Sección 1: Portada ==================== -->
     <section class="section" id="s1">
+      <audio id="bgMusic" src="./mp3/musica.mp3" preload="auto" loop playsinline aria-hidden="true"></audio>
+      <button type="button" id="playMusicBtn" class="audio-btn" aria-controls="bgMusic">
+        ▶ Reproducir música
+      </button>
       <article class="card card--hero">
-        <img src="./img/Fondo_portada_arriba.png" alt="" class="card__media2 flower flower--tl" aria-hidden="true" role="presentation">
+        <img src="./img/Fondo_portada_arriba.png" alt="" class="card__media2 flower flower--tl" aria-hidden="true"
+          role="presentation">
         <img class="card__media1" alt="Pareja al atardecer" src="./img/IMAGEN1.jpeg" />
 
         <div class="overlay">
@@ -150,7 +154,8 @@
         <!-- Decoración superior -->
         <picture aria-hidden="true">
           <source srcset="./img/Fondo_Sec2_arriba.png" media="(min-width: 768px)">
-          <img class="card__media card__media--top" src="./img/Fondo_Sec2_arriba.png" alt="" loading="lazy" decoding="async">
+          <img class="card__media card__media--top" src="./img/Fondo_Sec2_arriba.png" alt="" loading="lazy"
+            decoding="async">
         </picture>
 
         <header class="family-header">
@@ -194,7 +199,8 @@
         <!-- Decoración inferior -->
         <picture aria-hidden="true">
           <source srcset="./img/Fondo_Sec2_abajo.png" media="(min-width: 768px)">
-          <img class="card__media card__media--bottom" src="./img/Fondo_Sec2_abajo.png" alt="" loading="lazy" decoding="async">
+          <img class="card__media card__media--bottom" src="./img/Fondo_Sec2_abajo.png" alt="" loading="lazy"
+            decoding="async">
         </picture>
       </article>
     </section>
@@ -203,13 +209,15 @@
     <section class="section" id="s6">
       <article class="card card--venue" aria-labelledby="s6-title">
         <div class="venue-media">
-          <img class="card__media" alt="Salón decorado con luces cálidas" src="./img/salon.jpg?q=80&w=1600&auto=format&fit=crop" />
+          <img class="card__media" alt="Salón decorado con luces cálidas"
+            src="./img/salon.jpg?q=80&w=1600&auto=format&fit=crop" />
         </div>
 
         <div class="venue-body">
           <header class="venue-header">
             <h2 id="s6-title" class="venue-title font-tangerine">Nuestro lugar especial</h2>
-            <p class="venue-intro">Acompáñanos a celebrar la ceremonia civil y la recepción en un espacio acogedor donde cada detalle está pensado para compartir con ustedes.</p>
+            <p class="venue-intro">Acompáñanos a celebrar la ceremonia civil y la recepción en un espacio acogedor donde
+              cada detalle está pensado para compartir con ustedes.</p>
           </header>
 
           <div class="venue-highlight" aria-label="28 de diciembre de 2025, 4:00 pm">
@@ -327,7 +335,8 @@
           <div class="dc-in">
             <h2 class="dc-eyebrow">Código de Vestimenta:</h2>
             <p class="dc-style" id="dc-title">Formal</p>
-            <p class="dc-note"><span class="dc-highlight">Evitar</span> vestimenta completa de los siguientes colores:</p>
+            <p class="dc-note"><span class="dc-highlight">Evitar</span> vestimenta completa de los siguientes colores:
+            </p>
 
             <ul class="dc-grid" role="list" aria-label="Colores a evitar">
               <li class="dc-chip" aria-label="Blanco">
@@ -356,9 +365,11 @@
     <section class="section" id="s10">
       <div class="card">
         <div class="card-body">
-          <div class="card-title section10">Tu presencia es muy importante para nosotros, por lo que nos gustaría que nos confirmaras antes del 2 de diciembre</div>
+          <div class="card-title section10">Tu presencia es muy importante para nosotros, por lo que nos gustaría que
+            nos confirmaras antes del 2 de diciembre</div>
           <div class="actions">
-            <a href="https://wa.me/5219211024671?text=%C2%A1Hola!%20Quiero%20confirmar%20mi%20asistencia%20a%20la%20boda.%20Mi%20nombre%20es%20[Tu%20Nombre]." target="_blank" rel="noopener" class="btn">
+            <a href="https://wa.me/5219211024671?text=%C2%A1Hola!%20Quiero%20confirmar%20mi%20asistencia%20a%20la%20boda.%20Mi%20nombre%20es%20[Tu%20Nombre]."
+              target="_blank" rel="noopener" class="btn">
               Confirmar por WhatsApp
             </a>
           </div>
@@ -472,4 +483,5 @@
     })();
   </script>
 </body>
+
 </html>
