@@ -11,6 +11,8 @@
         aria-hidden="true"
       ></audio>
 
+      <MusicPlayer :audio-ref="bgMusic" />
+
       <section class="section" id="s1">
         <article class="card card--hero">
           <img
@@ -251,6 +253,7 @@
 
 <script setup>
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import MusicPlayer from './components/MusicPlayer.vue';
 
 const countdown = reactive({
   days: '00',
