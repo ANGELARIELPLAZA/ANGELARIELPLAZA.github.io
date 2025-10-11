@@ -5,16 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Invitación de Boda — S&A</title>
 
+  <!-- Fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Great+Vibes&family=Italianno&family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Estilos -->
   <link rel="stylesheet" href="style/style.unified.css" />
 
   <script defer>
-    // ===========================
-    // Galería tipo “stack” con swipe
-    // ===========================
+    // ===========================================
+    // 5) Galería tipo “stack” con swipe
+    // ===========================================
     document.addEventListener('DOMContentLoaded', () => {
       const stack = document.getElementById('gStack');
       if (!stack) return;
+
       const resetBtn = document.getElementById('gReset');
       const emptyMsg = document.getElementById('gEmpty');
       const original = stack.innerHTML;
@@ -22,8 +25,8 @@
       let currentCard = null;
       let startX = 0, startY = 0, dx = 0, dy = 0, dragging = false;
 
-      const THRESHOLD = 90; // px
-      const ROTATION = 18;  // deg
+      const THRESHOLD = 90; // px para considerar swipe
+      const ROTATION = 18;  // deg de rotación visual
 
       const topCard = () => stack.querySelector('.g-card');
 
@@ -37,15 +40,18 @@
         if (!currentCard) return;
         dragging = true;
         const p = (e.touches?.[0]) || e;
-        startX = p.clientX; startY = p.clientY; dx = 0; dy = 0;
+        startX = p.clientX; 
+        startY = p.clientY; 
+        dx = 0; dy = 0;
         currentCard.style.transition = 'none';
       };
 
       const move = (e) => {
         if (!dragging || !currentCard) return;
         const p = (e.touches?.[0]) || e;
-        dx = p.clientX - startX; dy = p.clientY - startY;
-        if (Math.abs(dx) > Math.abs(dy)) e.preventDefault(); // prioridad swipe
+        dx = p.clientX - startX; 
+        dy = p.clientY - startY;
+        if (Math.abs(dx) > Math.abs(dy)) e.preventDefault(); // dar prioridad al swipe horizontal
         applyTransform(currentCard, dx, dy);
       };
 
@@ -73,10 +79,12 @@
         emptyMsg.style.display = 'none';
       };
 
+      // Eventos mouse
       stack.addEventListener('mousedown', start);
       stack.addEventListener('mousemove', move);
       document.addEventListener('mouseup', end);
 
+      // Eventos touch
       stack.addEventListener('touchstart', start, { passive: false });
       stack.addEventListener('touchmove', move, { passive: false });
       stack.addEventListener('touchend', end);
@@ -88,12 +96,11 @@
 </head>
 
 <body>
-  <!-- Contenido con scroll-snap -->
   <main id="root">
     <!-- Audio único -->
-    <audio id="bgMusic" src="./mp3/musica.mp3" preload="auto" loop playsinline></audio>
+    <audio id="bgMusic" src="./mp3/musica.mp3" preload="auto" loop playsinline aria-hidden="true"></audio>
 
-    <!-- ======= Sección 1: Portada ======= -->
+    <!-- ==================== Sección 1: Portada ==================== -->
     <section class="section" id="s1">
       <article class="card card--hero">
         <img src="./img/Fondo_portada_arriba.png" alt="" class="card__media2 flower flower--tl" aria-hidden="true" role="presentation">
@@ -108,10 +115,22 @@
           <h2 class="textnoscasamos">¡Nos casamos!</h2>
 
           <div class="countdown" id="countdown">
-            <div class="box"><div class="number" id="days">00</div><div class="labelcount">Días</div></div>
-            <div class="box"><div class="number" id="hours">00</div><div class="labelcount">Horas</div></div>
-            <div class="box"><div class="number" id="minutes">00</div><div class="labelcount">Min</div></div>
-            <div class="box"><div class="number" id="seconds">00</div><div class="labelcount">Seg</div></div>
+            <div class="box">
+              <div class="number" id="days">00</div>
+              <div class="labelcount">Días</div>
+            </div>
+            <div class="box">
+              <div class="number" id="hours">00</div>
+              <div class="labelcount">Horas</div>
+            </div>
+            <div class="box">
+              <div class="number" id="minutes">00</div>
+              <div class="labelcount">Min</div>
+            </div>
+            <div class="box">
+              <div class="number" id="seconds">00</div>
+              <div class="labelcount">Seg</div>
+            </div>
           </div>
 
           <div class="swipe-indicator" aria-hidden="true">
@@ -122,34 +141,242 @@
       </article>
     </section>
 
-    <!-- ======= Sección 2: Familia ======= -->
-    <!-- (tu sección 2 tal cual la tenías) -->
+    <!-- ==================== Sección 2: Familia ==================== -->
+    <section id="s2" class="section" aria-labelledby="s2-title">
+      <article class="card card--family">
+        <!-- Decoración superior -->
+        <picture aria-hidden="true">
+          <source srcset="./img/Fondo_Sec2_arriba.png" media="(min-width: 768px)">
+          <img class="card__media card__media--top" src="./img/Fondo_Sec2_arriba.png" alt="" loading="lazy" decoding="async">
+        </picture>
 
-    <!-- ======= Sección 3: Ubicación ======= -->
-    <!-- (tu sección 3 tal cual la tenías) -->
+        <header class="family-header">
+          <h2 id="s2-title" class="family-title font-tangerine">Con la bendición de nuestros queridos padres</h2>
+          <div class="family-divider" aria-hidden="true"></div>
+        </header>
 
-    <!-- ======= Sección 4: Itinerario ======= -->
-    <!-- (tu sección 4 tal cual la tenías) -->
+        <div class="parents-grid" aria-label="Padres de los novios">
+          <!-- Padres de la novia -->
+          <section class="parents-col" aria-labelledby="parents-bride">
+            <h3 id="parents-bride" class="parents-title font-tangerine">Padres de la novia</h3>
+            <ul class="parents-list">
+              <li class="font-great">Crisóforo Molina H.</li>
+              <li aria-hidden="true" class="amp font-italianno">&amp;</li>
+              <li class="font-great">Enriqueta Cazarin L.</li>
+            </ul>
+          </section>
 
-    <!-- ======= Sección 5: Galería ======= -->
-    <!-- (tu sección 5 tal cual la tenías) -->
+          <!-- Padres del novio -->
+          <section class="parents-col" aria-labelledby="parents-groom">
+            <h3 id="parents-groom" class="parents-title font-tangerine">Padres del novio</h3>
+            <ul class="parents-list">
+              <li class="font-great">Ángel Alberto Plaza R.</li>
+              <li aria-hidden="true" class="amp font-italianno">&amp;</li>
+              <li class="font-great">Ángela Janely Acuña G.</li>
+            </ul>
+          </section>
+        </div>
 
-    <!-- ======= Sección 6: Código de Vestimenta ======= -->
-    <!-- (tu sección 6 tal cual la tenías) -->
+        <!-- Novios -->
+        <div class="couple-wrap" aria-live="polite">
+          <p class="couple-eyebrow">Nosotros</p>
+          <p class="couple-names font-italianno">Sinai <span class="amp" aria-hidden="true">&amp;</span> Ariel</p>
+        </div>
 
-    <!-- ======= Sección 7: RSVP ======= -->
-    <!-- (tu sección 7 tal cual la tenías) -->
+        <p class="invite-line">
+          Con gran alegría, les invitamos a compartir un nuevo capítulo de nuestra historia de amor:
+        </p>
+        <p class="invite-cta font-italianno">Nuestra boda.</p>
+
+        <!-- Decoración inferior -->
+        <picture aria-hidden="true">
+          <source srcset="./img/Fondo_Sec2_abajo.png" media="(min-width: 768px)">
+          <img class="card__media card__media--bottom" src="./img/Fondo_Sec2_abajo.png" alt="" loading="lazy" decoding="async">
+        </picture>
+      </article>
+    </section>
+
+    <!-- ==================== Sección 3: Ubicación ==================== -->
+    <section class="section" id="s6">
+      <article class="card card--venue" aria-labelledby="s6-title">
+        <div class="venue-media">
+          <img class="card__media" alt="Salón decorado con luces cálidas" src="./img/salon.jpg?q=80&w=1600&auto=format&fit=crop" />
+        </div>
+
+        <div class="venue-body">
+          <header class="venue-header">
+            <h2 id="s6-title" class="venue-title font-tangerine">Nuestro lugar especial</h2>
+            <p class="venue-intro">Acompáñanos a celebrar la ceremonia civil y la recepción en un espacio acogedor donde cada detalle está pensado para compartir con ustedes.</p>
+          </header>
+
+          <div class="venue-highlight" aria-label="28 de diciembre de 2025, 4:00 pm">
+            <img src="./img/flor_1.png" alt="" class="flower2 flower--tr" aria-hidden="true" role="presentation">
+            <div class="venue-calendar" aria-hidden="true">
+              <span class="venue-day">28</span>
+              <span class="venue-month">Dic</span>
+              <span class="venue-year">2025</span>
+            </div>
+            <div class="venue-schedule">
+              <h3 class="venue-event" itemprop="name">Ceremonia Civil y Recepción</h3>
+              <time class="venue-time" datetime="2025-12-28T16:00:00-06:00" itemprop="startDate">4:00 pm</time>
+              <p class="venue-place" itemprop="location" itemscope itemtype="https://schema.org/Place">
+                <span itemprop="name">Salón de eventos California</span><br>
+                <span itemprop="address">Hueyapan de Ocampo, Veracruz</span>
+              </p>
+            </div>
+          </div>
+
+          <ul class="venue-details">
+            <li>
+              <span class="venue-detail-title">Ambiente</span>
+              <span class="venue-detail-text">Jardines iluminados y espacios al aire libre.</span>
+            </li>
+          </ul>
+
+          <div class="venue-actions">
+            <a class="venue-btn" href="https://maps.app.goo.gl/J2DysbKQvpvysB4r6" target="_blank" rel="noopener">
+              Cómo llegar
+            </a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ==================== Sección 4: Itinerario ==================== -->
+    <section class="section" id="s7">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="section4">Itinerario</h2>
+          <img src="./img/flor_2.png" alt="" class="flower--bl" aria-hidden="true" role="presentation">
+
+          <div class="timeline">
+            <div class="timeline-item left">
+              <div class="timeline-content">
+                <h3>04:00 pm</h3>
+                <img src="./icons/wedding-arch.png" alt="Icono ceremonia civil" class="timeline-icon">
+                <p>Ceremonia civil</p>
+              </div>
+            </div>
+
+            <div class="timeline-item right">
+              <div class="timeline-content">
+                <h3>05:00 pm</h3>
+                <img src="./icons/wine.png" alt="Icono recepción" class="timeline-icon">
+                <p>Recepción</p>
+              </div>
+            </div>
+
+            <div class="timeline-item left">
+              <div class="timeline-content">
+                <h3>07:00 pm</h3>
+                <img src="./icons/restaurant.png" alt="Icono cena" class="timeline-icon">
+                <p>Cena</p>
+              </div>
+            </div>
+
+            <div class="timeline-item right">
+              <div class="timeline-content">
+                <h3>09:00 pm</h3>
+                <img src="./icons/dance.png" alt="Icono baile" class="timeline-icon">
+                <p>Bailes</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== Sección 5: Galería ==================== -->
+    <section class="section" id="s8">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="section5">Momentos</h2>
+          <div class="g-stack-wrap">
+            <div class="g-stack" id="gStack" aria-live="polite">
+              <div class="g-card"><img src="./img/IMG1.jpeg" alt="Foto 1"></div>
+              <div class="g-card"><img src="./img/IMG2.jpeg" alt="Foto 2"></div>
+              <div class="g-card"><img src="./img/IMG3.jpeg" alt="Foto 3"></div>
+              <div class="g-card"><img src="./img/IMG4.jpeg" alt="Foto 4"></div>
+              <div class="g-card"><img src="./img/IMG5.jpeg" alt="Foto 5"></div>
+              <div class="g-card"><img src="./img/IMG6.jpeg" alt="Foto 6"></div>
+              <div class="g-card"><img src="./img/IMG7.jpeg" alt="Foto 7"></div>
+              <div class="g-card"><img src="./img/IMG8.jpeg" alt="Foto 8"></div>
+              <div class="g-card"><img src="./img/IMG9.jpeg" alt="Foto 9"></div>
+              <div class="g-card"><img src="./img/IMG10.jpeg" alt="Foto 10"></div>
+              <div class="g-card"><img src="./img/IMG11.jpeg" alt="Foto 11"></div>
+            </div>
+            <div class="g-hint">Desliza a la izquierda o derecha para ver las fotos</div>
+            <div class="g-actions">
+              <button class="g-btn" id="gReset" type="button">⟲ Reiniciar</button>
+            </div>
+            <div class="g-empty" id="gEmpty" style="display:none">¡Sin más fotos! Presiona “Reiniciar”.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== Sección 6: Código de Vestimenta ==================== -->
+    <section class="section" id="s9">
+      <div class="card">
+        <div class="card-body">
+          <img src="./img/Fondo_portada_arriba.png" alt="" class="mirror-x" aria-hidden="true" role="presentation">
+
+          <div class="dc-in">
+            <h2 class="dc-eyebrow">Código de Vestimenta:</h2>
+            <p class="dc-style" id="dc-title">Formal</p>
+            <p class="dc-note"><span class="dc-highlight">Evitar</span> vestimenta completa de los siguientes colores:</p>
+
+            <ul class="dc-grid" role="list" aria-label="Colores a evitar">
+              <li class="dc-chip" aria-label="Blanco">
+                <span class="dc-swatch dc-white"><span class="dc-x">✕</span></span>
+                <span class="dc-chip-label">Blanco</span>
+              </li>
+              <li class="dc-chip" aria-label="Verde olivo claro">
+                <span class="dc-swatch dc-olive"><span class="dc-x">✕</span></span>
+                <span class="dc-chip-label">Verde olivo claro</span>
+              </li>
+              <li class="dc-chip" aria-label="Beige / arena">
+                <span class="dc-swatch dc-beige"><span class="dc-x">✕</span></span>
+                <span class="dc-chip-label">Beige / arena</span>
+              </li>
+              <li class="dc-chip" aria-label="Azul marino">
+                <span class="dc-swatch dc-navy"><span class="dc-x">✕</span></span>
+                <span class="dc-chip-label">Azul marino</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== Sección 7: RSVP ==================== -->
+    <section class="section" id="s10">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title section10">Tu presencia es muy importante para nosotros, por lo que nos gustaría que nos confirmaras antes del 2 de diciembre</div>
+          <div class="actions">
+            <a href="https://wa.me/5219211024671?text=%C2%A1Hola!%20Quiero%20confirmar%20mi%20asistencia%20a%20la%20boda.%20Mi%20nombre%20es%20[Tu%20Nombre]." target="_blank" rel="noopener" class="btn">
+              Confirmar por WhatsApp
+            </a>
+          </div>
+        </div>
+        <img src="./img/Fondo_Sec2_abajo.png" alt="" class="card__media card__media--bottom" aria-hidden="true">
+      </div>
+    </section>
   </main>
 
+  <!-- ======= Scripts finales: audio + countdown ======= -->
   <script>
     (function () {
-      // 1) Reproducir audio al primer toque/clic (móvil y desktop)
+      // Reproducir audio al primer gesto (móvil/desktop)
       function unlockAndPlay() {
         const audio = document.getElementById('bgMusic');
         if (!audio) return;
-        audio.muted = false;       // por si algunos navegadores empiezan en mute
-        audio.volume = 0.7;        // ajusta a gusto
+        audio.muted = false;   // por si inicia silenciado en algunos navegadores
+        audio.volume = 0.7;    // ajusta a gusto
         audio.play().catch(console.warn);
+
+        // Eliminar listeners (solo una vez)
         window.removeEventListener('pointerdown', unlockAndPlay);
         window.removeEventListener('click', unlockAndPlay);
         window.removeEventListener('touchend', unlockAndPlay);
@@ -158,7 +385,7 @@
       window.addEventListener('click', unlockAndPlay, { once: true });
       window.addEventListener('touchend', unlockAndPlay, { once: true, passive: true });
 
-      // 2) Cuenta regresiva
+      // Cuenta regresiva (zona horaria CDMX -06:00)
       (function setupCountdown() {
         const countdownEl = document.getElementById('countdown');
         if (!countdownEl) return;
@@ -168,7 +395,8 @@
         const mEl = document.getElementById('minutes');
         const sEl = document.getElementById('seconds');
 
-        const countdownDate = new Date('2025-12-28T16:00:00-06:00').getTime(); // ajusté TZ MX
+        // Ajusta la hora EXACTA de inicio del evento si cambia
+        const countdownDate = new Date('2025-12-28T16:00:00-06:00').getTime();
 
         const timer = setInterval(() => {
           const now = Date.now();
