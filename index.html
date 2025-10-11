@@ -90,13 +90,10 @@
 </head>
 
 <body>
-  <!-- Indicador (aparece cuando inicia el recorrido) -->
-  <div id="hint" class="hint">Recorrido en curso… toca para pausar</div>
-
   <!-- Contenido con scroll-snap -->
   <main id="root">
 
-    <audio id="bgMusic" src="./mp3/musica.mp3" preload="auto" loop aria-hidden="true"></audio>
+    <audio id="bgMusic" src="./mp3/musica.mp3" preload="auto" loop playsinline aria-hidden="true"></audio>
 
     <!-- Sección 1: Portada -->
     <section class="section" id="s1">
@@ -133,11 +130,9 @@
               <div class="labelcount">Seg</div>
             </div>
           </div>
-          <!-- Botón de inicio/pausa del recorrido -->
-          <div class="start-wrap">
-            <button id="startBtn" class="start-btn" type="button" aria-controls="root">
-              Iniciar recorrido
-            </button>
+          <div class="swipe-indicator" aria-hidden="true">
+            <span class="swipe-indicator__hand" aria-hidden="true">👇</span>
+            <span class="swipe-indicator__text">Desliza hacia abajo</span>
           </div>
 
         </div>
@@ -381,194 +376,88 @@
 
   <script>
     (function () {
-      // ====== Referencias básicas ======
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
       const root = document.getElementById('root');
-      const startBtn = document.getElementById('startBtn');
-      const hint = document.getElementById('hint');
+      const indicator = document.querySelector('.swipe-indicator');
       const bgMusic = document.getElementById('bgMusic');
 
-      if (!root || !startBtn) {
-        // Si falta algo crítico, no hacemos nada para evitar errores
-        console.warn('[tour] Falta #root o #startBtn');
-        return;
-      }
+      let indicatorHidden = false;
+      let musicUnlocked = false;
+      const gestureBindings = [];
 
-      const sections = Array.from(root.querySelectorAll('.section'));
+      function cleanupGestures() {
+        if (!gestureBindings.length) return;
 
-      // ====== Estado del recorrido ======
-      let running = false;
-      let stopRequested = false;
-
-      // ====== Utilidades ======
-      const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-      function showHint(show) {
-        if (!hint) return;
-        hint.classList.toggle('show', !!show);
-      }
-
-      // Espera hasta que el contenedor deje de moverse o se agote el tiempo
-      function waitForSettle(timeoutMs) {
-        return new Promise((resolve) => {
-          const start = performance.now();
-          let lastY = root.scrollTop;
-          let sameCount = 0;
-
-          function tick() {
-            if (stopRequested) { resolve(true); return; }
-
-            const now = performance.now();
-            const y = root.scrollTop;
-
-            if (Math.abs(y - lastY) < 0.5) {
-              sameCount++;
-              if (sameCount > 6) { resolve(true); return; }
-            } else {
-              sameCount = 0;
-              lastY = y;
-            }
-
-            if (now - start > timeoutMs) { resolve(false); return; }
-            requestAnimationFrame(tick);
-          }
-
-          requestAnimationFrame(tick);
+        gestureBindings.forEach(([target, eventName, options]) => {
+          target.removeEventListener(eventName, handleGesture, options);
         });
+        gestureBindings.length = 0;
       }
 
-      // Identifica la sección más visible para arrancar desde allí
-      function getStartIndex() {
-        let startIndex = 0;
-        let bestRatio = 0;
-        const viewportH = window.innerHeight || document.documentElement.clientHeight;
+      const hideIndicator = () => {
+        if (indicatorHidden || !indicator) return;
+        indicatorHidden = true;
+        indicator.classList.add('swipe-indicator--hidden');
+      };
 
-        sections.forEach((sec, i) => {
-          const rect = sec.getBoundingClientRect();
-          const visible = Math.max(0, Math.min(rect.bottom, viewportH) - Math.max(rect.top, 0));
-          const ratio = visible / Math.max(1, rect.height);
-          if (ratio > bestRatio) { bestRatio = ratio; startIndex = i; }
-        });
+      const tryPlayMusic = () => {
+        if (musicUnlocked || !bgMusic) return;
 
-        return startIndex;
-      }
-
-      // ====== Recorrido automático ======
-      async function playMusic() {
-        if (!bgMusic) return;
-        if (!bgMusic.paused) return;
-
-        try {
-          await bgMusic.play();
-        } catch (err) {
-          console.warn('[audio] No se pudo reproducir automáticamente:', err);
+        const attempt = bgMusic.play();
+        if (!attempt || typeof attempt.then !== 'function') {
+          musicUnlocked = true;
+          cleanupGestures();
+          return;
         }
-      }
 
-      function pauseMusic() {
-        if (!bgMusic) return;
-        if (bgMusic.paused) return;
-        bgMusic.pause();
-      }
-
-      async function autoTour() {
-        if (prefersReduced.matches) return; // respeta accesibilidad
-
-        running = true;
-        stopRequested = false;
-        showHint(true);
-        startBtn.textContent = 'Pausar recorrido';
-
-        const startIndex = getStartIndex();
-
-        await playMusic();
-
-        const slowScrollTo = (section, duration = 2400) => {
-          const targetTop = section.offsetTop;
-          const startTop = root.scrollTop;
-          const distance = targetTop - startTop;
-          const startTime = performance.now();
-          const originalSnap = root.style.scrollSnapType;
-          root.style.scrollSnapType = 'none';
-
-          return new Promise((resolve) => {
-            function step(now) {
-              if (stopRequested) {
-                root.style.scrollSnapType = originalSnap;
-                resolve();
-                return;
-              }
-
-              const elapsed = now - startTime;
-              const t = Math.min(1, elapsed / duration);
-              const eased = 1 - Math.pow(1 - t, 3);
-              root.scrollTop = startTop + distance * eased;
-
-              if (t < 1) {
-                requestAnimationFrame(step);
-              } else {
-                root.style.scrollSnapType = originalSnap;
-                resolve();
-              }
-            }
-
-            requestAnimationFrame(step);
+        attempt
+          .then(() => {
+            musicUnlocked = true;
+            cleanupGestures();
+          })
+          .catch(() => {
+            musicUnlocked = false;
           });
+      };
+
+      let firstInteracted = false;
+      function markFirstInteraction() {
+        if (!firstInteracted) {
+          firstInteracted = true;
+          hideIndicator();
+        }
+        tryPlayMusic();
+      }
+
+      function handleGesture() {
+        markFirstInteraction();
+
+        if (musicUnlocked) cleanupGestures();
+      }
+
+      function bindGesture(target, eventName, options) {
+        target.addEventListener(eventName, handleGesture, options);
+        gestureBindings.push([target, eventName, options]);
+      }
+
+      if (root) {
+        const onFirstScroll = () => {
+          if (root.scrollTop > 8) {
+            markFirstInteraction();
+            if (musicUnlocked) root.removeEventListener('scroll', onFirstScroll);
+          }
         };
 
-        for (let i = startIndex; i < sections.length; i++) {
-          if (stopRequested) break;
-
-          await slowScrollTo(sections[i]);
-
-          // Espera a que el scroll se asiente, luego una pausa más larga
-          const settled = await waitForSettle(1800);
-          if (!settled) await sleep(800);
-          await sleep(1200);
-        }
-
-        running = false;
-        stopRequested = false;
-        showHint(false);
-        startBtn.textContent = 'Repetir recorrido';
+        root.addEventListener('scroll', onFirstScroll, { passive: true });
+        bindGesture(root, 'touchstart', { passive: true });
       }
 
-      // ====== Interacciones ======
-      startBtn.addEventListener('click', () => {
-        if (!running) {
-          autoTour();
-        } else {
-          stopRequested = true;
-          pauseMusic();
-          showHint(false);
-          startBtn.textContent = 'Reanudar recorrido';
-        }
-      });
+      bindGesture(window, 'wheel', { passive: true });
+      bindGesture(document, 'click');
+      bindGesture(document, 'pointerdown', { passive: true });
+      bindGesture(document, 'pointerup', { passive: true });
+      bindGesture(document, 'touchend', { passive: true });
+      bindGesture(document, 'keydown');
 
-      // Tocar la pantalla también pausa (móvil friendly)
-      root.addEventListener('pointerdown', () => {
-        if (running) {
-          stopRequested = true;
-          pauseMusic();
-          showHint(false);
-          startBtn.textContent = 'Reanudar recorrido';
-        }
-      }, { passive: true });
-
-
-      window.addEventListener('focusout', () => { root.style.scrollSnapType = 'y mandatory'; });
-
-      // Pausa si la pestaña pierde foco (opcional, mejora UX)
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden && running) {
-          stopRequested = true;
-          pauseMusic();
-          showHint(false);
-          startBtn.textContent = 'Reanudar recorrido';
-        }
-      });
-
-      // ====== Cuenta regresiva ======
       (function setupCountdown() {
         const countdownEl = document.getElementById('countdown');
         if (!countdownEl) return;
@@ -578,7 +467,6 @@
         const mEl = document.getElementById('minutes');
         const sEl = document.getElementById('seconds');
 
-        // Ajusta la fecha/hora de tu evento:
         const countdownDate = new Date('2025-12-28T17:00:00').getTime();
 
         const timer = setInterval(() => {
