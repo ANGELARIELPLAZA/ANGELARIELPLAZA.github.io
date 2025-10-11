@@ -93,7 +93,7 @@
   <!-- Contenido con scroll-snap -->
   <main id="root">
 
-    <audio id="bgMusic" src="./mp3/musica.mp3" preload="auto" loop aria-hidden="true"></audio>
+    <audio id="bgMusic" src="./mp3/musica.mp3" preload="auto" loop playsinline aria-hidden="true"></audio>
 
     <!-- Sección 1: Portada -->
     <section class="section" id="s1">
@@ -395,30 +395,40 @@
         bgMusic.play().catch(() => { /* ignoramos fallos de autoplay */ });
       };
 
+      let firstInteracted = false;
+      const markFirstInteraction = () => {
+        if (firstInteracted) return;
+        firstInteracted = true;
+        hideIndicator();
+        tryPlayMusic();
+      };
+
       if (root) {
         const onFirstScroll = () => {
           if (root.scrollTop > 8) {
-            hideIndicator();
-            tryPlayMusic();
+            markFirstInteraction();
             root.removeEventListener('scroll', onFirstScroll);
           }
         };
 
         root.addEventListener('scroll', onFirstScroll, { passive: true });
-        root.addEventListener('touchstart', () => {
-          hideIndicator();
-          tryPlayMusic();
-        }, { once: true, passive: true });
+        root.addEventListener('touchstart', markFirstInteraction, { once: true, passive: true });
       }
 
-      window.addEventListener('wheel', () => {
-        hideIndicator();
-        tryPlayMusic();
-      }, { once: true, passive: true });
+      window.addEventListener('wheel', markFirstInteraction, { once: true, passive: true });
 
-      document.addEventListener('click', () => {
-        tryPlayMusic();
-      }, { once: true });
+      document.addEventListener('click', markFirstInteraction, { once: true });
+
+      const userGestureEvents = [
+        ['pointerdown', { once: true }],
+        ['pointerup', { once: true }],
+        ['touchend', { once: true }],
+        ['keydown', { once: true }]
+      ];
+
+      userGestureEvents.forEach(([eventName, options]) => {
+        document.addEventListener(eventName, markFirstInteraction, options);
+      });
 
       (function setupCountdown() {
         const countdownEl = document.getElementById('countdown');
