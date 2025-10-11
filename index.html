@@ -239,14 +239,6 @@
               </p>
             </div>
           </div>
-
-          <ul class="venue-details">
-            <li>
-              <span class="venue-detail-title">Ambiente</span>
-              <span class="venue-detail-text">Jardines iluminados y espacios al aire libre.</span>
-            </li>
-          </ul>
-
           <div class="venue-actions">
             <a class="venue-btn" href="https://maps.app.goo.gl/J2DysbKQvpvysB4r6" target="_blank" rel="noopener">
               Cómo llegar
@@ -383,38 +375,7 @@
   </main>
 
   <!-- ======= Scripts finales: audio + countdown ======= -->
-  <div id="consoleOutput" class="console-output" aria-live="polite" aria-label="Salida de la consola"></div>
-
   <script>
-    (function setupConsoleMirror() {
-      const output = document.getElementById('consoleOutput');
-      if (!output) return;
-
-      const serialize = (value) => {
-        if (typeof value === 'string') return value;
-        try {
-          return JSON.stringify(value);
-        } catch (error) {
-          return String(value);
-        }
-      };
-
-      ['log', 'warn', 'error', 'info'].forEach((type) => {
-        const original = console[type];
-        console[type] = function patchedConsole(...args) {
-          if (typeof original === 'function') {
-            original.apply(console, args);
-          }
-
-          const entry = document.createElement('div');
-          entry.className = `console-line console-${type}`;
-          entry.textContent = args.map(serialize).join(' ');
-          output.appendChild(entry);
-          output.scrollTop = output.scrollHeight;
-        };
-      });
-    })();
-
     (function () {
       // Reproducir audio al primer gesto (móvil/desktop)
       const audio = document.getElementById('bgMusic');
