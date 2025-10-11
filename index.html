@@ -99,6 +99,9 @@
   <main id="root">
     <!-- Audio único -->
     <audio id="bgMusic" src="./mp3/musica.mp3" preload="auto" loop playsinline aria-hidden="true"></audio>
+    <button type="button" id="playMusicBtn" class="audio-btn" aria-controls="bgMusic">
+      ▶ Reproducir música
+    </button>
 
     <!-- ==================== Sección 1: Portada ==================== -->
     <section class="section" id="s1">
@@ -366,20 +369,67 @@
   </main>
 
   <!-- ======= Scripts finales: audio + countdown ======= -->
+  <div id="consoleOutput" class="console-output" aria-live="polite" aria-label="Salida de la consola"></div>
+
   <script>
+    (function setupConsoleMirror() {
+      const output = document.getElementById('consoleOutput');
+      if (!output) return;
+
+      const serialize = (value) => {
+        if (typeof value === 'string') return value;
+        try {
+          return JSON.stringify(value);
+        } catch (error) {
+          return String(value);
+        }
+      };
+
+      ['log', 'warn', 'error', 'info'].forEach((type) => {
+        const original = console[type];
+        console[type] = function patchedConsole(...args) {
+          if (typeof original === 'function') {
+            original.apply(console, args);
+          }
+
+          const entry = document.createElement('div');
+          entry.className = `console-line console-${type}`;
+          entry.textContent = args.map(serialize).join(' ');
+          output.appendChild(entry);
+          output.scrollTop = output.scrollHeight;
+        };
+      });
+    })();
+
     (function () {
       // Reproducir audio al primer gesto (móvil/desktop)
-      function unlockAndPlay() {
-        const audio = document.getElementById('bgMusic');
+      const audio = document.getElementById('bgMusic');
+      const playBtn = document.getElementById('playMusicBtn');
+
+      const playMusic = () => {
         if (!audio) return;
         audio.muted = false;   // por si inicia silenciado en algunos navegadores
         audio.volume = 0.7;    // ajusta a gusto
-        audio.play().catch(console.warn);
+        const attempt = audio.play();
+        if (attempt?.catch) attempt.catch(console.warn);
+      };
+
+      function unlockAndPlay() {
+        playMusic();
 
         // Eliminar listeners (solo una vez)
         window.removeEventListener('pointerdown', unlockAndPlay);
         window.removeEventListener('click', unlockAndPlay);
         window.removeEventListener('touchend', unlockAndPlay);
+      }
+
+      if (playBtn) {
+        playBtn.addEventListener('click', () => {
+          playMusic();
+          playBtn.classList.add('is-playing');
+          playBtn.setAttribute('aria-pressed', 'true');
+          playBtn.textContent = '🔊 Música reproduciéndose';
+        });
       }
       window.addEventListener('pointerdown', unlockAndPlay, { once: true });
       window.addEventListener('click', unlockAndPlay, { once: true });
