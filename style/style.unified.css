@@ -103,6 +103,31 @@ body {
   }
 }
 
+.desktop-warning {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--bg);
+  text-align: center;
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  color: var(--brand-dark);
+  z-index: 2000;
+}
+
+@media (min-width: 768px) {
+  main,
+  .audio-player {
+    display: none;
+  }
+
+  .desktop-warning {
+    display: flex;
+  }
+}
+
 img {
   display: block;
   max-width: 100%;
