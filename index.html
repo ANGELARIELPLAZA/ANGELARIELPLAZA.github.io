@@ -375,13 +375,29 @@
           </header>
           <figure class="hotel-info__figure">
             <img src="./img/hotel.jpeg" width="720" height="405"
-              alt="Tarja informativa del Hotel Castillo con tarifas, requisitos de reservación y datos de contacto" />
-            <figcaption class="hotel-info__caption">Consulta las tarifas y políticas del Hotel Castillo para asegurar tu
+              alt="Tarja informativa del Hotel Castillo con tarifas, requisitos de reservación y datos de contacto"
+              id="hotelImage" class="hotel-info__image" role="button" tabindex="0"
+              aria-describedby="hotel-info-title hotel-info-caption" />
+            <figcaption class="hotel-info__caption" id="hotel-info-caption">Consulta las tarifas y políticas del Hotel Castillo para asegurar tu
               estancia.</figcaption>
           </figure>
         </div>
       </div>
     </section>
+
+    <div class="image-modal" id="hotelImageModal" role="dialog"
+      aria-labelledby="hotelImageModalTitle" aria-hidden="true">
+      <div class="image-modal__backdrop" data-dismiss-modal></div>
+      <figure class="image-modal__dialog" role="group" aria-labelledby="hotelImageModalTitle">
+        <div class="image-modal__header">
+          <h2 id="hotelImageModalTitle" class="image-modal__title">Alojamiento recomendado</h2>
+          <button type="button" class="image-modal__close" aria-label="Cerrar" data-dismiss-modal>&times;</button>
+        </div>
+        <img src="./img/hotel.jpeg" alt="Tarja informativa del Hotel Castillo con tarifas, requisitos de reservación y datos de contacto"
+          class="image-modal__img" />
+        <figcaption class="image-modal__caption">Toca fuera de la imagen o en el botón cerrar para volver.</figcaption>
+      </figure>
+    </div>
 
     <!-- ==================== Sección 8: RSVP ==================== -->
     <section class="section" id="s10">
@@ -417,6 +433,49 @@
           rsvpSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       }
+
+      const hotelImage = document.getElementById('hotelImage');
+      const hotelModal = document.getElementById('hotelImageModal');
+      const dismissControls = hotelModal?.querySelectorAll('[data-dismiss-modal]');
+      let lastFocusedElement = null;
+
+      const closeHotelModal = () => {
+        if (!hotelModal) return;
+        hotelModal.setAttribute('aria-hidden', 'true');
+        document.removeEventListener('keydown', handleModalKeyDown);
+        if (lastFocusedElement) {
+          lastFocusedElement.focus({ preventScroll: true });
+          lastFocusedElement = null;
+        }
+      };
+
+      const openHotelModal = () => {
+        if (!hotelModal) return;
+        lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        hotelModal.setAttribute('aria-hidden', 'false');
+        const closeBtn = hotelModal.querySelector('.image-modal__close');
+        closeBtn?.focus({ preventScroll: true });
+        document.addEventListener('keydown', handleModalKeyDown);
+      };
+
+      function handleModalKeyDown(event) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeHotelModal();
+        }
+      }
+
+      hotelImage?.addEventListener('click', openHotelModal);
+      hotelImage?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openHotelModal();
+        }
+      });
+
+      dismissControls?.forEach((control) => {
+        control.addEventListener('click', closeHotelModal);
+      });
 
       const setPlayingState = (isPlaying) => {
         if (!playBtn) return;
