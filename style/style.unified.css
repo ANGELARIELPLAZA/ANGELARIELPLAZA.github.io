@@ -1339,10 +1339,92 @@ blockquote {
   box-shadow: 0 18px 50px rgba(4, 19, 41, 0.45);
 }
 
+.hotel-info__image {
+  cursor: zoom-in;
+}
+
+.hotel-info__image:focus-visible {
+  outline: 3px solid rgba(242, 245, 255, 0.9);
+  outline-offset: 6px;
+}
+
 .hotel-info__caption {
   margin: 0;
   font-size: clamp(0.95rem, 3vw, 1.15rem);
   color: rgba(242, 245, 255, 0.76);
+}
+
+.image-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  z-index: 1000;
+}
+
+.image-modal[aria-hidden="false"] {
+  display: flex;
+}
+
+.image-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.image-modal__dialog {
+  position: relative;
+  max-width: min(92vw, 680px);
+  width: 100%;
+  background: #fff;
+  border-radius: clamp(18px, 4vw, 24px);
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(4, 19, 41, 0.55);
+  z-index: 1;
+}
+
+.image-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(0.75rem, 2.5vw, 1.25rem) clamp(1rem, 4vw, 1.75rem);
+  background: linear-gradient(135deg, #3f3d56, #5d5b78);
+  color: #fefefe;
+}
+
+.image-modal__title {
+  font-size: clamp(1.3rem, 4vw, 1.7rem);
+  margin: 0;
+}
+
+.image-modal__close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: clamp(2rem, 6vw, 2.6rem);
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.image-modal__close:active {
+  transform: scale(0.92);
+}
+
+.image-modal__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.image-modal__caption {
+  padding: clamp(0.75rem, 2.5vw, 1.25rem) clamp(1rem, 4vw, 2rem) clamp(1.25rem, 5vw, 2.25rem);
+  font-size: clamp(1rem, 3.2vw, 1.25rem);
+  color: rgba(4, 19, 41, 0.7);
+  text-align: center;
 }
 
 /* Utilities */
