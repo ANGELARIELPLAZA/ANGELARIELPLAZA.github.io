@@ -1293,6 +1293,58 @@ blockquote {
   background: #1e2f53;
 }
 
+/* Hotel info */
+.hotel-info {
+  background: #0b1f40;
+  border-radius: clamp(20px, 4vw, 28px);
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(8, 31, 64, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hotel-info__body {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  padding: clamp(1.75rem, 5vw, 3rem);
+  text-align: center;
+  color: #f2f5ff;
+}
+
+.hotel-info__header {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.hotel-info__title {
+  margin: 0;
+  font-size: clamp(2.1rem, 6vw, 3rem);
+  font-family: "Tangerine", cursive;
+  letter-spacing: 0.04em;
+}
+
+.hotel-info__subtitle {
+  margin: 0;
+  font-size: clamp(1rem, 3.5vw, 1.35rem);
+  color: rgba(242, 245, 255, 0.76);
+}
+
+.hotel-info__figure {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.hotel-info__figure img {
+  margin: 0 auto;
+  border-radius: clamp(16px, 3vw, 22px);
+  box-shadow: 0 18px 50px rgba(4, 19, 41, 0.45);
+}
+
+.hotel-info__caption {
+  margin: 0;
+  font-size: clamp(0.95rem, 3vw, 1.15rem);
+  color: rgba(242, 245, 255, 0.76);
+}
+
 /* Utilities */
 .number,
 .btn,
