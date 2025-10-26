@@ -86,6 +86,49 @@ body {
   font-size: 0.95rem;
 }
 
+.scroll-to-rsvp {
+  position: fixed;
+  right: 1.1rem;
+  bottom: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.15rem;
+  border: none;
+  border-radius: 999px;
+  background: rgba(30, 47, 83, 0.9);
+  color: #fff;
+  font: 600 0.9rem/1.1 "Segoe UI", Roboto, sans-serif;
+  letter-spacing: 0.02em;
+  box-shadow: 0 12px 28px rgba(30, 47, 83, 0.22);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+  z-index: 950;
+  opacity: 0.92;
+  backdrop-filter: blur(8px);
+}
+
+.scroll-to-rsvp:hover,
+.scroll-to-rsvp:focus-visible {
+  transform: translateY(-1px);
+  background: rgba(30, 47, 83, 1);
+  opacity: 1;
+}
+
+.scroll-to-rsvp:focus-visible {
+  outline: 2px solid rgba(181, 122, 106, 0.6);
+  outline-offset: 2px;
+}
+
+.scroll-to-rsvp__icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.scroll-to-rsvp__label {
+  font-size: 0.9rem;
+}
+
 @media (max-width: 600px) {
   .audio-player {
     top: 0.65rem;
@@ -100,6 +143,25 @@ body {
 
   .audio-player__icon {
     font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .scroll-to-rsvp {
+    right: 0.85rem;
+    bottom: 0.85rem;
+    padding: 0.5rem 0.95rem;
+    font-size: 0.85rem;
+  }
+
+  .scroll-to-rsvp__icon {
+    font-size: 0.95rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .scroll-to-rsvp {
+    display: none;
   }
 }
 

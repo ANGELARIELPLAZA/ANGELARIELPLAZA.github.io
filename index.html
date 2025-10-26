@@ -113,6 +113,12 @@
       </button>
     </div>
 
+    <button type="button" id="scrollToRsvp" class="scroll-to-rsvp"
+      aria-label="Ir a la sección de confirmar asistencia">
+      <span class="scroll-to-rsvp__icon" aria-hidden="true">⬇</span>
+      <span class="scroll-to-rsvp__label">Confirmar asistencia</span>
+    </button>
+
     <!-- ==================== Sección 1: Portada ==================== -->
     <section class="section" id="s1">
       <article class="card card--hero">
@@ -386,6 +392,14 @@
       const playBtn = document.getElementById('playMusicBtn');
       const icon = playBtn?.querySelector('.audio-player__icon');
       const label = playBtn?.querySelector('.audio-player__label');
+
+      const scrollBtn = document.getElementById('scrollToRsvp');
+      const rsvpSection = document.getElementById('s10');
+      if (scrollBtn && rsvpSection) {
+        scrollBtn.addEventListener('click', () => {
+          rsvpSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
 
       const setPlayingState = (isPlaying) => {
         if (!playBtn) return;
