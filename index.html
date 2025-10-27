@@ -365,19 +365,7 @@
       </div>
     </section>
 
-    <!-- ==================== Sección 7: Información de Hotel ==================== -->
-    <section class="section" id="hotel-info">
-      <div class="card hotel-info">
-        <div class="card-body hotel-info__body">
-          <div class="hotel-info__content">
-            <button type="button" id="hotelInfoButton" class="btn hotel-info__button">
-              Ver detalles de hospedaje
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- ==================== Sección 8: RSVP ==================== -->
+    <!-- ==================== Sección 7: RSVP ==================== -->
     <section class="section" id="s10">
       <div class="card">
         <div class="card-body">
@@ -393,7 +381,67 @@
         <img src="./img/Fondo_Sec2_abajo.png" alt="" class="card__media card__media--bottom" aria-hidden="true">
       </div>
     </section>
+    <!-- ==================== Sección 8: Detalles de Hospedaje ==================== -->
+    <section class="section" id="hotel-info">
+      <div class="card hotel-info">
+        <div class="card-body hotel-info__body">
+          <header class="hotel-info__header">
+            <h2 class="hotel-info__title">Detalles de hospedaje</h2>
+            <p class="hotel-info__subtitle">Tenemos una opción especial muy cerca del salón</p>
+          </header>
+
+          <div class="hotel-info__content">
+            <p class="hotel-info__note">Reserva con anticipación y menciona que asistirás a nuestra boda para
+              mantener la tarifa preferencial.</p>
+            <button type="button" id="hotelInfoButton" class="btn hotel-info__button">
+              Ver detalles de hospedaje
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <div class="image-modal" id="hotelImageModal" aria-hidden="true" role="dialog" aria-modal="true"
+    aria-labelledby="hotelModalTitle">
+    <div class="image-modal__backdrop" data-dismiss-modal></div>
+    <div class="image-modal__dialog" role="document">
+      <header class="image-modal__header">
+        <h2 class="image-modal__title" id="hotelModalTitle">Hospedaje recomendado</h2>
+        <button type="button" class="image-modal__close" aria-label="Cerrar detalles" data-dismiss-modal>&times;</button>
+      </header>
+      <div class="image-modal__body">
+        <div class="image-modal__slides">
+          <figure class="image-modal__figure is-active" data-hotel-name="Hotel Castillo" aria-hidden="false">
+            <img src="./img/hotel1.jpeg" alt="Habitación del Hotel Castillo" class="image-modal__img">
+            <figcaption class="image-modal__caption">
+              <p><strong>Hotel Castillo</strong> — Habitaciones King Size desde $700 MXN por noche y habitaciones doble o
+                matrimonial desde $600 MXN, todas con depósito reembolsable de $100 MXN.</p>
+              <p>Reserva con un anticipo del 50% y comunícate al <a href="tel:+5212941701440">+52 1 294 170 1440</a> o vía
+                Facebook en <strong>Hotel Castillo</strong>.</p>
+            </figcaption>
+          </figure>
+          <figure class="image-modal__figure" data-hotel-name="Tarifas y reservación" aria-hidden="true">
+            <img src="./img/tarja-informativa-hotel-castillo.svg" alt="Tarifas detalladas del Hotel Castillo"
+              class="image-modal__img">
+            <figcaption class="image-modal__caption">
+              <p>Recuerda solicitar tu habitación con tiempo. Durante diciembre el hotel se llena rápidamente, por lo que
+                te recomendamos reservar tan pronto como puedas.</p>
+            </figcaption>
+          </figure>
+        </div>
+        <div class="image-modal__controls">
+          <button type="button" class="image-modal__nav" data-carousel-dir="prev" aria-label="Ver hotel anterior">
+            ‹
+          </button>
+          <p class="image-modal__pagination" aria-live="polite" hidden></p>
+          <button type="button" class="image-modal__nav" data-carousel-dir="next" aria-label="Ver siguiente hotel">
+            ›
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ======= Scripts finales: audio + countdown ======= -->
   <script>
