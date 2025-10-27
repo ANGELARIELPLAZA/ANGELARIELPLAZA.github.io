@@ -366,62 +366,17 @@
     </section>
 
     <!-- ==================== Sección 7: Información de Hotel ==================== -->
-    <section class="section" id="hotel-info" aria-labelledby="hotel-info-title">
+    <section class="section" id="hotel-info">
       <div class="card hotel-info">
         <div class="card-body hotel-info__body">
-          <header class="hotel-info__header">
-            <h2 id="hotel-info-title" class="hotel-info__title">Alojamiento recomendado</h2>
-          </header>
           <div class="hotel-info__content">
-            <p class="hotel-info__subtitle" id="hotel-info-description">Para aquellas personas que requieran hospedaje, ponemos a su disposición la
-              información de los hoteles recomendados.</p>
-            <button type="button" id="hotelInfoButton" class="btn hotel-info__button" aria-controls="hotelImageModal"
-              aria-describedby="hotel-info-description hotel-info-note" aria-haspopup="dialog">
+            <button type="button" id="hotelInfoButton" class="btn hotel-info__button">
               Ver detalles de hospedaje
             </button>
-            <p class="hotel-info__note" id="hotel-info-note">El botón mostrará tarifas, requisitos de reservación y datos de contacto de los
-              hoteles recomendados.</p>
           </div>
         </div>
       </div>
     </section>
-
-    <div class="image-modal" id="hotelImageModal" role="dialog"
-      aria-labelledby="hotelImageModalTitle" aria-modal="true" aria-hidden="true">
-      <div class="image-modal__backdrop" data-dismiss-modal></div>
-      <div class="image-modal__dialog" role="group" aria-labelledby="hotelImageModalTitle">
-        <div class="image-modal__header">
-          <h2 id="hotelImageModalTitle" class="image-modal__title">Alojamiento recomendado</h2>
-          <button type="button" class="image-modal__close" aria-label="Cerrar" data-dismiss-modal>&times;</button>
-        </div>
-        <div class="image-modal__body">
-          <div class="image-modal__slides">
-            <figure class="image-modal__figure is-active" data-hotel-name="Hotel 1" aria-hidden="false">
-              <img src="./img/hotel1.jpeg"
-                alt="Información detallada del Hotel 1 con tarifas, requisitos de reservación y datos de contacto"
-                class="image-modal__img" />
-              <figcaption class="image-modal__caption">Detalles del Hotel 1 con tarifas, requisitos de reservación y contacto.</figcaption>
-            </figure>
-            <figure class="image-modal__figure" data-hotel-name="Hotel 2" aria-hidden="true">
-              <img src="./img/hotel1.png"
-                alt="Información detallada del Hotel 2 con tarifas, requisitos de reservación y datos de contacto"
-                class="image-modal__img" />
-              <figcaption class="image-modal__caption">Detalles del Hotel 2 con tarifas, requisitos de reservación y contacto.</figcaption>
-            </figure>
-          </div>
-          <div class="image-modal__controls">
-            <button type="button" class="image-modal__nav" data-carousel-dir="prev" aria-label="Ver hotel anterior">
-              ◀
-            </button>
-            <span class="image-modal__pagination" aria-live="polite">Hotel 1 (1 de 2)</span>
-            <button type="button" class="image-modal__nav" data-carousel-dir="next" aria-label="Ver hotel siguiente">
-              ▶
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- ==================== Sección 8: RSVP ==================== -->
     <section class="section" id="s10">
       <div class="card">
