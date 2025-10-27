@@ -372,14 +372,16 @@
           <header class="hotel-info__header">
             <h2 id="hotel-info-title" class="hotel-info__title">Alojamiento recomendado</h2>
           </header>
-          <figure class="hotel-info__figure">
-            <img src="./img/hotel.jpeg" width="720" height="405"
-              alt="Tarja informativa del Hotel Castillo con tarifas, requisitos de reservación y datos de contacto"
-              id="hotelImage" class="hotel-info__image" role="button" tabindex="0"
-              aria-describedby="hotel-info-title hotel-info-caption" />
-            <figcaption class="hotel-info__caption" id="hotel-info-caption">Consulta las tarifas y políticas del Hotel Castillo para asegurar tu
-              estancia.</figcaption>
-          </figure>
+          <div class="hotel-info__content">
+            <p class="hotel-info__subtitle" id="hotel-info-description">Para aquellas personas que requieran hospedaje, ponemos a su disposición la
+              información del Hotel Castillo.</p>
+            <button type="button" id="hotelInfoButton" class="btn hotel-info__button" aria-controls="hotelImageModal"
+              aria-describedby="hotel-info-description hotel-info-note" aria-haspopup="dialog">
+              Ver detalles de hospedaje
+            </button>
+            <p class="hotel-info__note" id="hotel-info-note">El botón mostrará tarifas, requisitos de reservación y datos de contacto del
+              hotel recomendado.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -394,7 +396,8 @@
         </div>
         <img src="./img/hotel.jpeg" alt="Tarja informativa del Hotel Castillo con tarifas, requisitos de reservación y datos de contacto"
           class="image-modal__img" />
-        <figcaption class="image-modal__caption">Toca fuera de la imagen o en el botón cerrar para volver.</figcaption>
+        <figcaption class="image-modal__caption">Información pensada para quienes requieran hospedaje. Toca fuera de la imagen o
+          en el botón cerrar para volver.</figcaption>
       </figure>
     </div>
 
@@ -433,7 +436,7 @@
         });
       }
 
-      const hotelImage = document.getElementById('hotelImage');
+      const hotelInfoButton = document.getElementById('hotelInfoButton');
       const hotelModal = document.getElementById('hotelImageModal');
       const dismissControls = hotelModal?.querySelectorAll('[data-dismiss-modal]');
       let lastFocusedElement = null;
@@ -464,13 +467,7 @@
         }
       }
 
-      hotelImage?.addEventListener('click', openHotelModal);
-      hotelImage?.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          openHotelModal();
-        }
-      });
+      hotelInfoButton?.addEventListener('click', openHotelModal);
 
       dismissControls?.forEach((control) => {
         control.addEventListener('click', closeHotelModal);

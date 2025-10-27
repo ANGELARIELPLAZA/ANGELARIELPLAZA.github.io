@@ -1328,27 +1328,17 @@ blockquote {
   color: rgba(242, 245, 255, 0.76);
 }
 
-.hotel-info__figure {
+.hotel-info__content {
   display: grid;
-  gap: 0.75rem;
+  gap: clamp(1rem, 3vw, 1.5rem);
 }
 
-.hotel-info__figure img {
-  margin: 0 auto;
-  border-radius: clamp(16px, 3vw, 22px);
-  box-shadow: 0 18px 50px rgba(4, 19, 41, 0.45);
+.hotel-info__button {
+  justify-self: center;
+  width: min(100%, 320px);
 }
 
-.hotel-info__image {
-  cursor: zoom-in;
-}
-
-.hotel-info__image:focus-visible {
-  outline: 3px solid rgba(242, 245, 255, 0.9);
-  outline-offset: 6px;
-}
-
-.hotel-info__caption {
+.hotel-info__note {
   margin: 0;
   font-size: clamp(0.95rem, 3vw, 1.15rem);
   color: rgba(242, 245, 255, 0.76);
