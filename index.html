@@ -374,31 +374,52 @@
           </header>
           <div class="hotel-info__content">
             <p class="hotel-info__subtitle" id="hotel-info-description">Para aquellas personas que requieran hospedaje, ponemos a su disposición la
-              información del Hotel Castillo.</p>
+              información de los hoteles recomendados.</p>
             <button type="button" id="hotelInfoButton" class="btn hotel-info__button" aria-controls="hotelImageModal"
               aria-describedby="hotel-info-description hotel-info-note" aria-haspopup="dialog">
               Ver detalles de hospedaje
             </button>
-            <p class="hotel-info__note" id="hotel-info-note">El botón mostrará tarifas, requisitos de reservación y datos de contacto del
-              hotel recomendado.</p>
+            <p class="hotel-info__note" id="hotel-info-note">El botón mostrará tarifas, requisitos de reservación y datos de contacto de los
+              hoteles recomendados.</p>
           </div>
         </div>
       </div>
     </section>
 
     <div class="image-modal" id="hotelImageModal" role="dialog"
-      aria-labelledby="hotelImageModalTitle" aria-hidden="true">
+      aria-labelledby="hotelImageModalTitle" aria-modal="true" aria-hidden="true">
       <div class="image-modal__backdrop" data-dismiss-modal></div>
-      <figure class="image-modal__dialog" role="group" aria-labelledby="hotelImageModalTitle">
+      <div class="image-modal__dialog" role="group" aria-labelledby="hotelImageModalTitle">
         <div class="image-modal__header">
           <h2 id="hotelImageModalTitle" class="image-modal__title">Alojamiento recomendado</h2>
           <button type="button" class="image-modal__close" aria-label="Cerrar" data-dismiss-modal>&times;</button>
         </div>
-        <img src="./img/hotel.jpeg" alt="Tarja informativa del Hotel Castillo con tarifas, requisitos de reservación y datos de contacto"
-          class="image-modal__img" />
-        <figcaption class="image-modal__caption">Información pensada para quienes requieran hospedaje. Toca fuera de la imagen o
-          en el botón cerrar para volver.</figcaption>
-      </figure>
+        <div class="image-modal__body">
+          <div class="image-modal__slides">
+            <figure class="image-modal__figure is-active" data-hotel-name="Hotel 1" aria-hidden="false">
+              <img src="./img/hotel1.jpeg"
+                alt="Información detallada del Hotel 1 con tarifas, requisitos de reservación y datos de contacto"
+                class="image-modal__img" />
+              <figcaption class="image-modal__caption">Detalles del Hotel 1 con tarifas, requisitos de reservación y contacto.</figcaption>
+            </figure>
+            <figure class="image-modal__figure" data-hotel-name="Hotel 2" aria-hidden="true">
+              <img src="./img/hotel1.png"
+                alt="Información detallada del Hotel 2 con tarifas, requisitos de reservación y datos de contacto"
+                class="image-modal__img" />
+              <figcaption class="image-modal__caption">Detalles del Hotel 2 con tarifas, requisitos de reservación y contacto.</figcaption>
+            </figure>
+          </div>
+          <div class="image-modal__controls">
+            <button type="button" class="image-modal__nav" data-carousel-dir="prev" aria-label="Ver hotel anterior">
+              ◀
+            </button>
+            <span class="image-modal__pagination" aria-live="polite">Hotel 1 (1 de 2)</span>
+            <button type="button" class="image-modal__nav" data-carousel-dir="next" aria-label="Ver hotel siguiente">
+              ▶
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ==================== Sección 8: RSVP ==================== -->
@@ -439,7 +460,39 @@
       const hotelInfoButton = document.getElementById('hotelInfoButton');
       const hotelModal = document.getElementById('hotelImageModal');
       const dismissControls = hotelModal?.querySelectorAll('[data-dismiss-modal]');
+      const hotelSlides = hotelModal ? Array.from(hotelModal.querySelectorAll('.image-modal__figure')) : [];
+      const hotelPagination = hotelModal?.querySelector('.image-modal__pagination');
+      const hotelNavButtons = hotelModal ? Array.from(hotelModal.querySelectorAll('[data-carousel-dir]')) : [];
+      let currentHotelSlide = 0;
+
       let lastFocusedElement = null;
+
+      const updateHotelSlide = (index) => {
+        if (!hotelSlides.length) return;
+        const totalSlides = hotelSlides.length;
+        currentHotelSlide = (index + totalSlides) % totalSlides;
+        hotelSlides.forEach((slide, slideIndex) => {
+          const isActive = slideIndex === currentHotelSlide;
+          slide.classList.toggle('is-active', isActive);
+          slide.setAttribute('aria-hidden', String(!isActive));
+        });
+        if (hotelPagination) {
+          const activeSlide = hotelSlides[currentHotelSlide];
+          const hotelName = activeSlide?.getAttribute('data-hotel-name');
+          hotelPagination.textContent = hotelName
+            ? `${hotelName} (${currentHotelSlide + 1} de ${totalSlides})`
+            : `Hotel ${currentHotelSlide + 1} de ${totalSlides}`;
+          hotelPagination.toggleAttribute('hidden', totalSlides <= 1);
+        }
+        hotelNavButtons.forEach((button) => {
+          button.toggleAttribute('hidden', totalSlides <= 1);
+        });
+      };
+
+      const changeHotelSlide = (step) => {
+        if (!hotelSlides.length) return;
+        updateHotelSlide(currentHotelSlide + step);
+      };
 
       const closeHotelModal = () => {
         if (!hotelModal) return;
@@ -455,6 +508,7 @@
         if (!hotelModal) return;
         lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
         hotelModal.setAttribute('aria-hidden', 'false');
+        updateHotelSlide(0);
         const closeBtn = hotelModal.querySelector('.image-modal__close');
         closeBtn?.focus({ preventScroll: true });
         document.addEventListener('keydown', handleModalKeyDown);
@@ -464,10 +518,31 @@
         if (event.key === 'Escape') {
           event.preventDefault();
           closeHotelModal();
+          return;
+        }
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          changeHotelSlide(-1);
+          return;
+        }
+        if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          changeHotelSlide(1);
         }
       }
 
       hotelInfoButton?.addEventListener('click', openHotelModal);
+
+      hotelNavButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const direction = button.getAttribute('data-carousel-dir');
+          if (direction === 'next') {
+            changeHotelSlide(1);
+          } else if (direction === 'prev') {
+            changeHotelSlide(-1);
+          }
+        });
+      });
 
       dismissControls?.forEach((control) => {
         control.addEventListener('click', closeHotelModal);
