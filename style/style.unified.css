@@ -860,6 +860,20 @@ blockquote {
   margin: 0 0 1.5rem;
 }
 
+.section10__highlight {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.15rem 0.6rem 0.2rem;
+  border-radius: 999px;
+  background: rgba(181, 122, 106, 0.2);
+  color: var(--brand-dark);
+  font-family: "Segoe UI", Roboto, sans-serif;
+  font-size: clamp(1rem, 3.2vw, 1.3rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .actions {
   display: flex;
   justify-content: center;
